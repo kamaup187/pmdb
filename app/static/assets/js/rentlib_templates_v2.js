@@ -11,7 +11,7 @@ function toggleSide(){
 
 
 // Datatable update
-function updateRequestDataTable(data,table) {
+function updateBalanceDataTable(data,table) {
     // Assuming data is an array of objects
     // var table = $('#primaryData').DataTable();
 
@@ -22,15 +22,12 @@ function updateRequestDataTable(data,table) {
     data.forEach(function(item) {
 
         table.row.add([
+            item.start,             // PNo
             item.house,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
-            item.prev,           // Name
-            item.curr,        // Region
-            item.units,            // Phone
-            item.rate,
-            item.amount,       // Branch
-            item.period,       // Branch
-            item.date
+            item.tenant,           // Name
+            item.mobile,        // Region
+            item.balance           // Phone
             // Branch
         ]);
     });
@@ -140,6 +137,25 @@ var requestdataTableTemplate = `
 </table>
 
 `
+
+var balancedataTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">House</th>
+            <th class="fw-bold">Tenant</th>
+            <th class="fw-bold">Mobile</th>
+            <th class="fw-bold">Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+
+`
+
 var floatDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
@@ -908,6 +924,87 @@ var readingTemplate = `
 
 `
 
+var smsTemplate = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">SMS Center</h1>
+    </div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+<div class="col-12 row mb-2">
+
+    <div class="mb-3 col-md-3">
+        <label for="select-balance-property" class="form-label">Select property</label>
+        <select class="form-select" id="select-balance-property">
+            <option disabled selected>Select property below</option>
+        </select>
+    </div>
+
+    <div class="mb-3 col-md-3">
+        <label for="select-balance-category" class="form-label">Select category</label>
+        <select class="form-select" id="select-balance-category">
+            <option value="all" selected>All balances</option>
+            <option value="rent">Rent only</option>
+        </select>
+    </div>
+
+    <div class="mb-3 col-md-3">
+        <label for="balance-mobile" class="form-label">Enter mobile to send reports:</label>
+        <input type="text" id="balance-mobile" class="form-control" placeholder="Enter mobile number">
+    </div>
+
+    <div class="mb-3 col-md-3">	
+        <label for="send-balance-button" class="form-label">Send report</label>
+					    
+        <a class="btn app-btn-secondary form-control" id="send-balance-button" href="#">
+            <i data-feather="sms" style="width: 16px; height: 16px;"></i>
+            send
+        </a>
+    </div>
+</div>
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance preview</a>
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+
+
+    <div id="requests-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="balances-all-table" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+
+
+`
 
 var floatTemplate = `
 <div class="row g-3 mb-4 align-items-center justify-content-between">

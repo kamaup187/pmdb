@@ -251,6 +251,9 @@ class Index(Resource):
         if current_user.usercode == "5023":
             return redirect(url_for("api.stockmodule"))
 
+        if current_user.username == "general1":
+            return redirect(url_for("api.indexv2"))
+
         # mayiit = sms_phone_number_formatter("0716674695")
         # report = advanta_send_sms(hostee,mayiit,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
@@ -10602,6 +10605,99 @@ class FloatBranch(Resource):
 
             pusher_client_prod.trigger('my-channel', 'branches', items)
             return "success"
+
+class V2TenantBalances(Resource):
+    @login_required
+    def get(self):
+        category = request.args.get("category")
+        prop_id = request.args.get("propid")
+
+        items = []
+        if not prop_id:
+
+            props = fetch_all_apartments_by_user(current_user)
+            apartments = []
+            for prop in props:
+                prop_dict = {
+                    "id": prop.id,
+                    "name": prop.name,
+                }
+                apartments.append(prop_dict)
+
+            return [items,apartments]
+
+        else:
+
+            prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(prop_id))
+            if prop_obj is None:
+                abort(403)
+            bills = prop_obj.monthlybills
+
+            actualbills = fetch_current_billing_period_bills(prop_obj.billing_period,bills)
+
+            # time = datetime.datetime.now() + relativedelta(hours=3)
+
+            # sms_text = f"<p class='ln-14 mt-4'> Balances for [{prop}] as of {time.strftime('%d/%m/%Y')}: </p>"
+            # second_line = "<p class='ln-14'>House, Balance & Phone</p>"
+            # sms_text += second_line
+
+            start = 1
+
+            for bill in actualbills:
+                if category == "rent":
+                    if bill.rent_due:
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1].phone
+                            if not phone:phone = "N/A"
+                            tname = tenant_obj_check[1].name
+
+                        else:
+                            phone = "N/A"
+                            tname = "Vacated!"
+
+                        dict_obj = {
+                            "start":start,
+                            "house":bill.house.name,
+                            "tenant":tname,
+                            "mobile":phone,
+                            "balance":f"{bill.rent_due:,.0f}",
+                        }
+                        items.append(dict_obj)
+
+                        # new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, <span class='text-danger'> Bal :{bill.rent_due:,.0f}</span></p>"
+                        start += 1
+                        # sms_text += new_line
+
+
+                else:
+                    if bill.balance > 1:
+                        tenant_obj_check = check_occupancy(bill.house)
+                        if tenant_obj_check[0] == "occupied":
+                            phone = tenant_obj_check[1].phone
+                            if not phone:phone = "N/A"
+                            tname = tenant_obj_check[1].name
+                        else:
+                            phone = "N/A"
+                            tname = "Vacated!"
+
+                        dict_obj = {
+                            "start":start,
+                            "house":bill.house.name,
+                            "tenant":tname,
+                            "mobile":phone,
+                            "balance":f"{bill.balance:,.0f}",
+                        }
+
+                        # new_line = f"<p class='ln-10'>{bill.house} ; {tname} {phone}, <span class='text-danger'> Bal :{bill.balance:,.0f}</span></p>"
+                        start += 1
+                        items.append(dict_obj)
+                        # sms_text += new_line
+
+            # print("TEXT SENT:",sms_text)
+
+            return [items]
+
 
 class AddReading(Resource):
     @login_required

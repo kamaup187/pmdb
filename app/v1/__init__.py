@@ -121,6 +121,7 @@ api.add_resource(PropertyManagement,"/manage/property")
 api.add_resource(MeterManagement,"/meters")
 
 api.add_resource(AddReading,"/v2/readings")
+api.add_resource(V2TenantBalances,"/v2/tenant/balances")
 
 api.add_resource(SubmissionsManagement,"/submissions")
 api.add_resource(PaymentsManagement,"/manage/payments")

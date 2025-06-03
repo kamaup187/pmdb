@@ -126,7 +126,7 @@ def create_app(*args):
 
         app.config['SECRET_KEY'] = '2b5f7b9b23c54f557b42c8f0fc6d22d3d922f607d3c9075b'
 
-        # app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
+        app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable caching for static files
 
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT'] = 465

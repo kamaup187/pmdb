@@ -1892,6 +1892,15 @@ def fetch_current_billing_period_readings(billing_period,arr):
                 current_billling_period_data.append(i)
     return current_billling_period_data
 
+def fetch_current_billing_period_readings_alt_alt(billing_period,arr):
+    """water"""
+    current_billling_period_data = []
+    for i in arr:
+        if i.reading_period:
+            if i.reading_period.month == billing_period.month and i.reading_period.year == billing_period.year and i.description == "actual borehole reading":
+                current_billling_period_data.append(i)
+    return current_billling_period_data
+
 def fetch_current_billing_period_readings_alt(billing_period,arr):
     """elec"""
     current_billling_period_data = []

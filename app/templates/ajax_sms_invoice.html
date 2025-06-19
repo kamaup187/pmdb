@@ -43,11 +43,19 @@
 
     {%if watertarget%}
       {%if readings%}
-        <div class="divjust-end mr-5 overline-thin-fade"><span>Water Previous: </span><span class="text-gray-900">{{readings.last_reading}}</span></div>
-        <div class="divjust-end mr-5 "><span>Water Current: </span><span class="text-gray-900">{{readings.reading}}</span></div>
+        <div class="divjust-end mr-5 overline-thin-fade"><span>A LR: </span><span class="text-gray-900">{{readings.last_reading}}</span></div>
+        <div class="divjust-end mr-5 "><span>A CR: </span><span class="text-gray-900">{{readings.reading}}</span></div>
         <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{readings.units}}<span class="text-danger font-weight-bold {{w_edited}}"> *</span></span></div>
         <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.waterrate}}</span></div>
         <div class="divjust-end mr-5 underline-thin-fade "><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.waterrate * readings.units|float)}}</span></div>
+
+      {% endif %}
+      {%if breadings%}
+        <div class="divjust-end mr-5 overline-thin-fade"><span>B LR: </span><span class="text-gray-900">{{breadings.last_reading}}</span></div>
+        <div class="divjust-end mr-5 "><span>B CR: </span><span class="text-gray-900">{{breadings.reading}}</span></div>
+        <div class="divjust-end mr-5 "><span>Units: </span><span class="text-gray-900">{{breadings.units}}<span class="text-danger font-weight-bold {{b_edited}}"> *</span></span></div>
+        <div class="divjust-end mr-5 "><span>Rate: </span><span class="text-gray-900">{{house.housecode.waterrate}}</span></div>
+        <div class="divjust-end mr-5 underline-thin-fade "><span>Amount: </span><span class="text-gray-900">{{'%0.2f'| format(house.housecode.waterrate * breadings.units|float)}}</span></div>
 
       {% endif %}
     {% endif %}

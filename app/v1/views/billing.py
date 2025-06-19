@@ -779,6 +779,14 @@ class BillInvoice(Resource):
             print(sibling_water_bill[0].reading_period)
         except:
             pass
+        
+        sibling_borehole_bill = fetch_current_billing_period_readings_alt_alt(bill_period,bill.house.meter_readings)
+        print("BOREHOLE BILLS ARE HERE",sibling_borehole_bill)
+        try:
+            print(sibling_borehole_bill[0].reading_period)
+        except:
+            pass
+
         sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill_period,bill.house.meter_readings)
         print("ELECTRICITY BILLS ARE HERE",sibling_electricity_bill)
         try:
@@ -793,6 +801,13 @@ class BillInvoice(Resource):
         except:
             wbill = None
             w_edited = "dispnone"
+
+        try:
+            bbill = sibling_borehole_bill[0]
+            b_edited = "dispnone" if bbill.units == float(bbill.reading) - float(bbill.last_reading) else ""
+        except:
+            bbill = None
+            b_edited = "dispnone"
 
         try:
             ebill = sibling_electricity_bill[0]
@@ -1037,6 +1052,8 @@ class BillInvoice(Resource):
                 p = bill.apartment.paymentdetails,
                 narration=narration.replace("None", ""),
                 readings = wbill,
+                breadings = bbill,
+                b_edited = b_edited,
                 watertarget = watertarget,
                 w_edited = w_edited,
                 ereadings = ebill,
@@ -1164,6 +1181,8 @@ class BillInvoice(Resource):
                 bill = bill,
                 readings = wbill,
                 w_edited = w_edited,
+                breadings = bbill,
+                b_edited = b_edited,
                 ereadings = ebill,
                 e_edited = e_edited,
                 watertarget=watertarget,

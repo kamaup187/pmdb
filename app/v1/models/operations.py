@@ -2241,7 +2241,7 @@ class MeterReadingOp(MeterReading,Base):
         return "N/A"
 
     def get_rates(self):
-        if self.meter.metertype == "water":
+        if self.meter.metertype == "water" or self.meter.metertype == "borehole":
             rate = self.house.housecode.waterrate
             if self.house.housecode.seweragerate:
                 rate = f'{self.house.housecode.waterrate} & {self.house.housecode.seweragerate}'

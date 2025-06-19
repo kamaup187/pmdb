@@ -10557,6 +10557,86 @@ def water_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
 
                     MeterReadingOp.update_charge_status(i,charge_status)
 
+def borehole_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
+
+    charge_type_id = get_charge_type_id(chargetype)
+    apartment_obj = ApartmentOp.fetch_apartment_by_id(apartment_id)#get apartment obj first
+    # meter_readings = apartment_obj.meter_readings
+    target_readings = []
+
+    house_list = []
+
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            if hse:
+                house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for h in house_list:
+        if h.apartment_id != int(apartment_id):
+            continue
+
+        meter_readings = h.meter_readings
+
+        for item in meter_readings:
+            if item.reading_period:
+                if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual borehole reading":
+                    target_readings.append(item)
+
+    for i in target_readings:
+        units = i.units
+        reading_id= i.id
+        apartment_id = i.apartment_id
+        house_id = i.house_id
+        meter_id = i.meter_id
+        house_obj = HouseOp.fetch_house_by_id(house_id)
+        if not house_obj.housecode:
+            print("HOUSE GROUP MISSING FOR: ",house_obj,"of",house_obj.apartment)
+            continue
+        if not house_obj.housecode.waterrate and not house_obj.housecode.waterrate1:
+            print("RATE MISSING FOR: ",house_obj,"of",house_obj.apartment)
+            continue
+        if house_obj.housecode.waterrate1:
+            print("using graduated scale")
+            if units < 7:
+                bill_amount = house_obj.housecode.waterrate1
+            elif units < 20:
+                bill_amount = house_obj.housecode.waterrate2 * units
+            else:
+                bill_amount = house_obj.housecode.waterrate3 * units
+        else:
+    
+            if house_obj.housecode.seweragerate:
+                bill_amount = (house_obj.housecode.waterrate * units) + (house_obj.housecode.seweragerate * units)
+            else:
+                bill_amount = house_obj.housecode.waterrate * units
+                
+            print("using normal scale")
+
+
+        existing_charge_obj=ChargeOp.fetch_charge_by_reading_id(reading_id)
+        # if existing_charge_obj:
+        #     ChargeOp.delete(existing_charge_obj)
+        if not existing_charge_obj:
+            date = generate_date(month,year)
+            house_obj = HouseOp.fetch_house_by_id(house_id)
+            if house_obj:
+                if not house_obj.billable:
+                    charge_obj =  ChargeOp(charge_type_id,0.0,apartment_id,house_id,user_id,date,meter_id,reading_id)#REFACTOR meter can be left out for rent,garbage and security
+                    charge_obj.save()
+                    charge_status = True
+
+                    MeterReadingOp.update_charge_status(i,charge_status)
+                else:
+                    charge_obj =  ChargeOp(charge_type_id,bill_amount,apartment_id,house_id,user_id,date,meter_id,reading_id)#REFACTOR meter can be left out for rent,garbage and security
+                    charge_obj.save()
+                    charge_status = True
+                    print("Billing water >>>",house_obj.name, "of",house_obj.apartment,"Amount >>>",bill_amount)
+
+                    MeterReadingOp.update_charge_status(i,charge_status)
+
 def fixed_water_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app()
@@ -12773,6 +12853,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
     ApartmentOp.update_billing_progress(apartment_obj,"billing")
 
     water_bill_alt(apartment_id,houseids,"Water",user_id,month,year)
+    borehole_bill_alt(apartment_id,houseids,"Water",user_id,month,year)
+
     electricity_bill_alt(apartment_id,houseids,"Electricity",user_id,month,year)
     fixed_water_bill_alt(apartment_id,houseids,"Water",user_id,month,year)
 

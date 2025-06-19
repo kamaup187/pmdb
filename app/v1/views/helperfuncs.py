@@ -6328,6 +6328,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
         for bill in target_bills:
 
             sibling_water_bill = fetch_current_billing_period_readings(prop_obj.billing_period,bill.house.meter_readings)
+            sibling_borehole_bill = fetch_current_billing_period_readings_alt_alt(prop_obj.billing_period,bill.house.meter_readings)
             sibling_electricity_bill = fetch_current_billing_period_readings_alt(bill.apartment.billing_period,bill.house.meter_readings)
 
 
@@ -6335,6 +6336,11 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                 wbill = sibling_water_bill[0]
             except:
                 wbill = None
+
+            try:
+                bbill =  sibling_borehole_bill[0]
+            except:
+                bbill = None
 
             try:
                 ebill = sibling_electricity_bill[0]
@@ -6364,9 +6370,28 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                     smsstd = f"Standing charge: Kes {standing_charge}" if bill.house.housecode.watercharge else ""
                 smsbill = (f"Kes {amount:,.2f} ")
 
-                wmessage = f"\n\nWater, \nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"
+                wmessage = f"\n\nWater B, \nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"
             else:
                 wmessage = ""
+                smsbill = "Kes 0.0"
+
+            if bbill:
+                amount = 0.0
+
+                if bbill.charged:
+                    charge_obj = ChargeOp.fetch_charge_by_reading_id(bbill.id)
+                    amount = charge_obj.amount
+
+                smslastreading = (f"{bbill.last_reading} ")
+                smscurrentreading = (f"{bbill.reading} ")
+                smsunits = (f"{bbill.units} ")
+                smsstd = ""
+
+                smsbill = (f"Kes {amount:,.2f} ")
+
+                bmessage = f"\n\nWater A, \nLR: {smslastreading} \nCR: {smscurrentreading} \nUnits: {smsunits} \n{smsstd} \nBill: {smsbill}"
+            else:
+                bmessage = ""
                 smsbill = "Kes 0.0"
 
             if ebill:
@@ -6578,6 +6603,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 smswater = ""
                                 waterbill = ""
+                                bmessage = ""
                         else:
                             waterbill = ""
 
@@ -6595,9 +6621,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,.1f}")
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}." 
 
 
                             else:
@@ -6605,9 +6631,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,.1f}")
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} \nPrevious credit: {sms_bbf} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
+                                    message = f"Dear {tname},({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smssev} {smsdep} {smsfine} {smsarrears} \n\nTotal due: {smstotal} {paidbal} {bankdetails} {str_co}."
 
                             smsperiod = generate_date(prop_obj.billing_period.month, prop_obj.billing_period.year)
 
@@ -6690,6 +6716,7 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                             else:
                                 smswater = ""
                                 waterbill = ""
+                                bmessage = ""
                         else:
                             waterbill = ""
 
@@ -6707,9 +6734,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,.1f}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} Previous credit: {sms_bbf} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} Previous credit: {sms_bbf} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}." 
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} updated invoice (VAT inclusive) is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}." 
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} \nPaid: {sms_bbf} \n\nTotal due: {smstotal} {bankdetails} {str_co}."
                                 # else:
                                 #     message = f"Dear {tname}, the revised {str_month} bill is as follows; {smsrent} {smswater} \n {smsgarb} {smssec} {smselec} {smsdep} {smsarrears} \n\nTotal due: {smstotal} {bankdetails} {str_co}." 
@@ -6719,9 +6746,9 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
                                 if arrears < 0.0:
                                     bbf = -1 * arrears
                                     sms_bbf = (f"{bbf:,.1f}")
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} Previous credit: {sms_bbf} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} Previous credit: {sms_bbf} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
                                 else:
-                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
+                                    message = f"Dear {tname} ({bill.house.name}), your {str_month} {servicecharge}{waterbill} bill is as follows; {smsrent} {smsvat} {smsdisc} {smsrentsub} {smssev} {bmessage} {smswater} \n {smselec} \n {smsgarb} {smssec} {smsdep} {smsfine} {smsarrears} \nTotal due: {smstotal} {paidbal} {misc} {bankdetails} {str_co}."
 
                             smsperiod = generate_date(prop_obj.billing_period.month, prop_obj.billing_period.year)
 

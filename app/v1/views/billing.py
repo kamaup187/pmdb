@@ -9763,6 +9763,220 @@ class CallBackUrlLes(Resource):
         resp = jsonify(response)
         return make_response(resp)
 
+class CallBackUrlColmar(Resource):
+    def get(self):
+        pass
+    def post(self):
+
+        # advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+        #parse for json
+        try:
+            my_data=request.data
+            my_json = my_data.decode('utf8').replace("'", '"')
+            # advanta_send_sms(f"PROD LESAMA COOP has good data >>> {my_json}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+        except Exception as e:
+            advanta_send_sms(f"PROD COLMAR COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+            # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
+            # ww = f"{my_json},PROD LESAMA has sent data"
+            # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            # response = sms.send(ww, ["+254716674695"],"KIOTAPAY")
+        try:
+            data = json.loads(my_json)
+            # advanta_send_sms(f"UNPACKING PROD LESAMA COOP data >>> {data}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+            # print("#####################################COOP COOP COOP############################################")
+            # print(data)
+            # print("#####################################COOP COOP COOP############################################")
+
+            # {
+            # "MessageReference":"F5FF3715DA15219DE05400144FF8392F",
+            # "MessageDateTime":"2023-03-03T15:39:57.097+03:00",
+            # "PaymentRef": "RC36WOI5YS",
+            # "AccountNumber": "01148173864900",
+            # "Amount": "9000.0",
+            # "TransactionDate": "2023-03-03T15:39:31.112+03:00",
+            # "EventType": "CREDIT",
+            # "Currency": "KES",
+            # "ExchangeRate": "",
+            # "Narration": "RC36WOI5YS 432942#GJ70J 2",
+            # "CustMemo": {
+            # "CustMemoLine1": "RC36WOI5YS 432942#GJ70J 2",
+            # "CustMemoLine2": "54714921138 MPESAC2B_4002",
+            # "CustMemoLine3": "22 JOEL ONDARI"
+            # },
+            # "ValueDate": "20230303",
+            # "EntryDate": "20230303",
+            # "TransactionId": "6186a77c0fffE0iY"
+            # }
+
+            if data.get("EventType") == "CREDIT":
+                pass
+            else:
+                response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+                resp = jsonify(response)
+                return make_response(resp)
+
+
+            lesama_dict = {
+                "AcctNo": "01148173864900",
+                "Amount": "17430.0",
+                "BookedBalance": "1288578.27",
+                "ClearedBalance": "1288578.27",
+                "Currency": "KES",
+                "CustMemoLine1": "SJ98GDWUXE~432942#NF16~25",
+                "CustMemoLine2": "4111366171~MPESAC2B_40022",
+                "CustMemoLine3": "2~Natalie Bosire",
+                "EventType": "CREDIT",
+                "ExchangeRate": "",
+                "Narration": "SJ98GDWUXE~432942#NF16~254111366171~MPESAC2B_400222~Natalie Bosire",
+                "PaymentRef": "09102024_613155272",
+                "PostingDate": "2024-10-09 03:00",
+                "ValueDate": "2024-10-09 03:00",
+                "TransactionDate": "2024-10-09 03:00",
+                "TransactionId": "CB0198527_09102024_2"
+                }
+
+
+            acc_no = data.get("AcctNo")
+            trans_amnt = data.get('Amount')
+            trans_id = data.get('PaymentRef')
+
+            custmemo = data.get("CustMemoLine1")
+            # narration = data.get("Narration")
+
+            try:
+                # refnum2 = custmemo.split("#")[1].replace("~", "")
+                refnum2 = extract_code(custmemo)
+            except:
+                refnum2 = custmemo
+
+            
+       
+            trans_time = data.get('TransactionDate')
+            trans_type = data.get('EventType')
+            business_shortcode = "000000"
+            bill_ref_num = refnum2
+            invoice_num = data.get('InvoiceNumber')
+            try:
+                msisdn = extract_and_modify_number(data.get('CustMemoLine2'))
+            except:
+                msisdn = data.get('CustMemoLine2')
+            org_acc_bal = data.get('OrgAccountBalance')
+            fname = data.get('CustMemoLine3')
+            lname = "N/A"
+            mode = "Bank"
+            company_id = 122
+
+
+            data_obj = CtoBop.fetch_record_by_ref(trans_id)
+            if data_obj:
+                response =  {"responseCode": "OK","responseMessage": "DUPLICATE"}
+            else:
+                data_obj = CtoBop(trans_id,trans_time,trans_amnt,trans_type,business_shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
+                data_obj.save()
+                response =  {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+
+
+                com = CompanyOp.fetch_company_by_id(company_id)
+                props = com.props
+
+                prop = None
+                target_house = None
+
+                if bill_ref_num:
+                    # bill_ref_num2 = extract_text_after_hashtag(bill_ref_num)
+                    formatted_ref = name_standard(bill_ref_num)
+
+                    part1_part2 = split_text_by_keywords(formatted_ref,keywords)
+
+                    prop_code = part1_part2[1]
+                    if prop_code:
+                        prop_name = switch_property_code(prop_code)
+                        prop = ApartmentOp.fetch_apartment_by_name(prop_name)
+                        if prop:
+                            target_house = get_specific_house_obj(prop.id,part1_part2[0])
+                        else:
+                            for prp in props:
+                                for house in prp.houses:
+                                    n = name_standard(house.name)
+
+                                    clean_n = remove_keywords_prefix(n,keywords)
+                                    
+                                    n_units = [part1_part2[0]]
+                                    if clean_n in n_units:
+                                        # prop = house.apartment
+                                        target_house = house
+                                        break
+                    else:
+                        for prp in props:
+                            for house in prp.houses:
+                                n = name_standard(house.name)
+                                clean_n = remove_keywords_prefix(n,keywords)
+
+                                n_units = [part1_part2[0]]
+                                if clean_n in n_units:
+                                    prop = house.apartment
+                                    target_house = house
+                                    break
+
+                    # if "," in formatted_ref:
+                    #     n_units = formatted_ref.split(",")
+                    # else:
+                    #     n_units = [formatted_ref]
+
+                    
+
+
+
+                    # for prp in props:
+                    #     for house in prp.houses:
+                    #         n = name_standard(house.name)
+                    #         if n in n_units:
+                    #             multiple_units.append(n)
+                                
+
+                if not target_house:
+                    print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
+                    advanta_send_sms(f"fail, PROD COLMAR Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+                else:
+                    propid = prop.id if prop else None
+                    dict_array = []
+                    if prop:
+                        payperiod = prop.billing_period
+
+                        dict_obj = {
+                        "housename":target_house.name,
+                        "amount":trans_amnt,
+                        "date":"",
+                        "ref":trans_id,
+                        "desc":"",
+                        "comment":""
+                        }
+
+                        dict_array.append(dict_obj)
+
+                        uploadsjob2 = q.enqueue_call(
+                            func=read_payments_excel, args=(dict_array,payperiod,propid,1,data_obj.id,), result_ttl=5000
+                        )
+
+                        CtoBop.update_status(data_obj,"claimed")
+
+                        advanta_send_sms(f"success, PROD COLMAR Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+
+            # auto_consume_ctob(ctob_obj)
+        except Exception as e:
+            advanta_send_sms(f"PROD COLMAR COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            print ("It failed, Bank integration has an error",e)
+
+        response = {"responseCode": "OK","responseMessage": "SUCCESSFUL"}
+        resp = jsonify(response)
+        return make_response(resp)
+
 class CallBackUrlTestLes(Resource):
     def get(self):
         pass

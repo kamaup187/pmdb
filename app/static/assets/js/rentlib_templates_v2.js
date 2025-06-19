@@ -928,7 +928,7 @@ var smsTemplate = `
 		
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">
-        <h1 class="app-page-title mb-0">SMS Center</h1>
+        <h1 class="app-page-title mb-0">Balance report to Caretakers/Field Officers</h1>
     </div>
 
     <div class="col-auto">
@@ -940,14 +940,14 @@ var smsTemplate = `
 
 <div class="col-12 row mb-2">
 
-    <div class="mb-3 col-md-3">
+    <div class="mb-3 col-md-4">
         <label for="select-balance-property" class="form-label">Select property</label>
         <select class="form-select" id="select-balance-property">
             <option disabled selected>Select property below</option>
         </select>
     </div>
 
-    <div class="mb-3 col-md-3">
+    <div class="mb-3 col-md-4">
         <label for="select-balance-category" class="form-label">Select category</label>
         <select class="form-select" id="select-balance-category">
             <option value="all" selected>All balances</option>
@@ -955,23 +955,35 @@ var smsTemplate = `
         </select>
     </div>
 
-    <div class="mb-3 col-md-3">
-        <label for="balance-mobile" class="form-label">Enter mobile to send reports:</label>
-        <input type="text" id="balance-mobile" class="form-control" placeholder="Enter mobile number">
-    </div>
-
-    <div class="mb-3 col-md-3">	
-        <label for="send-balance-button" class="form-label">Send report</label>
+    <div class="mb-3 col-md-4">	
+        <label for="view-preview-button" class="form-label">Preview balances</label>
 					    
-        <a class="btn app-btn-secondary form-control" id="send-balance-button" href="#">
-            <i data-feather="sms" style="width: 16px; height: 16px;"></i>
-            send
+        <a class="btn app-btn-secondary form-control" id="view-preview-button" href="#">
+            <i data-feather="users" style="width: 16px; height: 16px;"></i>
+            View balances
         </a>
     </div>
 </div>
+<div class="col-12 row mb-2">
+    <div class="mb-3 col-md-8">
+        <label for="balance-mobile" class="form-label">Enter mobile number to send balance reports:</label>
+        <input type="text" id="balance-mobile" class="form-control" placeholder="Enter mobile number">
+    </div>
+
+    <div class="mb-3 col-md-4">	
+        <label for="send-balance-button" class="form-label">Send balances</label>
+					    
+        <a class="btn app-btn-secondary form-control" id="send-balance-button" href="#">
+            <i data-feather="users" style="width: 16px; height: 16px;"></i>
+            send
+        </a>
+    </div>
+    
+</div>
+
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance preview</a>
+<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance preview table</a>
 </nav>
 
 

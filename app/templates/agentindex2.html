@@ -1192,7 +1192,9 @@
     <!-- Page Specific JS -->
     <script src="{{ url_for('static', filename='assets/js/app.js') }}"></script> 
 
-	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --> <!-- this is the one that is valid for use-->
+	  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+
 	<script src="{{ url_for('static', filename='assets/js/rentlib_templates_v2.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
@@ -1966,6 +1968,37 @@
 				$("#requests-spinner").addClass("d-none")
 				}
 			});
+		});
+
+		$("#working-block").on("click", "#view-preview-button", function() {
+			if (!$("#select-balance-property").val()){
+				alert("Select property first!")
+			}else{
+			$("#balances-all-table").empty()
+			$("#requests-spinner").removeClass("d-none")
+			$.ajax({
+				url: "/v2/tenant/balances",
+				type: "get",
+				data: {
+					propid: $("#select-balance-property").val(),
+					category: $("#select-balance-category").val(),
+				},
+				success: function (response) {
+					var elem = $("#balances-all-table")
+					renderBalanceTemplate("allBalanceTable",elem);
+
+					var t1 = runDataTable("allBalanceTable")
+
+				updateBalanceDataTable(response[0],t1)
+				$("#requests-spinner").addClass("d-none")
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#requests-spinner").addClass("d-none")
+				}
+			});
+		}
 		});
 	</script>
 

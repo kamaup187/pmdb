@@ -330,6 +330,9 @@ api.add_resource(Oauth2BankIntegration,"/oauth2/v1/generate")
 api.add_resource(CallBackUrlLes,"/bank/lesama")
 api.add_resource(CallBackUrlTestLes,"/test/les/45")
 
+api.add_resource(CallBackUrlColmar,"/ins/bank/colmar/collection")
+# api.add_resource(CallBackUrlTestColmar,"/ins/bank/colmartest/collection")
+
 api.add_resource(SendGridInbound,"/sendgrid/mail")
 
 api.add_resource(ViewHouses, "/view/houses")

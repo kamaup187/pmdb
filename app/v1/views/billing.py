@@ -9765,7 +9765,7 @@ class CallBackUrlLes(Resource):
 
 class CallBackUrlColmar(Resource):
     def get(self):
-        pass
+        return "why are you here 😄"
     def post(self):
 
         # advanta_send_sms("Lesama prod has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")

@@ -125,6 +125,8 @@ class ServiceWorker(Resource):
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
+# advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?","254716674695",unipay_api_key,unipay_partner_id,"KEVMAREAL")
+
 # advanta_send_sms("Greetings PAUL 🙂, \MALIBU sms sender Id is ready ~ KiotaPay Team",telll,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")

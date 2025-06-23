@@ -113,6 +113,8 @@ else:
 
 from .advanta import *
 
+unipay_api_key = "f3542fb71925b5b6d2fff0a39f99d5ba"
+unipay_partner_id = 8938
 
 kiotapay_api_key = "c60dc99dedf85f85ee872a6bbec4a39d"
 kiotapay_partner_id = 8929
@@ -1601,9 +1603,9 @@ def sms_sender(company,sms_text,phonenum):
     ################################## OWN SENDER IDS ##################################
 
     elif company.upper() == "KEVMA REAL ESTATE":
-        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
-        if not report:
-            report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KEVMAREAL")
+        report = advanta_send_sms(sms_text,phonenum,unipay_api_key,unipay_partner_id,"KEVMAREAL")
+        # if not report:
+        #     report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KEVMAREAL")
 
     elif company.title() == "Latitude Properties":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LATITUDE")

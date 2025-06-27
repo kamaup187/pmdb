@@ -9787,12 +9787,12 @@ class CallBackUrlColmar(Resource):
         return "why are you here 😄"
     def post(self):
 
-        advanta_send_sms("Lesama COLMAR has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # advanta_send_sms("Lesama COLMAR has sent data","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
-        try:
-            advanta_send_sms(f"PROD COLMAR COOP has good data >>> {request.data}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
-        except:
-            advanta_send_sms(f"PROD COLMAR COOP has blank data >>> {request}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # try:
+        #     advanta_send_sms(f"PROD COLMAR COOP has good data >>> {request.data}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+        # except:
+        #     advanta_send_sms(f"PROD COLMAR COOP has blank data >>> {request}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
 
 

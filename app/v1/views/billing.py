@@ -549,7 +549,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(30,5,2025)
+        invdate = generate_exact_date(1,7,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)
@@ -9745,7 +9745,7 @@ class CallBackUrlLes(Resource):
 
                 if not target_house:
                     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-                    advanta_send_sms(f"fail, PROD LESAMA Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                    # advanta_send_sms(f"fail, PROD LESAMA Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
                 else:
                     propid = prop.id if prop else None
@@ -9770,7 +9770,7 @@ class CallBackUrlLes(Resource):
 
                         CtoBop.update_status(data_obj,"claimed")
 
-                        advanta_send_sms(f"success, PROD LESAMA Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                        # advanta_send_sms(f"success, PROD LESAMA Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
 
             # auto_consume_ctob(ctob_obj)
@@ -9800,11 +9800,11 @@ class CallBackUrlColmar(Resource):
         try:
             my_data=request.data
             my_json = my_data.decode('utf8').replace("'", '"')
-            advanta_send_sms(f"PROD COLMAR COOP has good data >>> {my_json}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            # advanta_send_sms(f"PROD COLMAR COOP has good data >>> {my_json}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
         except Exception as e:
-            advanta_send_sms(f"PROD COLMAR COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
-
+            # advanta_send_sms(f"PROD COLMAR COOP has error data >>> {e}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            pass
             # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>COOP PROD DATA>>>>>>>>>",my_json)
             # ww = f"{my_json},PROD LESAMA has sent data"
             # advanta_send_sms(ww,"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
@@ -9966,7 +9966,7 @@ class CallBackUrlColmar(Resource):
 
                 if not target_house:
                     print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-                    advanta_send_sms(f"fail, PROD COLMAR Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                    # advanta_send_sms(f"fail, PROD COLMAR Did not find house for {bill_ref_num} and extracted {bill_ref_num} prop being {part1_part2[1]} specific hse being {part1_part2[0]}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
                     return "success", 200
                 else:
                     propid = prop.id if prop else None
@@ -9991,7 +9991,7 @@ class CallBackUrlColmar(Resource):
 
                         CtoBop.update_status(data_obj,"claimed")
 
-                        advanta_send_sms(f"success, PROD COLMAR Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                        # advanta_send_sms(f"success, PROD COLMAR Did find house for {bill_ref_num} and extracted {bill_ref_num}","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
                         return "success", 200
 
             # auto_consume_ctob(ctob_obj)

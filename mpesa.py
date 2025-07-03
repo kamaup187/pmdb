@@ -12,8 +12,8 @@ def generate_access_token():
     # consumer_key = "710QNGdu7FWDsP0Xca9VIRI9DkGIWuCA"
     # consumer_secret = "dAoOC51LeAFTkQaa"
 
-    consumer_key = "7HRqy53Fe7RcC7tE2teENWhBqDDq4Ca9IGovThDrwuClHowg"
-    consumer_secret = "oauYLe9vzrp3N92hhmXeqJ7NjWnRMoAslZROU1f8OtHgCEvABxNVn50zOdz4rYMG"
+    consumer_key = "M85RkjMsxk87TuSZ9zbOvIfQqCGycl5N"
+    consumer_secret = "aw9h6W0SK6qAQkby"
 
     api_URL = (
         "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
@@ -42,10 +42,10 @@ def register_url():
     headers = {"Authorization": "Bearer %s" % my_access_token}
 
     request = {
-        "ShortCode": "4091381",
+        "ShortCode": "4085263",
         "ResponseType": "Completed",
-        "ConfirmationURL": "https://rentlib.com/astrol/4091381",
-        "ValidationURL": "https://rentlib.com/astrol/4091381",
+        "ConfirmationURL": "https://rentlib.com/m/sirenga/ins/payment",
+        "ValidationURL": "https://rentlib.com/m/sirenga/ins/validation",
     }
 
     try:

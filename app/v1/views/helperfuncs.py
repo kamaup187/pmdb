@@ -1625,7 +1625,9 @@ def sms_sender(company,sms_text,phonenum):
         report = None
 
     elif company.title() == "Sirenga Investments Ltd":
-        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
+        report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"SirengaRent")
+        if not report:
+            report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
 
 
     elif company.title() == "Lymax Properties":

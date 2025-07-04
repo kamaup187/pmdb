@@ -190,12 +190,12 @@
               <span class="smallify">Payments</span>
             </span>
           
-            <span class="mr-3 dispnone">
+            <span class="mr-3 dispnon">
               <label class="switch">
                 <input id="reporttoggle2" type="checkbox">
                 <span class="slider round"></span>
               </label>
-              <span class="smallify">Profile</span>
+              <span class="smallify">Readings</span>
             </span>
 
             <span class="mr-3 dispnone">
@@ -1208,11 +1208,11 @@
       // $("#allocate-reloader").html("current");
 
       $.ajax({
-                url: "{{ url_for('api.fetchtenants') }}",
+                url: "{{ url_for('api.fetchreadings') }}",
                 type: "get",
                 data: {
                   tenantid:  $("#tenant_identifier").text(),
-                  target:"tenant details"
+                  target:"house readings"
                 },
                 success: function(response) {
                   

@@ -2301,6 +2301,7 @@ class MeterReadingOp(MeterReading,Base):
             'house':self.house,
             'meter':self.meter,
             'date':self.date.date(),
+            'perioddate':self.reading_period.date(),
             'period':MeterReadingOp.get_str_month(self.reading_period.month),
             'reading':self.reading,
             'last_reading':self.last_reading,

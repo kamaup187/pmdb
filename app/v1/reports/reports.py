@@ -9141,6 +9141,24 @@ class FetchTenants(Resource):
 
 class FetchReadings(Resource):
     def get(self):
+        tenant_id = request.args.get('tenantid')
+        if tenant_id:
+            tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+            house_obj = check_house_occupied(tenant_obj)[1]
+
+            hse_id = house_obj.id
+
+            readings = MeterReadingOp.fetch_all_readings_by_house(hse_id)
+            filtered_readings = filter_in_recent_data(readings)
+            meter_readings = []
+            for i in filtered_readings:
+                new_i = MeterReadingOp.view(i)
+                meter_readings.append(new_i)
+
+            print("meter readings >>> ", meter_readings)
+
+            return render_template("ajax_house_readings.html",bills=meter_readings)
+
         propid = request.args.get('propid')
         target = request.args.get('target')
 

@@ -13726,8 +13726,12 @@ def filtered_house_list(apartment_id,readdate=None):
             else:
                 unread_houses.append(house)
         else:
+            if prev_reading_obj.reading_period.month > month and prev_reading_obj.reading_period.year == year:
+                pass
+            else:
+                unread_houses.append(house)
 
-            unread_houses.append(house)
+            # unread_houses.append(house)
 
 
         # if prev_reading_obj.reading_period and prev_reading_obj.description != "initial reading" and prev_reading_obj.description != "actual electricity reading":

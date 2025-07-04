@@ -44,24 +44,6 @@
               Add meter
             </span>
           </div>
-
-          <div class="small">
-            <nav class="nav nav-borders">
-              <div class="info_item mr-2">
-                <i class="fas fa-map-marker mr-2"></i>
-                <input class="periods" id="period1" name="readperiod" type="radio" value="current" checked/>
-                <label class="small font-weight-bold mb-1 text-danger" for="period1">Current Period <span class="text-black">({{current_month}})</span></label>
-              </div> 
-            </nav>
-
-            <nav class="nav nav-borders">
-              <div class="info_item mr-2">
-                <i class="fas fa-receipt mr-2"></i>
-                <input class="periods" id="period2" name="readperiod" type="radio" value="next"/>
-                <label class="mb-1 small font-weight-bold text-danger" for="period2">Next period <span class="text-black">({{period}})</span></label>
-              </div>
-            </nav>
-          </div>
         </div> 
             
             <div class="row">
@@ -141,11 +123,23 @@
         <div class="dispnon">
           <nav class="nav nav-borders">
             <div>
-              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> readings view</label>
-              <label class="me-2 btn text-primary"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> meters view</label>
+              <input id="periodpicker" class="ph mr-2" type="text" placeholder="select month..." readonly />
+
+              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb1" value="cb1" class="chb dispnon" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> view readings</label>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb2" value="cb2" class="chb dispnon"/><i class="feather-18 text-black mr-1 pb-1" data-feather="list"></i> view meters</label>
             </div>
           </nav>
         </div>
+
+        <script>
+          $("#periodpicker").datepicker({ 
+            autoclose: true, 
+            todayHighlight: true,
+            format: "mm-yyyy",
+            startView: "months", 
+            minViewMode: "months"
+          });
+      </script>
 
         <div id="barloader-alt" class="load-bar-alt mb-1 dispnone">
           <div class="bar-alt"></div>
@@ -158,6 +152,8 @@
         </div>
         
     </section>
+
+
     <!-- <button id="raise-edit-modal" type="button" class="dispnone" data-toggle="modal" data-target="#editReadingModal"></button> -->
     <!--================Contact Area =================-->
 
@@ -209,7 +205,25 @@
                   <div class="card-body modal-forms">
                     <form id="readingform" autocomplete="off" method="POST" action="">
 
+                      <div class="form-group mt-3">
+                        <!-- <nav class="nav nav-borders"> -->
+                          <label class="mb-0">Select invoice period:</label>
+
+                          <div class="divjust-end">
+                            <span class="form-control">
+                              <input class="periods no-reset" id="period1" name="readperiod" type="radio" value="current" checked/>
+                              <label class="small font-weight-bold mb-1 text-danger" for="period1">Current Period <span class="text-black">({{current_month}})</span></label>
+                            </span> 
+                          
+                            <span class="form-control ml-2">
+                              <input class="periods no-reset" id="period2" name="readperiod" type="radio" value="next"/>
+                              <label class="mb-1 small font-weight-bold text-danger" for="period2">Next period <span class="text-black">({{period}})</span></label>
+                            </span>
+                          </div>
+                      </div>
+
                       <div class="form-group">
+                        <label class="mb-0">Select meter type:</label>
                         <select class="form-control no-reset" id="reading_metertype">
                           <option disabled selected value> -- Select meter type -- </option>
                           <option selected value="water">Water(Council)</option>
@@ -221,7 +235,7 @@
                       </div>
 
                       <div class="form-group mt-2">
-                        <label class="mb-0">Select week/month:</label>
+                        <label class="mb-0">Select week (optional):</label>
                         <div id="" class="date" data-date-format="dd-mm-yyyy">
                           <input id="reading-period" name="month" class="form-control ph" type="text" placeholder="-none set-" />
                           <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
@@ -229,7 +243,8 @@
                       </div>
 
                       <div class="form-group input-icons mt-2">
-                        <i class="fa fa-caret-down icon text-info"></i>
+                        <label class="mb-0">Select meter/house:</label>
+                        <!-- <i class="fa fa-caret-down icon text-info"></i> -->
                         <select name="house" class="form-control no-reset" id ="select_house" >
                           <option disabled selected value> -- Select House -- </option>
                           {% for o in items %}
@@ -240,6 +255,7 @@
                       <div class="center-btn mb-1" id="alerts-meterreading"></div>
                       <div id="dynamic_div">
                         <div class="form-group">
+                          <label class="mb-0">Type reading here:</label>
                           <input id="reading" class="form-control" type="text" name="rentrate" placeholder="type reading here" disabled>
                         </div>
                       </div>
@@ -883,7 +899,7 @@
 
 <script type="text/javascript">
   
-  getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+  getReadings($("#prop_identifier").text(), $("#periodpicker").val(), 1)
 
 
   $.fn.getLabels = function() {
@@ -914,7 +930,7 @@
 
           if ($(this).val() == "cb1"){
             $(this).getLabels().addClass("underline");
-            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+            getReadings($("#prop_identifier").text(),$("#periodpicker").val(),$("#currentunitpage").text())
           }else{
             $(this).getLabels().addClass("underline");
             getMeters($("#prop_identifier").text(),"",$("#currentunitpage").text())
@@ -924,32 +940,33 @@
       });
 
 
-      $(".periods").change(function (e) {
+      // $(".periods").change(function (e) {
 
-        //Getting status before unchecking all
-        var status = $(this).prop("checked");
+      //   //Getting status before unchecking all
+      //   var status = $(this).prop("checked");
 
-        $(".periods").prop('checked', false);
-        $(this).prop('checked', true);
+      //   $(".periods").prop('checked', false);
+      //   $(this).prop('checked', true);
 
-        //false means checkbox was checked and 
-        //became unchecked on change event, so let it stay unchecked
-        if (status === false) {
-          $(this).prop('checked', false);
-        }else{
+      //   //false means checkbox was checked and 
+      //   //became unchecked on change event, so let it stay unchecked
+      //   if (status === false) {
+      //     $(this).prop('checked', false);
+      //   }else{
 
-          if ($(this).val() == "current"){
-            // $('#cb1').prop('checked', true);
-            // $(".chb").change();
-            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
-          }else{
-            // $(".chb").change();
-            // $('#cb1').prop('checked', true);
-            getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
-          }
-        }
+      //     if ($(this).val() == "current"){
+      //       // $('#cb1').prop('checked', true);
+      //       // $(".chb").change();
+      //       getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+      //     }else{
+      //       // $(".chb").change();
+      //       // $('#cb1').prop('checked', true);
+      //       getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+      //     }
+      //   }
 
-      });
+      // });
+
 
 </script>
 
@@ -1447,6 +1464,31 @@
 
 
 <script>
+
+    $("input.periods").change(function () {
+
+      $("#alerts-meterreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+      $.ajax({
+        url: "{{ url_for('api.capturereading') }}",
+        type: "POST",
+        data: {
+              propid: $("#prop_identifier").text(),
+              readperiod: $("input[name=readperiod]:checked").val(),
+              readperiod2: $("#reading-period").val(),
+              readtype: $("#reading_metertype").val(),
+              run:"houselist"
+            },
+        success: function(response) {
+          $("#select_house").html(response);
+          $("#select_house option:eq('1')").attr("selected", "selected");
+          $("#select_house").change();
+          $("#meterReadingModal").find('#reading').focus();   
+
+          getReadings($("#prop_identifier").text(),$("input[name=readperiod]:checked").val(),$("#currentunitpage").text())
+
+        }
+      });
+     });
       
   $("#meterReadingModal").on('shown.bs.modal', function(){
     $("#alerts-meterreading").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
@@ -1524,6 +1566,7 @@ $("#select_house").on('change',function(){
     data: {
           propid: $("#prop_identifier").text(),
           house: $("#select_house").val(),
+          readperiod: $("input[name=readperiod]:checked").val(),
           readperiod2: $("#reading-period").val(),
           readtype: $("#reading_metertype").val(),
           run:"run-reading"
@@ -1581,6 +1624,7 @@ $("#select_house_alt").on('change',function(){
         data: {
                 propid: $("#prop_identifier").text(),
                 house: $("#select_house").val(),
+                readperiod: $("input[name=readperiod]:checked").val(),
                 readperiod2: $("#reading-period").val(),
                 reading: $("#reading").val(),
                 readtype:"water",
@@ -1772,7 +1816,7 @@ $("#select_house_alt").on('change',function(){
               $("#select_house_alt option:eq('1')").attr("selected", "selected");
               $("#select_house_alt").change();
               $("#elecReadingModal").find('#reading-alt').focus();    
-              getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+              getReadings($("#prop_identifier").text(), $("#periodpicker").val(), 1)
 
             }
             
@@ -1942,7 +1986,7 @@ $("#select_house_alt").on('change',function(){
             },
         success: function(response) {
           $(".alert-msgs").html(response);
-          getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+          getReadings($("#prop_identifier").text(), $("#periodpicker").val(), 1)
           
           setTimeout(function(){
             $("#new_units").empty();
@@ -1973,7 +2017,7 @@ $("#select_house_alt").on('change',function(){
             },
         success: function(response) {
           $(".alert-msgs").html(response);
-          getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+          getReadings($("#prop_identifier").text(), $("#periodpicker").val(), 1)
           
           setTimeout(function(){
             $(".alerts-editreading").empty();
@@ -2019,7 +2063,7 @@ $("#select_house_alt").on('change',function(){
                 
               });
 
-              getReadings($("#prop_identifier").text(), $("input[name=readperiod]:checked").val(), 1)
+              getReadings($("#prop_identifier").text(), $("#periodpicker").val(), 1)
 
 
           $(".closemodal").click();

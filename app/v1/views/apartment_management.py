@@ -8421,7 +8421,6 @@ class CaptureReading(Resource):
             readdate = billing_period
         else:
             readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
-
         unread_units = len(filtered_house_list(prop_id,readdate))
         metered_units = len(filter_in_metered_houses(prop_obj.name))
         read_units = metered_units - unread_units
@@ -8498,12 +8497,13 @@ class CaptureReading(Resource):
         
         run = request.form.get('run')
 
-        prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
         readperiod = request.form.get('readperiod')
         if readperiod == "current":
             readdate = billing_period
+            print("kingwonye",readdate)
         else:
             readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
+            print("chemasta",readdate)
 
         #################################################################################################
         if run == "houselist":

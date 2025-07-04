@@ -9145,26 +9145,44 @@ class FetchReadings(Resource):
         target = request.args.get('target')
 
         prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+
+        print("target >>> ",target)
         
-        billing_period = get_billing_period(prop_obj)
+        try:
+            billdate = date_formatter_alt(target)
+            billing_period = parse(billdate)
+        except:
+            billing_period = get_billing_period(prop_obj)
+
+        if target == "next":
+            billing_period = billing_period + relativedelta(months=1)
+
+
+        str_month = get_str_month(billing_period.month)
+        readings = readingsauto(billing_period,prop_obj)
+        readinglist = reading_details(readings)
+        readingids = get_obj_ids(readinglist)
+
+        return render_template("ajax_currentreadings.html",period=str_month,items=readinglist,readingids=readingids)
+
         
-        if target == "old" or target == "current": #REFACTOR: should BE CURRENT AND NEXT BLOCK "NEXT"
-            print("ayeya")
-            next_billing_month = billing_period.month
-            str_month = get_str_month(next_billing_month)
-            readings = readingsauto(billing_period,prop_obj)
-            readinglist = reading_details(readings)
-            # import pdb; pdb.set_trace()
-            readingids = get_obj_ids(readinglist)
-            return render_template("ajax_oldreadings.html",period=str_month,items=readinglist,readingids=readingids)
-        else:
-            print("imelost")
-            next_billing_month = billing_period.month + 1 if billing_period.month != 12 else 1
-            str_month = get_str_month(next_billing_month)
-            readings = readingsauto_new(billing_period,prop_obj)
-            readinglist = reading_details(readings)
-            readingids = get_obj_ids(readinglist)
-            return render_template("ajax_currentreadings.html",period=str_month,items=readinglist,readingids=readingids)
+        # if target == "old" or target == "current": #REFACTOR: should BE CURRENT AND NEXT BLOCK "NEXT"
+        #     print("ayeya")
+        #     next_billing_month = billing_period.month
+        #     str_month = get_str_month(next_billing_month)
+        #     readings = readingsauto(billing_period,prop_obj)
+        #     readinglist = reading_details(readings)
+        #     # import pdb; pdb.set_trace()
+        #     readingids = get_obj_ids(readinglist)
+        #     return render_template("ajax_oldreadings.html",period=str_month,items=readinglist,readingids=readingids)
+        # else:
+        #     print("imelost")
+        #     next_billing_month = billing_period.month + 1 if billing_period.month != 12 else 1
+        #     str_month = get_str_month(next_billing_month)
+        #     readings = readingsauto_new(billing_period,prop_obj)
+        #     readinglist = reading_details(readings)
+        #     readingids = get_obj_ids(readinglist)
+        #     return render_template("ajax_currentreadings.html",period=str_month,items=readinglist,readingids=readingids)
 
 class FetchTenancy(Resource):
     def get(self):

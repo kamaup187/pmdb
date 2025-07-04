@@ -279,6 +279,10 @@ class Index(Resource):
         # prps = [954]
 
 
+        # checker = ApartmentOp.fetch_apartment_by_name("Kitengela.")
+        # print(checker.company)
+
+
 
         # for idd in prps:
 

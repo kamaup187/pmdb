@@ -835,9 +835,10 @@ def example_func(param):
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",param,">>>>",user_obj.name)
 
 def send_internal_email_notifications(company,param):
-    job = q.enqueue_call(
-        func=send_mail_notifications, args=(company,param,), result_ttl=5000
-    )
+    pass
+    # job = q.enqueue_call(
+    #     func=send_mail_notifications, args=(company,param,), result_ttl=5000
+    # )
 
 def format_month(num):
     if num < 9:

@@ -9672,7 +9672,13 @@ class FetchPayments(Resource):
             db.session.expire(prop)
             payments = prop.payment_data
 
-            period = get_billing_period(prop)
+            date = request.args.get("date")
+
+            try:
+                billdate = date_formatter_alt(date)
+                period = parse(billdate)
+            except:
+                period = get_billing_period(prop)
 
             if crm(current_user):
                 filtered_payments = [x for x in payments if not x.voided]

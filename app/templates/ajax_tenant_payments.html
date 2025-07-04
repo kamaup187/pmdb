@@ -27,17 +27,7 @@
         <span id="sendspan"> <i class="feather-18 text-black mr-1 pb-0" data-feather="mail"></i></span>send receipts
       </span>
 
-      <input id="receiptmonthpicker" class="ph" type="text" placeholder="select month..." readonly />
 
-      <script>
-        $("#receiptmonthpicker").datepicker({ 
-          autoclose: true, 
-          todayHighlight: true,
-          format: "mm-yyyy",
-          startView: "months", 
-          minViewMode: "months"
-        });
-      </script>
 
     </div>
     <div class="hide">hide</div>
@@ -54,12 +44,14 @@
   </div>
 
 
-  <div class="row mt-2">
+  <div class="row mt-3">
     <div class="col-lg-6">
       <nav class="nav nav-borders">
-        <a id="current" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">current</a>
-        <a id="previous" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">previous</a>
-        <a id="voided" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">voided</a>
+        <input id="receiptmonthpicker" class="ph mr-2" type="text" placeholder="select month..." readonly />
+
+        <a id="current" class="nav-link pl-0 pb-0 pt-1 text-black underline active ms-0" href="#">view paid</a>
+        <!-- <a id="previous" class="nav-link pl-0 pb-0 pt-1 text-black ms-0" href="#">previous</a> -->
+        <a id="voided" class="nav-link pl-0 pb-0 pt-1 text-danger ms-0" href="#">view voided</a>
       </nav>
     </div>
 
@@ -71,6 +63,16 @@
       </nav>
     </div>
   </div>
+
+      <script>
+        $("#receiptmonthpicker").datepicker({ 
+          autoclose: true, 
+          todayHighlight: true,
+          format: "mm-yyyy",
+          startView: "months", 
+          minViewMode: "months"
+        });
+      </script>
 
 
 </div>
@@ -296,6 +298,7 @@
                 type: "get",
                 data: {
                   propid:  $("#prop_identifier").text(),
+                  date: $("#receiptmonthpicker").val(),
                   target:"new"
                 },
                 success: function(response) {
@@ -387,6 +390,7 @@
                 type: "get",
                 data: {
                   propid:  $("#prop_identifier").text(),
+                  date: $("#receiptmonthpicker").val(),
                   target:"voided"
                 },
                 success: function(response) {

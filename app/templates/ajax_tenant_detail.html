@@ -1,5 +1,5 @@
 <span id="prop_identifier" class="dispnone">{{prop.id}}</span>
-<span id="tenant_identifier" class="dispnon">{{tenant.id}}</span>
+<span id="tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="ttype" class="dispnone">{{tenant.tenant_type}}</span>
 <span id="edit_tenant_identifier" class="dispnone">{{tenant.id}}</span>
 <span id="del_tenant_identifier" class="dispnone"></span>
@@ -8,6 +8,8 @@
 <span id="del_payment_identifier" class="dispnone"></span>
 <span id="bill_identifier" class="dispnone"></span>
 <span id="edit_bill_identifier" class="dispnone"></span>
+<span id="hist_bill_identifier" class="dispnone"></span>
+
 <span id="edit_pay_identifier" class="dispnone"></span>
 <span id="edit_bal_identifier" class="dispnone"></span>
 <span id="del_bill_identifier" class="dispnone"></span>
@@ -840,6 +842,40 @@
       </div>
     </div>
 
+        <div class="modal fade" id="histBillModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <span id="update-reloader" class="dispnon"></span>
+          <div class="modal-header pb-0 text-center dispnon">
+            <!-- <h5 class="modal-title text-info" id="paymentDetailModalLabel">INVOICE</h5> -->
+            <div class="modal-title header-elements-inline pb-2 divjust-end">
+              <h5 class="card-title mobile-malaysian invoice-color mb-2 mt-md-2">Invoice edit history</h5>
+              <div>
+                <button type="button" class="btn btn-light btn-sm ml-3" data-dismiss="modal"><i class="fa fa-times text-danger mr-2"></i>Close</button>
+              </div>
+          </div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+
+                    
+                    <div class="mt-2" id="edithistinvoicebed">
+                      <div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="editArrModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -1583,6 +1619,28 @@
       success: function(response) {
         $("#billeditbed").html(response);
       }
+    });
+  });
+
+</script>
+
+<script>
+      
+  $("#histBillModal").on('shown.bs.modal', function(){
+    $("#edithistinvoicebed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.billinvoice') }}",
+      type: "get",
+      data: {
+            billid: $("#hist_bill_identifier").text(),
+            target: "history"
+          },
+      success: function(response) {
+        $("#edithistinvoicebed").html(response);
+      },
+      error: function(xhr) {
+        $("#edithistinvoicebed").html('<div class="center-btn text-danger mb-3">History not found!</div>');
+        }
     });
   });
 

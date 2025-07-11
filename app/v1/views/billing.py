@@ -437,33 +437,42 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
+            clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+            cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
+            if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
-        clients.append(cl)
+        
+        print("no company here",clients)
+        current_month_bill = None
         for c in clients:
-            result = fetch_current_billing_period_bills(timenow,c.bills)
-            current_month_bill = result[0] if result else None
-
-            print("weeeeeee ",current_month_bill)
-
-            if current_month_bill:
-                # pass
-                ClientBillOp.delete(current_month_bill)
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+            print("printing clients",c)
+            if not c.bills:
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
                 new_month_bill.save()
-            else:
-                try:
+            else: 
+                result = fetch_current_billing_period_bills(timenow,c.bills)
+                current_month_bill = result[0] if result else None
+
+                print("weeeeeee ",current_month_bill)
+
+                if current_month_bill:
+                    # pass
                     ClientBillOp.delete(current_month_bill)
-                except:
-                    pass
-                current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
-                current_month_bill.save()
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
+                    new_month_bill.save()
+                else:
+                    try:
+                        ClientBillOp.delete(current_month_bill)
+                    except:
+                        pass
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
+                    current_month_bill.save()
 
         if not current_month_bill:
             return "nada"
@@ -528,7 +537,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('Vintage Residence Limited')
+        comm = CompanyOp.fetch_company_by_name('PEACEFIELD')
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -542,7 +551,7 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 9989
+        invnum = bill.id + 10989
         # invnum = 
 
         timenow = datetime.datetime.now()
@@ -738,6 +747,40 @@ class BillInvoice(Resource):
         identifier = billid[target_index:]
 
         bill = MonthlyChargeOp.fetch_specific_bill(identifier)
+
+        if target == "history":
+            hist_objs = bill.histories
+            if not hist_objs:
+                # monthly_charge_obj_alt = MonthlyChargeHistoryOp(bill.year,bill.month,bill.water,bill.rent,bill.garbage,bill.electricity,bill.security,bill.maintenance,bill.penalty,bill.arrears,bill.deposit,bill.agreement,bill.total_bill,bill.id,current_user.id)
+                # monthly_charge_obj_alt.save()
+                # hist_objs = [monthly_charge_obj_alt]
+                pass
+            rent=0; water=0; electricity=0; garbage=0; service=0; security=0; penalty=0; 
+            for item in hist_objs:
+                rent += item.rent; water += item.water; electricity += item.electricity; garbage += item.garbage
+                security += item.security; service += item.maintenance; penalty += item.penalty
+
+            histories = history_details(hist_objs)
+            rent = "" if rent else "dispnone"
+            water = "" if water else "dispnone"
+            electricity = "" if electricity else "dispnone"
+            garbage = "" if garbage else "dispnone"
+            security = "" if security else "dispnone"
+            service = "" if service else "dispnone"
+            penalty = "" if penalty else "dispnone"
+
+            return render_template(
+                "ajax_invoice_history.html",
+                histories=histories,
+                rent=rent,
+                water=water,
+                electricity=electricity,
+                garbage=garbage,
+                security=security,
+                service=service,
+                penalty=penalty,
+                relativedelta=relativedelta
+                )
 
         second_bill = False
 
@@ -1518,7 +1561,8 @@ class EditBill(Resource):
 
                 MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
 
-
+                monthly_charge_obj_alt = MonthlyChargeHistoryOp(bill.year,bill.month,bill.water,bill.rent,bill.garbage,bill.electricity,bill.security,bill.maintenance,bill.penalty,bill.arrears,bill.deposit,bill.agreement,bill.total_bill,bill.id,current_user.id)
+                monthly_charge_obj_alt.save()
 
 
                 diff = total_amount - original_amount
@@ -1749,6 +1793,9 @@ class EditBill(Resource):
 
                 MonthlyChargeOp.update_dues(bill,0.0,0.0,0.0,rentbal,waterbal,electricitybal,garbagebal,securitybal,servicebal,penaltybal,depositbal,agreementbal)
                 # MonthlyChargeOp.update_rent_balance(bill,rentarr)
+
+                monthly_charge_obj_alt = MonthlyChargeHistoryOp(bill.year,bill.month,bill.water,bill.rent,bill.garbage,bill.electricity,bill.security,bill.maintenance,bill.penalty,bill.arrears,bill.deposit,bill.agreement,bill.total_bill,bill.id,current_user.id)
+                monthly_charge_obj_alt.save()
 
 
                 diff = total_amount - original_amount

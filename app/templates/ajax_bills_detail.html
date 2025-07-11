@@ -43,8 +43,8 @@
 
         </div>
 
-        <div class="smal">
 
+        <!-- <div class="smal">
 
             <span class="mb-1 smallify">
               <input id="billmonthpicker2" class="ph ml-1" type="text" placeholder="month to view" readonly />
@@ -57,20 +57,39 @@
               </span>
             </span>
 
-        </div>
+        </div> -->
       </div> 
 
 
 
-      <div class="dispnon">
-        <nav class="nav nav-borders">
+      <div class="row">
+        <div class="col-lg-6">
+          <nav class="nav nav-borders">
+            <label class="mt-2"><input id="billmonthpicker2" class="ph mr-2" type="text" placeholder="select month..." readonly /></label>
+
+            <label id="summary"  class="me-2 btn text-primary underline"><a class="nav-link pl-0 pb-0 pt-1 ms-0" href="#"> <i class="feather-18 text-black mr-1 pb-1" data-feather="clipboard"></i> view summary</a></label>
+            <label id="detailed" class="me-2 btn text-primary"><a class="nav-link pl-0 pb-0 pt-1  ms-0" href="#"> <i class="feather-18 text-black mr-1 pb-1" data-feather="book"></i> view detailed</a></label>
+          </nav>
+        </div>
+
+        <div class="col-lg-6">
+            <nav class="nav nav-borders">
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="help-circle"></i>pending</label>
+              <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="check-circle"></i>invoiced</label>
+              <label class="me-2 btn text-primary"><input type="checkbox" id="cb3" value="cb3" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="alert-circle"></i>vacant</label>
+            </nav>
+          </div>
+
+        <!-- <nav class="nav nav-borders">
           <div>
             <label class="me-2 btn text-primary"><input type="checkbox" id="cb1" value="cb1" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="help-circle"></i>pending</label>
             <label class="me-2 btn text-primary underline"><input type="checkbox" id="cb2" value="cb2" class="chb dispnone" checked/><i class="feather-18 text-black mr-1 pb-1" data-feather="check-circle"></i>invoiced</label>
             <label class="me-2 btn text-primary"><input type="checkbox" id="cb3" value="cb3" class="chb dispnone"/><i class="feather-18 text-black mr-1 pb-1" data-feather="alert-circle"></i>vacant</label>
           </div>
-        </nav>
+        </nav> -->
+
       </div>
+
 
 
         <!-- <div class="pb-2 bg-white divjust-end">
@@ -462,6 +481,39 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editHistoryInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <span id="update-reloader" class="dispnon"></span>
+          <div class="modal-header pb-0 text-center dispnon">
+            <!-- <h5 class="modal-title text-info" id="paymentDetailModalLabel">INVOICE</h5> -->
+            <div class="modal-title header-elements-inline pb-2 divjust-end">
+              <h5 class="card-title mobile-malaysian invoice-color mb-2 mt-md-2">Invoice edit history</h5>
+              <div>
+                <button type="button" class="btn btn-light btn-sm ml-3" data-dismiss="modal"><i class="fa fa-times text-danger mr-2"></i>Close</button>
+              </div>
+          </div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+
+                    
+                    <div class="mt-2" id="edithistoryinvoicebed">
+                      <div class="cssload-jumping"><span></span><span></span><span></span><span></span><span></span></div>
+                    </div>
+        
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal fade" id="invoiceModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl" role="document">
@@ -488,6 +540,10 @@
 
                       <div>
                         <i class="fas fa-envelope ml-3 mr-2 text-success"></i><span type="button" class="btn-outline-info  borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#doubleMailInvoiceModal">Double PDF</span>
+                      </div>
+
+                      <div>
+                        <i class="fas fa-edit ml-3 mr-2 text-success"></i><span type="button" class="btn-outline-info  borderless modalTrigger text-gray-700" data-toggle="modal" data-target="#editHistoryInvoiceModal">Edit History</span>
                       </div>
 
                       <button class="btn btn-light dismissparent dispnone" type="button" data-dismiss="modal"></i>Dismiss</button>
@@ -598,6 +654,24 @@
     $("#activeprop-period").text($("#target_period").text())
 
 })
+
+  $("#summary").click(function(){
+    $(this).addClass("underline")
+    $("#detailed").removeClass("underline")
+
+    $("#target_period").text($("#billmonthpicker2").val());
+    getInvs($("#prop_identifier").text(), $("#target_identifier").text() + "#summary", $("#currentinvpage").text())
+    $("#activeprop-period").text($("#target_period").text())
+  })
+
+  $("#detailed").click(function(){
+    $(this).addClass("underline")
+    $("#summary").removeClass("underline")
+
+    $("#target_period").text($("#billmonthpicker2").val());
+    getInvs($("#prop_identifier").text(), $("#target_identifier").text() + "#detailed", $("#currentinvpage").text())
+    $("#activeprop-period").text($("#target_period").text())
+  })
 </script>
 
       <script>
@@ -636,7 +710,7 @@
       </script> 
 
 <script type="text/javascript">
-  getInvs($("#prop_identifier").text(), "", 1)
+  getInvs($("#prop_identifier").text(), "#summary", 1)
 
 
   $.fn.getLabels = function() {
@@ -980,12 +1054,43 @@
 </script>
 
 <script>
+  $("#editHistoryInvoiceModal").on('shown.bs.modal', function(){
+    $(".dismissparent").click();
+    $('#invoiceModal').on('hidden.bs.modal', function (e) {
+        $('body').addClass('modal-open');
+    });
+
+    $.ajax({
+      url: "{{ url_for('api.billinvoice') }}",
+      type: "get",
+      data: {
+            billid: $("#bill_identifier").text(),
+            target: "history"
+          },
+      success: function(response) {
+        $("#edithistoryinvoicebed").html(response);
+      },
+      error: function(xhr) {
+        $("#edithistoryinvoicebed").html('<div class="center-btn text-danger mb-3">History not found!</div>');
+        }
+    });
+  });
+
+</script>
+
+<script>
   $('#doubleMailInvoiceModal').on('hidden.bs.modal', function () {
     $("#bill_identifier").empty();
     $("#doublemailinvoicebed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
 })
 </script>
 
+<script>
+  $('#editHistoryInvoiceModal').on('hidden.bs.modal', function () {
+    $("#bill_identifier").empty();
+    $("#edithistoryinvoicebed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+})
+</script>
 
 <script>
     function tabletoggler() {

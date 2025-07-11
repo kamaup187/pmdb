@@ -9608,6 +9608,8 @@ class FetchPayments(Resource):
 
                 # print("cooooooo",prop.company.cbids)
                 shortcode = prop.paymentdetails.mpesapaybill
+                # if not shortcode:
+                #     shortcode = prop.company.cbids
                 if shortcode == "000000":
                     raw_unclaimed = prop.company.cbids
                 else:
@@ -10000,7 +10002,7 @@ class FetchBills(Resource):
                 return render_template(
                     template,
                     fieldshow_sec = "dispnone" if not get_sum(detailed_bills,"security") else "",
-                    fieldshow_sev = "dispnone" if not get_sum(detailed_bills,"maintenance") else "",
+                    fieldshow_sev = "dispnone" if not get_sum(detailed_bills,"service") else "",
                     fieldshow_elec = "dispnone" if not get_sum(detailed_bills,"electricity") else "",
                     fieldshow_garb = "dispnone" if not get_sum(detailed_bills,"garbage") else "",
                     fieldshow_water = "dispnone" if not get_sum(detailed_bills,"water") else "",
@@ -10008,7 +10010,7 @@ class FetchBills(Resource):
                     fieldshow_dep = "dispnone" if not get_sum(detailed_bills,"deposit") else "",
                     fieldshow_arg = "dispnone" if not get_sum(detailed_bills,"agreement") else "",
                     fieldshow_fine = "dispnone" if not get_sum(detailed_bills,"penalty") else "",
-                    fieldshow_arr = "dispnone" if not get_sum(detailed_bills,"arrears") else "",
+                    # fieldshow_arr = "dispnone" if not get_sum(detailed_bills,"arrears") else "",
                     items=detailed_bills,
                     billids=billids
                     )
@@ -10043,11 +10045,11 @@ class FetchBills(Resource):
 
             period_target = request.args.get("period")
 
-            if period_target:
-                datestring = date_formatter_alt(period_target)
-                target_period = parse(datestring)
-            else:
-                target_period = current_user.company.billing_period
+            # if period_target:
+            #     datestring = date_formatter_alt(period_target)
+            #     target_period = parse(datestring)
+            # else:
+            #     target_period = current_user.company.billing_period
 
             if period_target:
                 datestring = date_formatter_alt(period_target)
@@ -10187,8 +10189,43 @@ class FetchBills(Resource):
 
                 pg_data = paginator(request,detailed_bills)
 
+            elif "summary" in target:
+                page_header = "Summarized invoices"
+                current_bills = fetch_current_billing_period_bills(target_period,bills)
+
+                detailed_bills = bill_summary_details(current_bills)
+                pg_data = paginator(request,detailed_bills)
+
+                items = pg_data[1]
+
+                page = pg_data[2]
+                pages = len(pg_data[0])
+                iter_list = pg_data[3]
+                prev_num = pg_data[4]
+                next_num = pg_data[5]
+                num_items = len(detailed_bills)
+
+                billids = []
+
+                str_month = get_str_month(prop_obj.billing_period.month)
+
+                return render_template(
+                    "ajax_prop_summary_bills.html",
+                    prop=prop_obj,
+                    current_month=str_month,
+                    bills=items,
+                    page=page,
+                    page_header=page_header,
+                    pages=pages,
+                    iter_list=iter_list,
+                    prev_num=prev_num,
+                    next_num=next_num,
+                    num_items=num_items,
+                    billids=billids
+                    )
+
             else:
-                page_header = "Invoiced occupied units"
+                page_header = "Detailed invoices"
                 # pg_data = fetch_pg_current_billing_period_bills(request,target_period,bills)
                 current_bills = fetch_current_billing_period_bills(target_period,bills)
 

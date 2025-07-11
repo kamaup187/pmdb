@@ -70,6 +70,9 @@ class Base():
 
     def generate_balid(self):
         return "bal" + str(self.id)
+    
+    def generate_histid(self):
+        return "hist" + str(self.id)
 
     def generate_viewid(self):
         return "view" + str(self.id)
@@ -4533,6 +4536,17 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 return f"{t_current_house.name}-(formerly {hh.name})"
         # return f"{hh.name}(Vacated)"
         return f"{hh.name}"
+    
+    def view_summary(self):
+
+        return {
+            'hst':MonthlyChargeOp.combine_house_tenant_alt(self),
+            'total':MonthlyChargeOp.fig_format(self.total_bill),
+            'paid':MonthlyChargeOp.calculate_pbreakdown(self),
+            'balance':MonthlyChargeOp.calculate_dbreakdown(self),
+            'smsstatus':MonthlyChargeOp.get_sms_status(self),
+
+        }
             
     def view_detail(self):
         
@@ -4545,6 +4559,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'editid':MonthlyChargeOp.generate_editid(self),
             'payid':MonthlyChargeOp.generate_payid(self),
             'balid':MonthlyChargeOp.generate_balid(self),
+            'histid':MonthlyChargeOp.generate_histid(self),
             'delid':MonthlyChargeOp.generate_delid(self),
             'tenantid':self.tenant_id if self.tenant_id else "-",
             'ptenant':self.ptenant_id if self.ptenant_id else "-",
@@ -4852,7 +4867,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         }
     
 class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
-    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,invoice_id,created_by):
+    def __init__(self,year,month,water,rent,garbage,electricity,security,maintenance,penalty,arrears,deposit,agreement,total_amount,invoice_id,created_by):
         self.month = month
         self.year=year
         self.water=water
@@ -4869,9 +4884,6 @@ class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
         # self.miscellaneous=miscellaneous
         self.penalty=penalty
         # foreign keys
-        self.apartment_id=apartment_id
-        self.house_id=house_id
-        self.tenant_id=tenant_id
         self.invoice_id=invoice_id
         self.user_id = created_by
 
@@ -4887,8 +4899,6 @@ class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
         self.agreement_due = agreement
 
         self.updated = True
-
-        print("UPDATE DONE")
 
         db.session.commit()
 
@@ -4908,6 +4918,24 @@ class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
         print("UPDATE DONE")
 
         db.session.commit()
+
+    def view_details(self):
+
+        return {
+            'total':MonthlyChargeHistoryOp.fig_format(self.total_bill),
+            'water':MonthlyChargeHistoryOp.fig_format(self.water),
+            'rent': MonthlyChargeHistoryOp.fig_format(self.rent),
+            'garbage':MonthlyChargeHistoryOp.fig_format(self.garbage),
+            'electricity':MonthlyChargeHistoryOp.fig_format(self.electricity),
+            'security':MonthlyChargeHistoryOp.fig_format(self.security),
+            'agreement':MonthlyChargeHistoryOp.fig_format(self.agreement),
+            'deposit':MonthlyChargeHistoryOp.fig_format(self.deposit),
+            'penalty':MonthlyChargeHistoryOp.fig_format(self.penalty),
+            'service':MonthlyChargeHistoryOp.fig_format(self.maintenance),
+            'arrears':MonthlyChargeHistoryOp.fig_format(self.arrears),
+            "by":self.user,
+            'createdon':self.createdon
+        }
 
 class PaymentScheduleOp(PaymentSchedule,Base):
     def __init__(self,name,arrears,amount,total,rbal,date,apartment_id,house_id,ptenant_id):

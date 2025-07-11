@@ -3553,6 +3553,24 @@ def bill_details(arr):
 
     return detailed_bills
 
+def bill_summary_details(arr):
+    detailed_bills = []
+    for i in arr:
+        # print("item date and item id", i.month, i.year, "id", i.id)
+        bill_item = MonthlyChargeOp.view_summary(i)
+        detailed_bills.append(bill_item)
+
+    return detailed_bills
+
+def history_details(arr):
+    detailed_bills = []
+    for i in arr:
+        # print("item date and item id", i.month, i.year, "id", i.id)
+        bill_item = MonthlyChargeHistoryOp.view_details(i)
+        detailed_bills.append(bill_item)
+
+    return detailed_bills
+
 def bill_details_alt(arr):
     detailed_bills = []
     for i in arr:
@@ -11809,8 +11827,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,addfee,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -12087,8 +12105,8 @@ def total_bill(apartment_id,houseids,user_id,month,year):
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,addfee,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -12564,8 +12582,8 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,addfee,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -12842,8 +12860,8 @@ def total_bill_alt(apartment_id,houseids,user_id,month,year):
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,addfee,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -13323,8 +13341,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                     monthly_charge_obj = MonthlyChargeOp(year,month,booking,instalment,addfee,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,ptenant_id,user_id)
                     monthly_charge_obj.save()
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,0.0,0.0,0.0,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -13610,8 +13628,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
 
                     print("BILLLLL>>>",monthly_charge_obj.maintenance,"<<<<<<<<<",monthly_charge_obj)
 
-                    # monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,apartment_id,house_id,tenant_id,monthly_charge_obj.id,user_id)
-                    # monthly_charge_obj_alt.save()
+                    monthly_charge_obj_alt = MonthlyChargeHistoryOp(year,month,water_total,rent,garbage,electricity,security,maintenance,fines,arrears,deposit,agreement,total_amount,monthly_charge_obj.id,user_id)
+                    monthly_charge_obj_alt.save()
 
                     MonthlyChargeOp.update_balances(monthly_charge_obj,0.0,0.0,0.0,rent_bal,water_bal,electricity_bal,garbage_bal,security_bal,maintenance_bal,fines_bal,deposit_bal,agreement_bal)
                     MonthlyChargeOp.update_dues(monthly_charge_obj,booking,instalment,addfee,rent_due,water_due,electricity_due,garbage_due,security_due,maintenance_due,fines_due,deposit_due,agreement_due)
@@ -13923,8 +13941,6 @@ def filtered_house_list_alt(apartment_id,readdate=None,*args):
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
     house_list = filter_in_metered_houses_alt(prop.name) # FIXED BUGG
-
-    print("tugegegegegggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggeegs", house_list)
     
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period
@@ -15092,6 +15108,8 @@ def get_obj_ids_alt(arr):
             obj_id_list.append(editid)
             balid = req.get("balid")
             obj_id_list.append(balid)
+            histid = req.get("histid")
+            obj_id_list.append(histid)
             payid = req["payid"]
             obj_id_list.append(payid)
             delid = req["delid"]

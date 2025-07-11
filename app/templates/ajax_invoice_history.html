@@ -1,0 +1,77 @@
+
+<div id="inv" class="justify-content-cente text-black m-2">
+        <div class="divcol-inv scrollable-150">
+
+            {%if not histories%}
+            <p>Histories not found for this invoice!</p>
+            {%endif%}
+
+            <ul class="sessions tm">
+            
+                {%for bill in histories%}
+
+                <li class="tm">
+
+                <div class="time">{{(bill.createdon + relativedelta(hours=3)).strftime('%a, %d-%b-%y %H:%M %p')}} 📌</div>
+                    <p class="tm"> 
+                    <table class="table ml-4">
+                        <thead>
+                            <tr>
+                                <th class="{{rent}} pl-0 text-black font-weight-bold text-125">Rent</th>
+                                <th class="{{water}} text-black font-weight-bold text-125">Water</th>
+                                <th class="{{garbage}} text-black font-weight-bold text-125">Garbage</th>
+                                <th class="{{service}} text-black font-weight-bold text-125">Service</th>
+                                <th class="{{security}} text-black font-weight-bold text-125">Security</th>
+                                <th class="{{penalty}} text-black font-weight-bold text-125">Penalty</th>
+                                <th class="{{electricity}} text-black font-weight-bold text-125">Electricity</th>
+                                <th class="text-black font-weight-bold text-125">Arrears</th>
+                                <th class="text-black font-weight-bold text-125">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0 {{rent}}">{{bill.rent}}</td>
+                                <td class="{{water}}">{{bill.water}}</td>
+                                <td class="{{garbage}}">{{bill.garbage}}</td>
+                                <td class="{{service}}">{{bill.service}}</td>
+                                <td class="{{security}}">{{bill.security}}</td>                               
+                                <td class="{{penalty}}">{{bill.penalty}}</td>
+                                <td class="{{electricity}}">{{bill.electricity}}</td>
+                                <td>{{bill.arrears}}</td>
+                                <td>{{bill.total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </li>
+                {%endfor%}
+
+                </ul>
+                
+
+
+
+                <div class="divjust-end">
+                    <p class="small text-muted text-center mt-5">
+                        powered by <img class="" src={{slogo}} alt="Rentlib">
+                    </p>
+
+                    <p class="small text-muted text-right">
+                        Signed by <img class="" src={{sign}} alt="Signature"><br>
+                    </p>
+                </div>
+            </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

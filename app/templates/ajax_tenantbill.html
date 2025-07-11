@@ -20,7 +20,7 @@
                 <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_dep}}">Deposit</th>
                 <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_arg}}">Agreement</th>
                 <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_fine}}">Fine</th>
-                <th class="text-info track-title-cell expand dispnone-alt {{fieldshow_arr}}">Arr</th>
+                <th class="text-info track-title-cell expand dispnone-alt">Arr</th>
                 <th class="text-info track-title-cell ">Total</th>
                 <th class="text-info track-title-cell">Paid</th>
                 <th class="text-info track-title-cell expand dispnone-alt">Date</th>
@@ -28,6 +28,7 @@
                 <!-- <th class="text-info track-title-cell">Action</th> -->
                 <th class="text-primary track-title-cell">SMS</th>
                 <th class="text-primary track-title-cell expand dispnone-alt">Action</th>
+                <th class="text-primary track-title-cell expand dispnone-alt">Trail</th>
                 <th class="text-danger track-title-cell expand dispnone-alt">Delete</th>
 
                 </tr>
@@ -52,7 +53,7 @@
                 <td class="data-cell expand dispnone-alt {{fieldshow_dep}}">{{ i['deposit'] }}</td>
                 <td class="data-cell expand dispnone-alt {{fieldshow_arg}}">{{ i['agreement'] }}</td>
                 <td class="data-cell expand dispnone-alt {{fieldshow_fine}}">{{ i['fine'] }}</td>
-                <td class="data-cell {{fieldshow_arr}} expand dispnone-alt {{i['balance-badge']}}">{{ i['arrears'] }}</td>
+                <td class="data-cell expand dispnone-alt {{i['balance-badge']}}">{{ i['arrears'] }}</td>
                 <td class="data-cell ">{{ i['total'] }}</td>
                 <td id="{{i['payid']}}" class="data-cell underline"  data-toggle="modal" data-target="#editPayModal">{{ i['paid'] }}</td>
                 <td class="data-cell expand dispnone-alt">{{ i['payment_date'] }}</td>
@@ -68,6 +69,11 @@
                 <td class="text-s data-cell expand dispnone-alt">
                   <div>
                     <button id="{{i['editid']}}" type="button" class="btn action-btn {{i['editoutline']}} font-weight-bold  modalTrigger no-wrap" {{i['active']}} data-toggle="modal" data-target="#editBillModal"><i class="fas fa-cog mr-1"></i>Edit</button>
+                  </div>
+                </td>
+                <td class="text-s data-cell">
+                  <div>
+                    <button id="{{i['histid']}}" type="button" class="btn action-btn font-weight-bold btn-outline-primary  modalTrigger no-wrap" data-toggle="modal" data-target="#histBillModal"><i class="fas fa-file mr-1"></i>History</button>
                   </div>
                 </td>
                 <td class="text-s data-cell expand dispnone-alt">
@@ -150,6 +156,8 @@
 
           }else if(item.startsWith("pay")){
             $("#edit_pay_identifier").html(item)
+          }else if(item.startsWith("hist")){
+            $("#hist_bill_identifier").html(item)
           }else if(item.startsWith("bal")){
             $("#edit_bal_identifier").html(item)
           }else{

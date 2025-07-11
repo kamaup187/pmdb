@@ -8500,10 +8500,8 @@ class CaptureReading(Resource):
         readperiod = request.form.get('readperiod')
         if readperiod == "current":
             readdate = billing_period
-            print("kingwonye",readdate)
         else:
             readdate = generate_date(get_next_month(billing_period.month),get_next_year(billing_period.month,billing_period.year))
-            print("chemasta",readdate)
 
         #################################################################################################
         if run == "houselist":

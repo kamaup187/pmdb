@@ -9670,7 +9670,7 @@ class FetchPayments(Resource):
             today = prop.billing_period
 
             # Calculate one month ago and one month into the future
-            one_month_ago = today - timedelta(days=30)
+            one_month_ago = today - timedelta(days=60)
             one_month_future = today + timedelta(days=30)
 
             # Generate date range from one month ago to one month into the future

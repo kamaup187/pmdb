@@ -5322,6 +5322,14 @@ class PaymentOp(Payment,Base):
     def get_pay_timestamp(self):
         return self.pay_date.strftime("%d/%m/%Y %X")
 
+    def fetch_shortcode(self):
+        company_cbids = self.apartment.company.cbids
+        for cbid in company_cbids:
+            if cbid.trans_id == self.ref_number:
+                return cbid.business_shortcode
+        return "-"
+
+
     def view(self):
         return {
             'id':self.id,
@@ -5337,6 +5345,7 @@ class PaymentOp(Payment,Base):
             'payid':self.id,
             'receiptno':self.receipt_num if self.receipt_num else self.id,
             'ref':self.ref_number,
+            'shortcode':PaymentOp.fetch_shortcode(self),
             'chargedamnt':PaymentOp.fig_format(self.charged_amount),
             'highlight':PaymentOp.highlight(self),
             'amount':PaymentOp.fig_format(self.amount),

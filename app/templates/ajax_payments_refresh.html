@@ -14,6 +14,7 @@
           <th class="text-info   text-danger" data-orderable="false">Void</th>
           <th class="text-info  font-weight-bold ">#No.</th> 
           <th class="text-info  font-weight-bold ">#Ref.</th> 
+          <th class="text-info  font-weight-bold ">#Code.</th> 
           <th class="text-info  font-weight-bold ">Due</th>                                                                 
           <th class="text-info " data-orderable="false">Paid</th>
           <th class="text-info  text-danger" data-orderable="false">Bal</th>
@@ -50,7 +51,8 @@
           </td>
 
           <td class="data-cell ">{{ item['receiptno'] }} <span class="badge badge-success badge-counter">{{ item['new'] }}</span></td>
-          <td class="data-cell ">{{ item['ref'] }}</td>                                                                    
+          <td class="data-cell ">{{ item['ref'] }}</td>  
+          <td class="data-cell text-black">{{ item['shortcode'] }}</td>                                                                                                                                                                                               
           <td class="data-cell ">{{ item['chargedamnt'] }}</td>                                                                    
           <td class="data-cell"><span class="text-info font-weight-bold">{{ item['amount'] }}</span></td>
           <td class="data-cell"><span class="{{item['highlight']}}">{{ item['balance'] }}</span></td>

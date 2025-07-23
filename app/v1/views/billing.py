@@ -437,13 +437,13 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
             clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("PEACEFIELD")
+            cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
             if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
@@ -453,7 +453,7 @@ class ClientBilling(Resource):
         for c in clients:
             print("printing clients",c)
             if not c.bills:
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,6000.0,0.0,0.0,0.0,0.0,6000.0,c.id)
                 new_month_bill.save()
             else: 
                 result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -464,14 +464,14 @@ class ClientBilling(Resource):
                 if current_month_bill:
                     # pass
                     ClientBillOp.delete(current_month_bill)
-                    new_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,6000.0,0.0,0.0,0.0,0.0,6000.0,c.id)
                     new_month_bill.save()
                 else:
                     try:
                         ClientBillOp.delete(current_month_bill)
                     except:
                         pass
-                    current_month_bill = ClientBillOp(timenow.year,timenow.month,4500.0,0.0,0.0,0.0,0.0,4500.0,c.id)
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,6000.0,0.0,0.0,0.0,0.0,6000.0,c.id)
                     current_month_bill.save()
 
         if not current_month_bill:
@@ -537,13 +537,13 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name('PEACEFIELD')
+        comm = CompanyOp.fetch_company_by_name("Lesama Ltd")
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
         # import pdb; pdb.set_trace()
-        if mycomm:
-            CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES",", Ronald Ngala Avenue","Nairobi","CBD","00100-312321","info@rentlib.com","0716-674695")
+        # if mycomm:
+        #     CompanyOp.update_details(mycomm,"RENTLIB TECHNOLOGIES",", Ronald Ngala Avenue","Nairobi","CBD","00100-312321","info@rentlib.com","0716-674695")
 
         bills = comm.bills
         bill = max(bills, key=lambda x: x.id) if bills else None
@@ -4121,6 +4121,129 @@ class PrintActualReceipt(Resource):
                 randid=payment_obj.rand_id if payment_obj.rand_id else "a"
             ))
 
+        elif target == "all":
+
+            return Response(render_template(
+                "print.html"))
+
+            payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
+            db.session.expire(payment_obj)
+
+            prop_obj =  payment_obj.apartment
+
+            payments = prop_obj.payment_data
+
+            date = request.args.get("date")
+
+            try:
+                billdate = date_formatter_alt(date)
+                period = parse(billdate)
+            except:
+                period = get_billing_period(prop)
+
+            filtered_payments = fetch_current_billing_period_payments(period,payments)
+            receipt_objs = []
+
+            for pp in filtered_payments:
+                p = inflect.engine()
+                int_amount = int(pp.amount)
+                str_amount = p.number_to_words(int_amount)
+                stramount = str_amount.capitalize()
+
+                paydate = pp.pay_date if pp.pay_date else pp.date
+                payperiod = pp.pay_period if pp.pay_period else pp.date
+
+
+                if pp.charged_amount < 1:
+                    bill = "KES 0.0"
+                else:
+                    bill = f"KES {pp.charged_amount:,.0f}"
+
+                paid = f'KES {pp.amount:,.0f}'
+
+                if pp.balance:
+                    if pp.balance > -1:
+                        baltitle = "Balance"
+                        outline = "text-danger"
+                        bal = f"KES {pp.balance:,.0f}"
+                    else:
+                        baltitle = "Advance"
+                        outline = "text-success"
+                        bal = f"KES {pp.balance*-1:,.0f}"
+
+                else:
+                    baltitle = "Balance"
+                    outline = "text-black"
+                    bal = f"Kes 0.0"
+
+                server = fname_extracter(UserOp.fetch_user_by_id(pp.user_id).name)
+
+                co = current_user.company
+
+                if pp.receipt_num:
+                    receiptno = pp.receipt_num
+                else:
+                    receiptno = pp.id
+
+                prop = pp.apartment
+
+                address = None
+
+
+                if pp.ptenant:
+                    tenant = pp.ptenant
+                    depbal = f"Kes 0.0"
+                    depbaltitle = "Other balances"
+                else:
+                    tenant = pp.tenant
+                    if tenant.deposits:
+                        if pp.apartment.company.id == 114:
+                            depbal = f"Kes {tenant.deposits.balance:,.0f}"
+                            depbaltitle = "Deposit balance"
+                            # bal = f"KES {(pp.balance-tenant.deposits.balance):,.0f}"
+                        else:
+                            depbal = f"Kes 0.0"
+                            depbaltitle = "Deposit balance"
+
+                    else:
+                        depbal = f"Kes 0.0"
+                        depbaltitle = "Deposit balance"
+
+                pp_obj = {
+                    "tenant": tenant.name,
+                    "house": payment_obj.house.name,
+                    "amount":paid,
+                    "str_amount":stramount,
+                    "str_month":get_str_month(payperiod.month),
+                    "paydate":paydate.strftime("%d %B, %Y"),
+                    "paytime":paydate.strftime("%X"),
+                    "rdate ": payment_obj.date.strftime("%d %B, %Y"),
+                    "bill":bill,
+                    "baltitle":baltitle,
+                    "depbaltitle":depbaltitle,
+                    "outline":outline,
+                    "balance":bal,
+                    "depbalance":depbal,
+                    "chargetype":payment_obj.payment_name,
+                    "receiptno":receiptno,
+                    "refnum":payment_obj.ref_number,
+                    "paymode":payment_obj.paymode,
+                    "logopath":logo(current_user.company)[0],
+                    "companyname":current_user.company.name.upper,
+                    "companyphone":current_user.company.phone,
+                    "companyemail":current_user.company.email,
+                    "address":address,
+                    "user":current_user.company if current_user.company == "MojaMbili Homes" else server,
+                    "prop":prop,
+                    "randid":payment_obj.rand_id if payment_obj.rand_id else "a"
+                }
+
+                receipt_objs.append(pp_obj)
+
+            return Response(render_template(
+                "aa_all.html",receipts=receipt_objs))
+
+
         else:
 
             payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
@@ -4174,22 +4297,22 @@ class PrintActualReceipt(Resource):
 
             address = None
 
-            if payment_obj.apartment.company.name == "LaCasa":
+            # if payment_obj.apartment.company.name == "LaCasa":
 
-                if prop.address:
+            #     if prop.address:
 
-                    address = {
-                        "address":prop.address,
-                        "tel":prop.phone,
-                        "email":prop.email
-                    }
+            #         address = {
+            #             "address":prop.address,
+            #             "tel":prop.phone,
+            #             "email":prop.email
+            #         }
 
-                else:
-                    address = {
-                        "address":"Mwiki, Kasarani",
-                        "tel":"0735267087",
-                        "email":"bizlineinvestment@gmail.com"
-                    }
+            #     else:
+            #         address = {
+            #             "address":"Mwiki, Kasarani",
+            #             "tel":"0735267087",
+            #             "email":"bizlineinvestment@gmail.com"
+            #         }
 
             if payment_obj.ptenant:
                 tenant = payment_obj.ptenant
@@ -6067,6 +6190,7 @@ class Receipt(Resource):
             depbalance=depbal,
             rlink=f"/printreceipt/{payment_obj.id}",
             rlink2=f"/printreceipt/{payment_obj.id}?target=combined",
+            rlink3=f"/printreceipt/{payment_obj.id}?target=all",
             chargetype=payment_obj.payment_name,
             receiptno=receiptno,
             refnum=payment_obj.ref_number,

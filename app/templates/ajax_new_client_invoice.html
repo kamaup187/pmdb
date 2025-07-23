@@ -80,8 +80,11 @@
                                             {%if client.region%}
                                             <li>{{client.region}}</li>
                                             {%endif%}
+                                            {%if client.phone%}
                                             <li>
-                                              {{client.phone}}</li>
+                                              {{client.phone}}
+                                            </li>
+                                            {%endif%}
                                             {%if client.email%}
                                             <li type="email" class="text-primary">{{client.email}}</li>
                                             {%endif%}
@@ -135,7 +138,7 @@
                                     <tr>
                                         <td>
                                             <!-- <span class="mb-0">Rentlib software Setup @12000 </span> -->
-                                            <span class="mb-0">2025, June-July-August Rentlib Software Subscription @4500 </span>
+                                            <span class="mb-0">2025, June & July Rentlib Software Subscription @6000 </span>
                                         </td>
                                         <td>1</td>
                                         <td class="mobile-malaysian">{{sub}}</td>

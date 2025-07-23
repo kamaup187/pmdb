@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Receipt</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        body {
+            background: #fff;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            margin: auto;
+            padding: 0;
+        }
+
+        .receipt_header {
+            text-align: center;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #000;
+        }
+
+        .receipt_header h1 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .receipt_header h1 span {
+            display: block;
+            font-size: 18px;
+        }
+
+        .receipt_header h2 {
+            font-size: 10px;
+            color: #727070;
+            font-weight: 300;
+        }
+
+        .receipt_header h2 span {
+            display: block;
+            font-size: 10px;
+        }
+
+        .receipt_body {
+            margin-top: 5px;
+            padding: 0 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 2px 0;
+        }
+
+        th:last-child, td:last-child {
+            text-align: right;
+        }
+
+        th, td {
+            font-size: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tfoot th, tfoot td {
+            font-weight: bold;
+            border-top: 1px solid #000;
+        }
+
+        h3 {
+            margin-top: 5px;
+            font-size: 12px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        /* Additional styles */
+        .additional-info {
+            margin-bottom: 20px;
+        }
+
+        .additional-info ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .additional-info ul li {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .received-from {
+            margin-bottom: 20px;
+        }
+
+        .received-from ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .received-from ul li {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .refund-message {
+            font-style: oblique;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @media print {
+            @page {
+                size: auto; /* auto is the default value */
+                margin: 0; /* this will remove the default margin */
+            }
+
+            /* Specify that headers and footers should not be printed */
+            @page :first {
+                /* This will remove the header */
+                header { display: none; }
+
+                /* This will remove the footer */
+                footer { display: none; }
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+
+
+{% for pp in receipts %}    
+<div class="container">
+    
+    <div class="receipt_header">
+        <h1>OFFICIAL PAYMENT RECEIPT <span>~ {{pp.companyname}} ~</span></h1>
+        <h2>Tel: {{pp.companyphone}} <span>Email: {{pp.companyemail}}</span></h2>
+    </div>
+    
+    <div class="receipt_body">
+
+
+
+        <div class="additional-info">
+            <ul>
+                <li><strong>Receipt No.</strong>{{pp.receiptno}}</li>
+                <li><strong>Reference #</strong>{{pp.refnum}}</li>
+                <li><strong>Payment date:</strong>{{pp.paydate}}</li>
+            </ul>
+        </div>
+
+        <div class="received-from">
+            <ul>
+                <li><strong>Received from:</strong></li>
+                <li>{{pp.tenant}},</li>
+                <li>House: {{pp.house}},</li>
+                <li>{{pp.prop}}</li>
+            </ul>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>PARTICULARS</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{pp.chargetype}}</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Amount due</td>
+                    <td>{{pp.bill}}</td>
+                </tr>
+                <tr>
+                    <td>Cash</td>
+                    <td>{{pp.amount}}</td>
+                </tr>
+                <tr>
+                    <td>Balance</td>
+                    <td>{{pp.balance}}</td>
+                </tr>
+                <tr>
+                    <td>Deposit Bal</td>
+                    <td>{{pp.depbalance}}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="refund-message">Payment once made is not refundable</div>
+
+    </div>
+
+    <h3>Thank You!</h3>
+
+</div>
+
+{% endfor %}
+
+<script type="text/javascript">
+
+    // Function to close the window after printing
+    function closeWindowAfterPrint() {
+        // Close the window
+        window.close();
+    }
+
+    // Add event listener for the afterprint event
+    window.addEventListener('afterprint', closeWindowAfterPrint);
+
+    window.onload = function() { window.print(); }
+</script>
+
+</body>
+</html>

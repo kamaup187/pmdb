@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .receipt {
+      page-break-after: always; /* Each receipt on a new page */
+      width: 80mm; /* Adjust for receipt printer width, e.g., thermal printers */
+      font-family: monospace;
+      padding: 10px;
+      margin: 0;
+    }
+    @media print {
+      body { margin: 0; }
+      .receipt { page-break-after: always; }
+      .receipt:last-child { page-break-after: avoid; } /* No break after last receipt */
+    }
+  </style>
+</head>
+<body>
+  <div id="receipts"></div>
+  <button onclick="batchPrint()">Print All Receipts</button>
+
+  <script>
+    // Sample receipt data (replace with your POS system’s data, e.g., from API or database)
+    const receipts = [
+      { id: 1, items: ["Item A: $10", "Item B: $20"], total: "$30" },
+      { id: 2, items: ["Item C: $15"], total: "$15" },
+      { id: 3, items: ["Item D: $25", "Item E: $10"], total: "$35" }
+    ];
+
+    // Render receipts into the DOM
+    function renderReceipts() {
+      const container = document.getElementById("receipts");
+      container.innerHTML = ""; // Clear previous content
+      receipts.forEach(receipt => {
+        const receiptDiv = document.createElement("div");
+        receiptDiv.className = "receipt";
+        receiptDiv.innerHTML = `
+          <h3>Receipt #${receipt.id}</h3>
+          <p>${receipt.items.join("<br>")}</p>
+          <p>Total: ${receipt.total}</p>
+        `;
+        container.appendChild(receiptDiv);
+      });
+    }
+
+    // Print all receipts in one job
+    function batchPrint() {
+      renderReceipts();
+      window.print(); // Triggers one print job with all receipts
+    }
+  </script>
+</body>
+</html>

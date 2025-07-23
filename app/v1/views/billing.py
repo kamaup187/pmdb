@@ -4123,8 +4123,8 @@ class PrintActualReceipt(Resource):
 
         elif target == "all":
 
-            return Response(render_template(
-                "print.html"))
+            # return Response(render_template(
+            #     "print.html"))
 
             payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
             db.session.expire(payment_obj)
@@ -4139,7 +4139,7 @@ class PrintActualReceipt(Resource):
                 billdate = date_formatter_alt(date)
                 period = parse(billdate)
             except:
-                period = get_billing_period(prop)
+                period = get_billing_period(prop_obj)
 
             filtered_payments = fetch_current_billing_period_payments(period,payments)
             receipt_objs = []
@@ -4229,7 +4229,7 @@ class PrintActualReceipt(Resource):
                     "refnum":payment_obj.ref_number,
                     "paymode":payment_obj.paymode,
                     "logopath":logo(current_user.company)[0],
-                    "companyname":current_user.company.name.upper,
+                    "companyname":current_user.company.name.upper(),
                     "companyphone":current_user.company.phone,
                     "companyemail":current_user.company.email,
                     "address":address,

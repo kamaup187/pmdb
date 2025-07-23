@@ -28,6 +28,18 @@
             padding: 0;
         }
 
+        .receipt {
+            page-break-after: always; /* Each receipt on a new page */
+            font-family: monospace;
+            padding: 10px;
+            margin: 0;
+        }
+        @media print {
+            body { margin: 0; }
+            .receipt { page-break-after: always; }
+            .receipt:last-child { page-break-after: avoid; } /* No break after last receipt */
+        }
+
         .receipt_header {
             text-align: center;
             padding-bottom: 5px;
@@ -149,7 +161,7 @@
 
 
 {% for pp in receipts %}    
-<div class="container">
+<div class="container receipt">
     
     <div class="receipt_header">
         <h1>OFFICIAL PAYMENT RECEIPT <span>~ {{pp.companyname}} ~</span></h1>

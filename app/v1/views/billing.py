@@ -4211,23 +4211,23 @@ class PrintActualReceipt(Resource):
 
                 pp_obj = {
                     "tenant": tenant.name,
-                    "house": payment_obj.house.name,
+                    "house": pp.house.name,
                     "amount":paid,
                     "str_amount":stramount,
                     "str_month":get_str_month(payperiod.month),
                     "paydate":paydate.strftime("%d %B, %Y"),
                     "paytime":paydate.strftime("%X"),
-                    "rdate ": payment_obj.date.strftime("%d %B, %Y"),
+                    "rdate ": pp.date.strftime("%d %B, %Y"),
                     "bill":bill,
                     "baltitle":baltitle,
                     "depbaltitle":depbaltitle,
                     "outline":outline,
                     "balance":bal,
                     "depbalance":depbal,
-                    "chargetype":payment_obj.payment_name,
+                    "chargetype":pp.payment_name,
                     "receiptno":receiptno,
-                    "refnum":payment_obj.ref_number,
-                    "paymode":payment_obj.paymode,
+                    "refnum":pp.ref_number,
+                    "paymode":pp.paymode,
                     "logopath":logo(current_user.company)[0],
                     "companyname":current_user.company.name.upper(),
                     "companyphone":current_user.company.phone,
@@ -4235,7 +4235,7 @@ class PrintActualReceipt(Resource):
                     "address":address,
                     "user":current_user.company if current_user.company == "MojaMbili Homes" else server,
                     "prop":prop,
-                    "randid":payment_obj.rand_id if payment_obj.rand_id else "a"
+                    "randid":pp.rand_id if pp.rand_id else "a"
                 }
 
                 receipt_objs.append(pp_obj)

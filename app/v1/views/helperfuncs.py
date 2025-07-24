@@ -3288,9 +3288,10 @@ def readingsauto(period,prop):
     #     # continue
     #     # print("readot ",reading.reading_period)
     #     if reading.reading_period:
-    #         if reading.reading_period.month == 1 and reading.description != "initial reading":
-    #             MeterReadingOp.update_reading_period(reading,generate_exact_date(2,2,2025))
-    #             readinglist.append(reading)
+    #         if reading.reading_period.month == 7 and reading.reading_period.year == 2025 and reading.description != "initial reading":
+    #             # MeterReadingOp.update_reading_period(reading,generate_exact_date(2,2,2025))
+    #             # readinglist.append(reading)
+    #             MeterReadingOp.delete(reading)
     
     # return readinglist
 

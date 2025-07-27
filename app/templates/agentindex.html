@@ -1913,6 +1913,14 @@ window.Tawk_API.onChatMessageVisitor = function(message){
                                 </span>
                             </div>
 
+                            <div class="font-weight-bold housebtn">
+                              <i class="feather-24 pb-1 text-black" data-feather="lock"></i>
+                              <span class="text-black">Locked: </span>
+                                <span class="text-black font-weight-bold fa-2x mr-1 ln-10 fixloader" id="lockedhousestats">
+                                  <div class="d-inline-block ml-2 dot-elastic"></div>
+                                </span>
+                            </div>
+
                             <div class="font-weight-bold mobile-malaysian tenantbtn">
                               <i class="feather-24 pb-1 text-black" data-feather="users"></i>
                               <span class="text-black">Residents: </span>
@@ -3239,6 +3247,7 @@ window.Tawk_API.onChatMessageVisitor = function(message){
     getBalanceStats()
     getPropStats()
     getHouseStats()
+    getLockedHouseStats()
     getPTenantStats()
     getTenantStats()
     getVacantStats()
@@ -3849,6 +3858,7 @@ function animateHH(element) {
     getBalanceStats();
     getPropStats();
     getHouseStats();
+    getLockedHouseStats();
     getPTenantStats();
     getTenantStats();
     getVacantStats();
@@ -4271,6 +4281,7 @@ function animateHH(element) {
       getBalanceStats()
       getPropStats()
       getHouseStats()
+      getLockedHouseStats()
       getPTenantStats()
       getTenantStats()
       getVacantStats()
@@ -4463,6 +4474,24 @@ function badSnack() {
 
     }
 
+        function getLockedHouseStats() {
+        $.ajax({
+            url: "{{ url_for('api.dashboard') }}",
+            type: 'get',
+            data: {
+                    prop: localStorage.getItem('propvar'),
+                    target:"locked housestats"
+
+                  },
+            success: function(data) {
+                $('#lockedhousestats').text(data);
+  
+            }
+        });
+      // setTimeout(getPTenantStats, 10);
+
+    }
+
     function getPTenantStats() {
         $.ajax({
             url: "{{ url_for('api.dashboard') }}",
@@ -4636,6 +4665,7 @@ function badSnack() {
     getBalanceStats()
     getPropStats()
     getHouseStats()
+    getLockedHouseStats()
     getPTenantStats()
     getTenantStats()
     getVacantStats()

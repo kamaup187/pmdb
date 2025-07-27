@@ -1238,6 +1238,29 @@ class EditBill(Resource):
     """class"""
     @login_required
     def get(self):
+        if request.args.get('target'):
+            target = request.args.get('target')
+            if target == "lockunlock":
+                if not permission(current_user, 'edit'):
+                    return err + "Insufficient permissions to lock/unlock house"
+
+                houseid = request.args.get('houseid')
+                if not houseid:
+
+                    bill = MonthlyChargeOp.fetch_specific_bill(get_identifier(request.args.get('billid')))
+                    house = bill.house
+                else:
+                    house = HouseOp.fetch_house_by_id(get_identifier(houseid))
+
+                lock_date = house.updated_on + datetime.timedelta(hours=3) if house.updated_on else None
+                lockdate = lock_date.strftime("%d/%b/%Y %H:%M:%S") if lock_date else "N/A"
+
+                lockcolor = "text-success" if not house.locked else "text-danger"
+                lockicon = "fa fa-lock" if house.locked else "fa fa-unlock"
+                locktext = "Locked" if house.locked else "Unlocked"
+
+                return render_template("ajax_lock_unlock.html",house=house,lockdate=lockdate,lockcolor=lockcolor,lockicon=lockicon,locktext=locktext)
+            
         if not permission(current_user, 'edit'):
             return err + "Insufficient permissions to edit invoice"
         
@@ -1358,6 +1381,28 @@ class EditBill(Resource):
         identifier = get_identifier(billid)
 
         bill = MonthlyChargeOp.fetch_specific_bill(identifier)
+
+        if target == "lockunlock":
+
+            houseid = request.form.get('houseid')
+            if not houseid:
+                house = bill.house
+            else:
+                house = HouseOp.fetch_house_by_id(get_identifier(houseid))
+
+            # db.session.expire(house)
+            if request.form.get('lock'):
+                lock_bool = get_bool(request.form.get('lock'))
+                HouseOp.update_lock_status(house, lock_bool)
+            db.session.expire(house)
+
+            lock_date = house.updated_on + datetime.timedelta(hours=3) if house.updated_on else None
+            lockdate = lock_date.strftime("%d/%b/%Y %H:%M:%S") if lock_date else "N/A"
+            lockcolor = "text-success" if not house.locked else "text-danger"
+            lockicon = "fa fa-lock" if house.locked else "fa fa-unlock"
+            locktext = "Locked" if house.locked else "Unlocked"
+
+            return render_template("ajax_lock_unlock.html",house=house,lockdate=lockdate,lockcolor=lockcolor,lockicon=lockicon,locktext=locktext)
 
         if bill:
 

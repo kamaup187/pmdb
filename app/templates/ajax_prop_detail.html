@@ -6,6 +6,7 @@
       <span id="house_identifier" class="dispnone"></span>
       <span id="edit_house_identifier" class="dispnone"></span>
       <span id="del_house_identifier" class="dispnone"></span>
+      <span id="lock_house_identifier" class="dispnone"></span>
       <span id="group_identifier" class="dispnone"></span>
       <span id="del_group_identifier" class="dispnone"></span>
       
@@ -606,6 +607,39 @@
       </div>
     </div>
 
+    <div class="modal fade" id="lockUnlockModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center card-bg">
+            <h5 class="modal-title text-info">Lock/Unlock House</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="lockunlockbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="lockunlock" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeLockModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="modal fade" id="updateHouseModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -1462,6 +1496,52 @@
       }
     });
   });
+</script>
+
+<script>
+  $("#lockUnlockModal").on('shown.bs.modal', function(){
+    $("#lockunlockbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            houseid: $("#lock_house_identifier").text(),
+            target:"lockunlock"
+          },
+      success: function(response) {
+        $("#lockunlockbed").html(response);
+      },
+      error: function(xhr) {
+        $("#lockunlockbed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        }
+    });
+  });
+
+
+    $("#lockunlock").click(function(){   
+    $("#lockunlock").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                houseid: $("#lock_house_identifier").text(),
+                target: "lockunlock",
+                lock: $("#lockunlockbed").find("input[name='lockstatus']:checked").val(),
+            },
+      success: function(response) {
+        $("#lockunlockbed").html(response);
+        $("#lockunlock").html("Update")  
+        getUnits($("#prop_identifier").text(),"",$("#currentunitpage").text())
+
+      },
+      error: function(xhr) {
+        $("#lockunlockbed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        $("#lockunlock").html("Update")  
+        }
+      })
+    })
 </script>
 
 

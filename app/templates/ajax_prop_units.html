@@ -30,6 +30,7 @@
                     <tr>
                         <th class="text-black font-weight-bold pl-0">Property</th>
                         <th class="text-black font-weight-bold">Units</th>
+                        <th class="text-black font-weight-bold">Locked</th>
                         <th class="text-black font-weight-bold">Tenants</th>
                         <th class="text-black font-weight-bold">Residents</th>
                         <th class="text-black font-weight-bold ">Vacant</th>
@@ -47,8 +48,9 @@
                               <span style="font-size: large;" id="{{item['id']}}" type="button" class="btn btn-outline-primary btn-sm ellipsis2 text-left no-wrap">{{item['name']}}</span>
                           </div>
                       </td>
-            
-                        <td id="houseinfo-{{item['id']}}" class="data-cell text-right"><div class="dot-elastic mt-2"></div></td>
+                      
+                      <td id="houseinfo-{{item['id']}}" class="data-cell text-right"><div class="dot-elastic mt-2"></div></td>
+                      <td id="lockedinfo-{{item['id']}}" class="data-cell text-right"><div class="dot-elastic mt-2"></div></td>
                         <td id="tenantinfo-{{item['id']}}" class="data-cell text-right"><div class="dot-elastic mt-2"></div></td> 
 
                         <td id="residentinfo-{{item['id']}}" class="data-cell text-right"><div class="dot-elastic mt-2"></div></td>
@@ -185,7 +187,9 @@
               propid: item
             },
         success: function(response) {
+          console.log("locked RESPONSE >>> ", response[6]);
           $("#houseinfo-" + item ).text(response[0]);
+          $("#lockedinfo-" + item ).text(response[6]);
           $("#tenantinfo-" + item ).text(response[1]);
 
           $("#residentinfo-" + item ).text(response[2]);

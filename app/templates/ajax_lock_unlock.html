@@ -1,0 +1,29 @@
+<div class="mb-3 mr-3 ml-3 underline-thin-fade">
+  <div class="mb-2">
+    House: <span class="text-black font-size-bold">{{house.name}}</span>
+  </div>
+  <div class="mb-2">
+    Status: <span class="{{lockcolor}} font-size-bold"> <i class="mr-2 {{lockicon}}"></i>{{locktext}}</span>
+  </div>
+    <div>
+    On: <span class="text-black font-size-bold">{{lockdate}}</span>
+  </div>
+</div>
+
+<div class="row underline-thin-fade">
+
+  <div class="col-3 hide">Lock/unlock</div>
+  <div class="col-9 form-group row">
+    <div class="col-6">
+      <input class="" id="lockhouse" name="lockstatus" type="radio" value="True" />
+      <label class="font-weight-bold mb-1 text-danger" for="lockhouse">Lock</label>
+  </div>
+
+  <div class="col-6">
+      <input class="" id="unlockhouse" name="lockstatus" type="radio" value="False" />
+      <label class="mb-1 font-weight-bold text-success" for="unlockhouse">Unlock</label>
+  </div>
+  </div>
+
+
+</div>

@@ -276,11 +276,11 @@ class Index(Resource):
 
 
 
-        # prps = [954]
+        # prps = [18]
 
 
-        # checker = ApartmentOp.fetch_apartment_by_name("Kitengela.")
-        # print(checker.company)
+        # # checker = ApartmentOp.fetch_apartment_by_name("Kitengela.")
+        # # print(checker.company)
 
 
 
@@ -288,7 +288,7 @@ class Index(Resource):
 
         #     propq = ApartmentOp.fetch_apartment_by_id(idd)
 
-        #     company = CompanyOp.fetch_company_by_name("ASTROL")
+        #     company = CompanyOp.fetch_company_by_name("Sun Mountain")
         #     # company = CompanyOp.fetch_company_by_id(114)
         #     ApartmentOp.update_company(propq,company.id)
         #     company_users = company.users
@@ -2560,6 +2560,11 @@ class Dashboard(Resource):
 
         if target == "housestats":
             return len(flatten([prop.houses for prop in props]))
+
+        if target == "locked housestats":
+            print("locked houses stats")
+            return len([house for prop in props for house in prop.houses if house.locked])
+            # return len(flatten([prop.houses for prop in props]))
 
         if target == "ptenantstats":
             return len(flatten([prop.ptenants for prop in props]))

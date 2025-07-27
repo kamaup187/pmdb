@@ -85,6 +85,9 @@ class Base():
 
     def generate_delid(self):
         return "del" + str(self.id)
+    
+    def generate_lockid(self):
+        return "lock" + str(self.id)
 
     def get_name(self):
         """method to get created by"""
@@ -1873,6 +1876,12 @@ class HouseOp(House,Base):
         self.status = status
         db.session.commit()
 
+    def update_lock_status(self,status):
+        """update lock status"""
+        self.locked = status
+        self.updated_on = datetime.datetime.now()
+        db.session.commit()
+
     def get_status(self):
         # print(">>>>>>>",self.status)
         if self.status == "available":
@@ -1881,6 +1890,13 @@ class HouseOp(House,Base):
             return '<span class="badge font-weight-bold bg-warning-alt text-warning">Booked</span>'
         else:
             return '<span class="badge font-weight-bold bg-info-alt text-info">Sold</span>'
+
+    def get_locked(self):
+        """method to get tenant name from tenant alloc id"""
+        if self.locked:
+            return '<span class="badge font-weight-bold bg-light text-danger">Locked</span>'
+        else:
+            return '<span class="badge font-weight-bold bg-light text-success">Unlocked</span>'
 
     def get_agentname(self):
         """method to get tenant name from tenant alloc id"""
@@ -1904,9 +1920,11 @@ class HouseOp(House,Base):
                 'id':self.id,
                 'editid':HouseOp.generate_editid(self),
                 'delid':HouseOp.generate_delid(self),
+                'lockid':HouseOp.generate_lockid(self),
                 "highlight":HouseOp.highlight_vacancy(self),
                 "mhighlight":HouseOp.highlight_unmetered(self),
                 'house':self.name,
+                'locked':HouseOp.get_locked(self),
                 'group':self.housecode,
                 'description':self.description,
                 'status':HouseOp.get_status(self),
@@ -1923,12 +1941,14 @@ class HouseOp(House,Base):
                 'id':self.id,
                 'editid':HouseOp.generate_editid(self),
                 'delid':HouseOp.generate_delid(self),
+                'lockid':HouseOp.generate_lockid(self),
                 "highlight":HouseOp.highlight_vacancy(self),
                 "mhighlight":HouseOp.highlight_unmetered(self),
                 'house':self.name,
                 'group':self.housecode,
                 'description':self.description,
                 'status':HouseOp.get_status(self),
+                'locked':HouseOp.get_locked(self),
 
                 'agent':HouseOp.get_agentname(self),
                 'booking':HouseOp.get_booking(self),

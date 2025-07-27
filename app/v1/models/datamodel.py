@@ -718,6 +718,9 @@ class House(db.Model):
     name = db.Column(db.VARCHAR)
     status = db.Column(db.String, default="available")
 
+    locked = db.Column(db.Boolean,default=False)
+    updated_on = db.Column(db.DateTime, default=db.func.current_timestamp())
+
     description = db.Column(db.String)
     floor = db.Column(db.String)
 

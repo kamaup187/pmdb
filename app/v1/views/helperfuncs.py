@@ -15013,6 +15013,10 @@ def get_obj_ids(arr):
             if smsid:
                 obj_id_list.append(smsid)
 
+            lockid=req.get("lockid")
+            if lockid:
+                obj_id_list.append(lockid)
+
             propid=req.get("propid")
             if propid:
                 obj_id_list.append(propid)
@@ -15700,7 +15704,17 @@ def get_tenancy(prop):
         
     occ = f"{ratio:,.0f}%"
 
-    return houses,occupancy_num,ptnts,vacants,occ,tnt_disp,groups
+    locked = len([house for house in prop.houses if house.locked])
+
+    print("locked houses",locked)
+
+    return houses,occupancy_num,ptnts,vacants,occ,tnt_disp,groups,locked
+
+
+def get_locked(prop):
+    """returns a list of locked houses in a property"""
+    locked_houses = len([house for house in prop.houses if house.locked])
+    return locked_houses
 
 countries = [
     "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 

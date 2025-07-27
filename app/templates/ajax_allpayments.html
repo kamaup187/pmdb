@@ -860,6 +860,40 @@
       </div>
     </div>
 
+      <div class="modal fade" id="lockUnlockModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center card-bg">
+            <h5 class="modal-title text-info">Lock/Unlock House</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body bg-light pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="mt-2 mb-3" id="lockunlockbed"></div>
+                    
+                      <div class="divbg center-btn">
+                        <button id="lockunlock" type="button" class="btn btn-outline-success">Update</button>
+                        <button class="btn btn-outline-danger" id="closeLockModal" type="button" data-dismiss="modal"></i>Dismiss</button>
+                        <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                      </div>
+                      
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="editDepModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -2154,6 +2188,12 @@
 </script>
 
 <script type="text/javascript">
+  $('#lockUnlockModal').on('hidden.bs.modal', function (e) {
+    $('body').addClass('modal-open');
+  });
+</script>
+
+<script type="text/javascript">
   $('#editArrModal').on('hidden.bs.modal', function (e) {
     $('body').addClass('modal-open');
   });
@@ -2187,6 +2227,26 @@
       error: function(xhr) {
         $("#billeditbed").html('<div class="center-btn text-danger mb-3">error!</div>');
         $("#editbill").addClass("dispnone");
+        }
+    });
+  });
+</script>
+
+<script>
+  $("#lockUnlockModal").on('shown.bs.modal', function(){
+    $("#lockunlockbed").html('<div class="cssload-container"><div class="cssload-speeding-wheel"></div></div>');
+    $.ajax({
+      url: "{{ url_for('api.editbill') }}",
+      type: "get",
+      data: {
+            billid: $("#edit_bill_identifier").text(),
+            target:"lockunlock"
+          },
+      success: function(response) {
+        $("#lockunlockbed").html(response);
+      },
+      error: function(xhr) {
+        $("#lockunlockbed").html('<div class="center-btn text-danger mb-3">error!</div>');
         }
     });
   });
@@ -2328,6 +2388,31 @@
         }
       });
   });
+</script>
+
+<script>
+
+  $("#lockunlock").click(function(){   
+    $("#lockunlock").html("updating...")  
+      $.ajax({
+        url: "{{ url_for('api.editbill') }}",
+        type: "POST",
+        data: {
+                billid: $("#edit_bill_identifier").text(),
+                target: "lockunlock",
+                lock: $("#lockunlockbed").find("input[name='lockstatus']:checked").val(),
+            },
+      success: function(response) {
+        $("#lockunlockbed").html(response);
+        $("#lockunlock").html("Update")  
+      },
+      error: function(xhr) {
+        $("#lockunlockbed").html('<div class="center-btn text-danger mb-3">error!</div>');
+        $("#lockunlock").html("Update")  
+        }
+      })
+    })
+
 </script>
 
 <script>

@@ -867,6 +867,7 @@ class AllProperties(Resource):
                     'vacant':res[3],
                     'reminders':f'<span class="text-success font-weight-bold">{prop.reminder_status}</span>' if prop.reminder_status == "sent" else f'<span class="text-danger font-weight-bold">{prop.reminder_status}</span>',
                     'occupancy':res[4],
+                    'locked':get_locked(prop),
                     'createdby':prop.user_id,
                 }
 

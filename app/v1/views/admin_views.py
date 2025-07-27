@@ -1362,21 +1362,25 @@ class LinkProperty(Resource):
 
         if target == "link":
             if current_user.id == 1 or current_user.username.startswith("qc"):
-                companies = CompanyOp.fetch_all_companies()
-                data = []
-                for company in companies:
-                    if company.name and company:
-                        data.append(company.name)
+                # companies = CompanyOp.fetch_all_companies()
+                # data = []
+
+                props = ApartmentOp.fetch_all_unlinked_apartments()
+                # for company in companies:
+                #     if company.name and company:
+                #         data.append(company.name)
+
                     # if not company.name or not company:
                     #     print(company.users)
                     #     companies.remove(company)
                         # return None
                         # CompanyOp.delete(company)
-                return render_template('ajax_multivariable.html',items=data,placeholder="select company")
+                return render_template('ajax_multivariable.html',items=props,placeholder="select property")
 
             else:
-                companies = [current_user.company]
-                return render_template('ajax_multivariable.html',items=companies,placeholder="select company")
+                # companies = [current_user.company]
+                props = ApartmentOp.fetch_all_unlinked_apartments()
+                return render_template('ajax_multivariable.html',items=props,placeholder="select property")
         else:
             companies = []
             return render_template('ajax_multivariable.html',items=companies,placeholder="ready to unlink")
@@ -1389,7 +1393,9 @@ class LinkProperty(Resource):
         prop = ApartmentOp.fetch_apartment_by_id(propid)
 
         if target == "link":
-            company = CompanyOp.fetch_company_by_name(co)
+            # company = CompanyOp.fetch_company_by_name(co)
+            company = current_user.company
+            prop = ApartmentOp.fetch_apartment_by_name(request.form.get("prop"))
             ApartmentOp.update_company(prop,company.id)
             company_users = company.users
             for i in company_users:
@@ -1401,7 +1407,8 @@ class LinkProperty(Resource):
             access = True
             # if current_user.id == 1:
             if access:
-                prop_co = CompanyOp.fetch_company_by_id(prop.company_id)
+                # prop_co = CompanyOp.fetch_company_by_id(prop.company_id)
+                prop_co = current_user.company
                 ApartmentOp.update_company(prop,None)
                 company_users = prop_co.users
                 for i in company_users:

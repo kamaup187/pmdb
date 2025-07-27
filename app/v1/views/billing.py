@@ -1245,8 +1245,11 @@ class EditBill(Resource):
                     return err + "Insufficient permissions to lock/unlock house"
 
                 houseid = request.args.get('houseid')
-                if not houseid:
-
+                tenant_id = request.args.get('tenantid')
+                if tenant_id:
+                    tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+                    house = check_house_occupied(tenant_obj)[1]
+                elif request.args.get('billid'):
                     bill = MonthlyChargeOp.fetch_specific_bill(get_identifier(request.args.get('billid')))
                     house = bill.house
                 else:
@@ -1383,12 +1386,17 @@ class EditBill(Resource):
         bill = MonthlyChargeOp.fetch_specific_bill(identifier)
 
         if target == "lockunlock":
-
+            tenant_id = request.form.get('tenantid')
             houseid = request.form.get('houseid')
-            if not houseid:
-                house = bill.house
-            else:
+
+            if tenant_id:
+                tenant_obj = TenantOp.fetch_tenant_by_id(get_identifier(tenant_id))
+                house = check_house_occupied(tenant_obj)[1]
+
+            elif houseid:
                 house = HouseOp.fetch_house_by_id(get_identifier(houseid))
+            else:
+                house = bill.house
 
             # db.session.expire(house)
             if request.form.get('lock'):

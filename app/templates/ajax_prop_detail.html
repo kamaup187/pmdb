@@ -1505,7 +1505,7 @@
       url: "{{ url_for('api.editbill') }}",
       type: "get",
       data: {
-            billid: $("#edit_bill_identifier").text(),
+            // billid: $("#edit_bill_identifier").text(),
             houseid: $("#lock_house_identifier").text(),
             target:"lockunlock"
           },
@@ -1519,13 +1519,13 @@
   });
 
 
-    $("#lockunlock").click(function(){   
+  $("#lockunlock").click(function(){   
     $("#lockunlock").html("updating...")  
       $.ajax({
         url: "{{ url_for('api.editbill') }}",
         type: "POST",
         data: {
-                billid: $("#edit_bill_identifier").text(),
+                // billid: $("#edit_bill_identifier").text(),
                 houseid: $("#lock_house_identifier").text(),
                 target: "lockunlock",
                 lock: $("#lockunlockbed").find("input[name='lockstatus']:checked").val(),

@@ -1,7 +1,7 @@
 <!--================Contact Area =================-->
 <section class="contact_area section_gap">
   <span id="prop_identifier" class="dispnone"></span>
-  <span id="link_identifier" class="dispnone"></span>
+  <span id="link_identifier" class="dispnone">link</span>
   <span id="prop_id_identifier" class="dispnone"></span>
   <span id="edit_prop_identifier" class="dispnone"></span>
   <span id="del_prop_identifier" class="dispnone"></span>
@@ -28,6 +28,17 @@
             <i class="me-1 feather-16" data-feather="upload"></i>
             Upload data
           </span>
+
+          <span id="linker" class="btn btn-sm btn-light text-black" data-toggle="modal" data-target="#linkModal">
+            <i class="me-1 feather-16" data-feather="link"></i>
+            Link property
+          </span>
+
+          <script>
+            $("#linker").on('click', function() {
+              $("#link_identifier").html("link");
+            });
+          </script>
         </div>
       </div>
 
@@ -407,9 +418,9 @@
                 <div class="form-group">
 
                   <div class="form-group ">
-                    <select name="owner" class="select-css" id="select_company" required>
+                    <select name="owner" class="select-css" id="select_property" required>
                       <option disabled selected value> loading... </option>
-                      {% for o in companies %}
+                      {% for o in properties %}
                       <option value="{{ o }}">{{ o }}</option>
                       {% endfor %}
                     </select>
@@ -1026,7 +1037,7 @@
   $("#linkModal").on('shown.bs.modal', function () {
     var targetLink = $("#link_identifier").text();
     if (targetLink == "link") {
-      $("#linkModalLabel").html("Link to Agent");
+      $("#linkModalLabel").html("Link to Company");
       $("#link-btn").html("Link");
     } else {
       $("#linkModalLabel").html("Unlink property");
@@ -1041,7 +1052,7 @@
         target: targetLink
       },
       success: function (response) {
-        $("#select_company").html(response);
+        $("#select_property").html(response);
       }
     });
   });
@@ -1061,8 +1072,9 @@
       url: "{{ url_for('api.linkproperty') }}",
       type: "POST",
       data: {
-        company: $("#select_company").val(),
-        propid: $("#prop_identifier").text(),
+        // company: $("#select_company").val(),
+        propid : $("#prop_identifier").text(),
+        prop: $("#select_property").val(),
         target: targetLink
       },
       success: function (response) {

@@ -9567,6 +9567,15 @@ class Results(Resource):
             if tenant_obj:
                 db.session.expire(tenant_obj)
 
+                lockcolor = "text-success" if not house_obj.locked else "text-danger"
+                lockicon = "fa fa-lock" if house_obj.locked else "fa fa-unlock"
+                locktext = "Locked" if house_obj.locked else "Unlocked"
+                
+                if house_obj.locked:
+                    houselock = f'<span class="{lockcolor}"><i class="{lockicon}"></i> {locktext}</span>'
+                else:
+                    houselock = f'<span class="{lockcolor}"><i class="{lockicon}"></i> {locktext}</span>'
+
                 current_invoice = fetch_current_tenant_invoice(house_obj,tenant_obj)
 
                 if current_invoice:
@@ -9624,10 +9633,9 @@ class Results(Resource):
                     else:
                         rlink = "/"
 
-                return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
-
-
-                return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,alloc=alloc,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                return render_template(template,prop=prop_obj,houses=houses,houselock=houselock,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                # return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+                # return render_template(template,prop=prop_obj,houses=house_obj,tenant=tenant_obj,alloc=alloc,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
             else:
                 tenant_obj = f'<span class="text-danger">Vacant</span>'
@@ -9850,7 +9858,7 @@ class Results(Resource):
 
 
         else:
-
+            houselock = "-"
             tenant_id = get_identifier(item)
 
             if item.startswith("tnt"):
@@ -9874,6 +9882,8 @@ class Results(Resource):
             if tenant_obj.multiple_houses:
                 paid_status = "-"
                 badge_status = ""
+                houselock = "-"
+                
             else:
                 # print(tenant_obj.resident_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<restype")
                 # print(tenant_obj.tenant_type,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<ttype")
@@ -9883,8 +9893,19 @@ class Results(Resource):
                 if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                     house_obj = tenant_obj.house
                     current_invoice = fetch_current_owner_invoice(house_obj)
+                    houselock = "-"
                 else:
                     house_obj = check_house_occupied(tenant_obj)[1]
+
+                    lockcolor = "text-success" if not house_obj.locked else "text-danger"
+                    lockicon = "fa fa-lock" if house_obj.locked else "fa fa-unlock"
+                    locktext = "Locked" if house_obj.locked else "Unlocked"
+                    
+                    if house_obj.locked:
+                        houselock = f'<span class="{lockcolor}"><i class="{lockicon}"></i> {locktext}</span>'
+                    else:
+                        houselock = f'<span class="{lockcolor}"><i class="{lockicon}"></i> {locktext}</span>'
+
                     if not house_obj:
                         return redirect(url_for('api.index'))
                         # return err + "Tenant cleared"
@@ -9909,6 +9930,7 @@ class Results(Resource):
             if tenant_obj.tenant_type == "owner" or tenant_obj.tenant_type == "resident":
                 houses = tenant_obj.house
                 alloc = None
+                houselock = "-"
             else:
                 if get_active_houses(tenant_obj)[0] == "Resident":
                     print(get_active_houses(tenant_obj)[0])
@@ -9946,7 +9968,7 @@ class Results(Resource):
                 else:
                     rlink = "/"
 
-            return render_template(template,prop=prop_obj,houses=houses,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
+            return render_template(template,prop=prop_obj,houses=houses,houselock=houselock,tenant=tenant_obj,alloc=alloc,rlink=rlink,paid_status=paid_status,badge_status=badge_status,smsable=smsable,month=month)
 
 
 class ContactManagement(Resource):

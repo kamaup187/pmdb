@@ -136,9 +136,10 @@
             <div class="ln-16">
               <span class="mr-1">PREMISES NO: {{thouse.name.upper()}}</span>
             </div>
-            <div class="ln-16">
+            <div class="ln-16 mt-2">
               {% if tenant_obj.deposit%}
-              <span class="mr-1">SECURITY ACCOUNT : {{tenant_obj.deposits.total}}</span>
+              <span class="mr-1">DEPOSIT PAID : {{tenant_obj.deposits.total_paid}}</span>
+              <span class="mr-1">DEPOSIT BALANCE : {{tenant_obj.deposits.balance}}</span>
               {%else%}
               <span class="mr-1">SECURITY ACCOUNT : {{tenant_obj.deposits}}</span>
               {% endif %}

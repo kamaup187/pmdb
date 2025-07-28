@@ -4921,6 +4921,7 @@ class MpesaDataUpload(Resource):
             dict_array = []
 
             for row in rows:
+                print("dates from excel  ",sheet.row_values(row)[3])
                 dict_obj = {
                 "BusinessShortCode":sheet.row_values(row)[0],
                 "TransID":sheet.row_values(row)[1],

@@ -5745,14 +5745,17 @@ class CtoBop(CtoB,Base):
             second = str_t[12:14]
             ftime = datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
         except Exception as e:
-            from datetime import datetime, timedelta
-            serial = int(float(self.trans_time))  # Safely cast to float then int
-            if not (1 <= serial <= 60000):  # Rough sanity range: ~1900 to 2065
-                return "Invalid date"
-            base_date = datetime(1899, 12, 30)
-            date_obj = base_date + timedelta(days=serial)
-            return date_obj.strftime('%m/%d/%y')
-        # paydate = self.post_date
+            try:
+                from datetime import datetime, timedelta
+                serial = int(float(self.trans_time))  # Safely cast to float then int
+                if not (1 <= serial <= 60000):  # Rough sanity range: ~1900 to 2065
+                    return self.post_date.strftime("%d/%b/%y")
+                base_date = datetime(1899, 12, 30)
+                date_obj = base_date + timedelta(days=serial)
+                return date_obj.strftime('%m/%d/%y')
+            except Exception as e:
+                ftime = self.post_date
+            # paydate = self.post_date
         str_date = ftime.strftime("%d/%b/%y")
         return str_date
 

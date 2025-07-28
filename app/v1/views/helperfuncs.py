@@ -7909,6 +7909,11 @@ def read_mpesa_excel(dict_array,target,user_id):
 
         print("transtime   ",trans_time)
 
+        existing_obj = CtoBop.fetch_record_by_ref(trans_id)
+        if existing_obj:
+            print("Record already exists ", trans_id)
+            continue
+
         ctob_obj = CtoBop(trans_id,trans_time,valid_amount[0],trans_type,shortcode,bill_ref_num,invoice_num,msisdn,org_acc_bal,fname,lname,"prod",mode,company_id)
         ctob_obj.save()
 

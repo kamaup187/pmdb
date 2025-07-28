@@ -1930,6 +1930,68 @@ class InternalDetailAlt(Resource):
             company=current_user.company,
             name=current_user.name))
 
+class LockedReport(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        if not selected_apartment:
+            apartment_list = fetch_all_apartments_by_user(current_user)
+            apartment_list.append("All")
+            return Response(render_template(
+                "report_locked_statement.html",
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name
+                ))
+
+        if selected_apartment == "All":
+            props = fetch_all_apartments_by_user(current_user)
+            rhouses = [item.houses for item in props]
+            houses = flatten(rhouses)
+            prop = "All"
+        else:
+            apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+            props = [apartment_obj]
+            prop = selected_apartment
+
+        if prop == "All":
+            rhouses = [item.houses for item in props]
+            houses = flatten(rhouses)
+        else:
+            prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+            if prop_obj:
+                houses = prop_obj.houses
+            else:
+                print("Properties not found")
+                houses = []
+
+        items = []
+        for house in houses:
+            if not house.locked:
+                continue
+            item = HouseOp.view(house)
+            item['balance'] = house.monthlybills[0].balance
+            items.append(item)
+
+        return Response(render_template(
+            "ajax_report_locked_statement.html",
+            prop=prop,
+            tenantlist=[],
+            bills=items,
+            paging=page(items),
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            billids = [],
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name)) 
 
 class CombinedReport(Resource):
     @login_required

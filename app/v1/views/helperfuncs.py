@@ -4467,6 +4467,34 @@ def getlast_reading(meter_id):
 def fetch_last_reading(meter_id):
     return MeterReadingOp.fetch_reading(meter_id)
 
+def fetch_last_reading_new(active_meter,prev_month,prev_year):
+    # Filter readings for the previous month and year
+    prev_readings = [
+        reading for reading in active_meter.meter_readings
+        if (reading.reading_period.month == prev_month and reading.reading_period.year == prev_year)
+    ]
+
+    if prev_readings:
+        # Sort by reading_period (latest first) and id as tiebreaker
+        prev_reading = max(prev_readings, key=lambda x: (x.reading_period, x.id))
+    else:
+        # Fallback to the reading with the maximum id
+        # prev_reading = max(active_meter.meter_readings, key=lambda x: x.id)
+        prev_reading = None
+
+    if prev_reading:
+        print("PREV READING >>>>>>>>>>>>>>>>", prev_reading.reading, "ID >>>>>>>>>", prev_reading.id, "PERIOD >>>>>>>>>", prev_reading.reading_period)
+
+    return prev_reading
+
+
+    # # Return the latest reading based on reading_period (or id as a tiebreaker)
+    # if prev_readings:
+    #     # Sort by reading_period (latest first) and then by id if needed
+    #     prev_reading = max(prev_readings, key=lambda x: (x.reading_period, x.id))
+    #     return prev_reading
+    # return None
+
 def generate_string(arg1,arg2,arg3,arg4,arg5,arg6,arg7):
     string1=""
     string2=""
@@ -13683,6 +13711,8 @@ def filtered_house_list(apartment_id,readdate=None):
     unread_houses = []
     prop = ApartmentOp.fetch_apartment_by_id(apartment_id)
     house_list = filter_in_metered_houses(prop.name)
+
+    print("Filtered house list for apartment",prop.name,"is",house_list,"readdate",readdate)
     
     # period = current_user.company.billing_period.month
     billing_period = prop.billing_period
@@ -13742,12 +13772,13 @@ def filtered_house_list(apartment_id,readdate=None):
     for house in house_list:
         active_meter = fetch_active_meter(house)
         if not active_meter: continue
+        prev_reading_obj = fetch_last_reading_new(active_meter,month, year)
         # prev_reading_obj = fetch_last_reading(active_meter.id)
-        prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
+        # prev_reading_obj = max(active_meter.meter_readings, key=lambda x: x.id) if active_meter.meter_readings else None
+        if not prev_reading_obj:
+            unread_houses.append(house)
 
-        # print("Prev reading period",prev_reading_obj.reading_period.month,"")
-
-        if prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
+        elif prev_reading_obj.reading_period.month == month and prev_reading_obj.reading_period.year == year:
             if prev_reading_obj.description == "actual water reading":
                 pass
             else:

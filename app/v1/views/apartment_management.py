@@ -8513,6 +8513,7 @@ class CaptureReading(Resource):
         if run == "houselist":
             if readtype == "water":
                 house_list = filtered_house_list(apartment_id,readdate)
+                print("HOUSE LIST",house_list)
                 return render_template('ajax_multivariable.html',items=sort_items(house_list),placeholder="select water meter")
 
             else:

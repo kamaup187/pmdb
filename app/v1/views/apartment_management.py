@@ -8499,6 +8499,9 @@ class CaptureReading(Resource):
 
         house = request.form.get('house')
         reading = request.form.get('reading')
+        decimals = request.form.get('decimals')
+
+
 
         
         run = request.form.get('run')
@@ -8536,16 +8539,16 @@ class CaptureReading(Resource):
         ##################################### VALIDATIONS ###############################################      
 
         if readtype == "water":
-            meter = fetch_active_meter(house_obj)
+            meter_obj = fetch_active_meter(house_obj)
         elif readtype == "borehole":
-            meter = fetch_active_meter_borehole(house_obj)
+            meter_obj = fetch_active_meter_borehole(house_obj)
         else:
-            meter = fetch_active_meter_alt(house_obj)
+            meter_obj = fetch_active_meter_alt(house_obj)
         
-        meter_id = meter.id
+        meter_id = meter_obj.id
         last_reading = getlast_reading(meter_id)
 
-        meter_num = meter.meter_number
+        meter_num = meter_obj.meter_number
         str_decitype = get_str_decitype(meter_id)
         prev_reading = f"Last reading: {last_reading}"
         meter = f"{meter_num}"
@@ -8554,7 +8557,29 @@ class CaptureReading(Resource):
         if run == "run-reading":
             return render_template('ajaxreadingdata.html',prev_reading=prev_reading,meter=meter,mtype=mtype)
         
+        #########################################################
+        reading = reading.replace(".","")
+
+        if decimals == "1":
+            decitype = get_decitype(meter_id)
+            if int(reading) % 10 == 0:
+                pass
+            else:
+                if decitype == 1.0:
+                    MeterOp.update_decitype(meter_obj,"1")
+        elif decimals == "2":
+            decitype = get_decitype(meter_id)
+
+            if int(reading) % 10 == 0:
+                pass
+            else:
+                if decitype == 1.0:
+                    MeterOp.update_decitype(meter_obj,"2")
+        else:
+            pass
+
         decitype = get_decitype(meter_id)
+        ######################################################
         try:
             float_current_reading = float(reading)*decitype
             float_last_reading = float(last_reading)*decitype

@@ -1617,7 +1617,33 @@ $("#select_house_alt").on('change',function(){
       $('#capture').removeClass('btn-secondary')
       $('#capture').addClass('btn-success')
     }  
-  
+
+    //##################################################################
+    // var readingValue = $('#reading').val();
+    // var hasDecimal = readingValue.indexOf('.') !== -1;
+    // var decimalPosition = hasDecimal ? readingValue.indexOf('.') : -1;
+
+      var readingValue = $(this).val().trim(); // Remove leading/trailing spaces
+
+      // Check if value is valid (non-empty and contains only numbers/dots)
+      if (readingValue === '' || !/^\d*\.?\d*$/.test(readingValue)) {
+          console.log("Invalid input");
+          return;
+      }
+
+        // Find the position of the first decimal point from left to right
+        var decimalIndex = readingValue.indexOf('.');
+
+        // Calculate decimal position from right to left
+        var decimalPosition = decimalIndex !== -1 ? readingValue.length - decimalIndex - 1 : 0;
+
+        // Count decimal places (digits after the first decimal)
+        var decimalCount = decimalIndex !== -1 ? readingValue.split('.')[1].length || 0 : 0;
+
+        // Return in the format 'position#count'
+        var result = decimalPosition + '#' + decimalCount;
+        console.log("Decimal position: " + decimalPosition); // Log right-to-left position
+      //######################################################################
       $.ajax({
         url: "{{ url_for('api.capturereading') }}",
         type: "POST",
@@ -1627,8 +1653,9 @@ $("#select_house_alt").on('change',function(){
                 readperiod: $("input[name=readperiod]:checked").val(),
                 readperiod2: $("#reading-period").val(),
                 reading: $("#reading").val(),
-                readtype:"water",
+                // readtype:"water",
                 readtype: $("#reading_metertype").val(),
+                decimals: decimalPosition,
                 run:"run-units"
             },
         success: function(response) {

@@ -2104,6 +2104,7 @@ class MeterOp(Meter,Base):
 
     def update_decitype(self,decitype):
         if decitype:
+            print("updating decitype",decitype)
             self.decitype = decitype
         db.session.commit()
 

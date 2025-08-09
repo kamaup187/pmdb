@@ -1667,7 +1667,8 @@ clear: both;
     /* top: 0 !important; */
     margin-top: 0px !important;
     margin-left: 0px !important;
-    width: 78.5% !important;
+    /* width: 78.5% !important; */
+    width: 83% !important;
 
     z-index: 10;
   }

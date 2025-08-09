@@ -31,23 +31,33 @@
               </div> -->
             </nav>
           </div>
+
+          </div>
+
+          <div class="pb-2 bg-white divjust-end">
+
+            <div class="hide">hidden</div>
   
-          <div class="">
+          <div class="mb-2">
   
-            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseCodeModal">
-              <i class="me-1" data-feather="user-plus"></i>
-              Add
+            <span class="btn btn-s btn-light text-whitee text-success font-weight-bold" data-toggle="modal" data-target="#newHouseCodeModal">
+              <i class="me-2 fas fa-plus"></i>
+              Create new item
             </span>
 
-            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#buyModal">
-              <i class="me-1" data-feather="user-plus"></i>
-              Buy
+            <span class="ms-2 btn btn-s btn-success text-white" data-toggle="modal" data-target="#transactionModal">
+              <i class="me-1 fas fa-check"></i>
+              Make a transaction
             </span>
 
-            <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#sellModal">
+            <script>
+              datafeather.replace();
+            </script>
+
+            <!-- <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#sellModal">
               <i class="me-1" data-feather="user-plus"></i>
               Sell
-            </span>
+            </span> -->
   
             <!-- <span class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#newHouseModal">
               <i class="me-1" data-feather="user-plus"></i>
@@ -128,7 +138,7 @@
                 </div>
               </div>
               <div class="modal-foote">
-                <button type="button" class="btn btn-secondary btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm has-margin-bottom" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -185,7 +195,80 @@
                         </div>
                      
                         <div class="divbg center-btn">
-                          <button id="addhousecode" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                          <button id="addhousecode" type="button" class="btn-success borderless text-white" disabled>Submit</button>
+                          <!-- <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fas fa-upload mr-1 text-success"></i><span class="smallify text-success">Upload</span></button> -->
+                          <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+            <div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="indicator"></div>
+            <div class="modal-header pb-0 text-center">
+              <h5 class="modal-title text-info divjust-end">
+                <span class="mr-3 smallify">Make a transaction</span>
+                <button class="btn btn-sm btn-light mb-1 pt-0 pb-0 pl-3 pr-3 dismissparent text-danger" type="button" data-dismiss="modal"></i>X</button>
+              </h5>
+              <div class="alert-msgs"></div>
+            </div>
+            <div class="modal-body pt-0">
+              <div class="media mb-2">
+                <div class="media-body">
+                  <div class="position-relative">
+                    <div class="card-body modal-forms">
+                      <form autocomplete="off" method="POST" action="/">
+  
+  
+                        <div class="form-group mt-2 mb-2">
+                            <label class="mb-1 mt-2" for="transactiontype">Select transaction type:</label>
+                            <input class="form-control" list="transactions" id="transactiontype">
+
+                            <datalist id="transactions">
+                              <option value="Stock purchase">
+                              <option value="Stock take">
+                              <option value="Register stock damage">
+                            </datalist>
+                        </div>
+  
+                        <div class="form-group mb-2">
+                          <label class="mb-1 mt-2" for="itemtype">Select Item</label>
+                          <input list="items" id="itemtype" class="form-control ph" type="text">
+                            <datalist id="items">
+                              <option value="Guinness can">
+                              <option value="Tusker lite can">
+                              <option value="Tusker malt can">
+                            </datalist>
+                        </div>
+
+                          <div class="form-group mb-2">
+                          <label class="mb-1 mt-2" for="supplieritem">Select Supplier</label>
+                          <input list="supplieritems" id="supplieritem" class="form-control ph" type="text">
+                            <datalist id="supplieritems">
+                              <option value="Tembo supplies Ltd">
+                              <option value="Airport supplies Ltd">
+                              <option value="EABL Africa Ltd">
+                            </datalist>
+                        </div>
+
+                          <div class="row mt-2">
+                          <div class="col-5 no-padding text-right"><span class="form-control border-0">Quantity </span></div>
+                          <div class="form-group col-7 no-paddin input-icons">
+                            <input id="added_stock" class="form-control ph" type="text">
+                          </div>
+                        </div>
+                     
+                        <div class="divbg center-btn">
+                          <button id="" type="button" class="btn-success borderless text-white" disabled>Submit</button>
                           <!-- <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#uploadGroupExcelModal"><i class="fas fa-upload mr-1 text-success"></i><span class="smallify text-success">Upload</span></button> -->
                           <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                         </div>
@@ -253,7 +336,7 @@
                         </div>
                       
                         <div class="divbg center-btn">
-                          <button id="uploadgroup" type="button" class="btn-secondary borderless text-white">Upload</button>
+                          <button id="uploadgroup" type="button" class="btn-success borderless text-white">Upload</button>
                           <button class="btn btn-light closemodal" type="button" data-dismiss="modal"></i>Dismiss</button>
                           <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                         </div>
@@ -399,7 +482,7 @@
                         <span class="dispnone" id="text-code"></span>
                       
                         <div class="divbg center-btn">
-                          <button id="addhouse" type="button" class="btn-secondary borderless text-white" disabled>Submit</button>
+                          <button id="addhouse" type="button" class="btn-success borderless text-white" disabled>Submit</button>
                           <button class="btn btn-light reset dispnone" type="reset"></i>Dismiss</button>
                         </div>
                       </form>
@@ -652,7 +735,7 @@
                           <hr>
                           <div class="divbg center-btn">
                             <button type="submit" class="bg-gradient-success borderless text-white"><i class="fas fa-check"></i>&nbsp;Save</button>
-                            <button class="btn btn-secondary" type="button" data-dismiss="modal"></i>Dismiss</button>
+                            <button class="btn btn-success" type="button" data-dismiss="modal"></i>Dismiss</button>
                           </div>
                       </form>
                     </div>
@@ -932,10 +1015,10 @@
         if (empty) {
             $('#addhousecode').attr('disabled', 'disabled');
             $('#addhousecode').removeClass('btn-success')
-            $('#addhousecode').addClass('btn-secondary')
+            $('#addhousecode').addClass('btn-success')
         } else {
           $('#addhousecode').removeAttr('disabled');
-          $('#addhousecode').removeClass('btn-secondary')
+          $('#addhousecode').removeClass('btn-success')
           $('#addhousecode').addClass('btn-success')
         }    
           $.ajax({
@@ -987,7 +1070,7 @@
               $(".iconotifications").html('--');
               $('#addhousecode').attr('disabled', 'disabled');
               $('#addhousecode').removeClass('btn-success')
-              $('#addhousecode').addClass('btn-secondary')
+              $('#addhousecode').addClass('btn-success')
               $("#addhousecode").html("submit")
             }, 2000);
           }
@@ -1375,10 +1458,10 @@
       if (empty) {
           $('#addhouse').attr('disabled', 'disabled');
           $('#addhouse').removeClass('btn-success')
-          $('#addhouse').addClass('btn-secondary')
+          $('#addhouse').addClass('btn-success')
       } else {
         $('#addhouse').removeAttr('disabled');
-        $('#addhouse').removeClass('btn-secondary')
+        $('#addhouse').removeClass('btn-success')
         $('#addhouse').addClass('btn-success')
       }    
       // console.log($("#code").text().length);
@@ -1413,10 +1496,10 @@
       // if (empty) {
       //     $('#edithouse').attr('disabled', 'disabled');
       //     $('#edithouse').removeClass('btn-success')
-      //     $('#edithouse').addClass('btn-secondary')
+      //     $('#edithouse').addClass('btn-success')
       // } else {
       //   $('#edithouse').removeAttr('disabled');
-      //   $('#edithouse').removeClass('btn-secondary')
+      //   $('#edithouse').removeClass('btn-success')
       //   $('#edithouse').addClass('btn-success')
       // }    
       // console.log($("#code").text().length);
@@ -1473,7 +1556,7 @@
               $(".iconotifications").html('--');
               $('#addhouse').attr('disabled', 'disabled');
               $('#addhouse').removeClass('btn-success')
-              $('#addhouse').addClass('btn-secondary')
+              $('#addhouse').addClass('btn-success')
               $("#addhouse").html("submit")
             }, 2000);
           }

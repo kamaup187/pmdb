@@ -251,6 +251,7 @@ class Index(Resource):
         # import pdb; pdb.set_trace()
     
         if current_user.usercode == "5023":
+            # UserOp.update_user(current_user,name="Inventory User",phone="99119903",national_id="88990191",email="inventory@rentlib.com",password="inventory1",user_group_id=None,company_id=None,modified_by=None)
             return redirect(url_for("api.stockmodule"))
 
         # if current_user.username == "general1":
@@ -10147,6 +10148,7 @@ class StockModule(Resource):
             if existing_stock:
                 continue
             else:
+                # pass
                 new_stock = StockOp(opening_stock,price,item.id)
                 new_stock.save()
 

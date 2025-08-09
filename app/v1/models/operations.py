@@ -529,7 +529,6 @@ class UserOp(User,Base):
             self.company_id = company_id
         if modified_by:
             self.user_id = modified_by
-        self.username = "inventory"
         db.session.commit()
 
     def update_extra_details(self, gender=None, category=None):

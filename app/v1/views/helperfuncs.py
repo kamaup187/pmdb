@@ -13115,6 +13115,9 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                 ptenant_id = None
                 tenant_id = tenant.id
 
+                if house.apartment_id == 765 and not tenant.monthly_charges:
+                    maintenance += 200.0
+
 
                 if tenant.accumulated_fine:
                     print("Calculating fines for ",house)
@@ -14916,7 +14919,7 @@ def auto_consume_ctob2(ctob_obj):
 def name_standard(name):
     try:
         n1 = name.replace(" ","")
-        n2 = name.replace(".","")
+        n2 = n1.replace(".","")
         n3 = n2.upper()
     except:
         n3 = name

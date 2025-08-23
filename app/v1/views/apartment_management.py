@@ -242,6 +242,142 @@ class IndexV2(Resource):
             user_logged_in=current_user
             ))
 
+class StockModule(Resource):
+    def get(self):
+
+        # items = ItemOp.fetch_all_items()
+
+        # for item in items:
+        #     if item.stocks:
+        #         prev_stock = item.stocks
+        #         price = prev_stock[0].selling_price
+        #         opening_stock =prev_stock[0].opening_stock
+        #     else:
+        #         price = 0.0
+        #         opening_stock =0.0
+                
+        #     date = datetime.datetime.now().date()
+        #     existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
+
+        #     if existing_stock:
+        #         continue
+        #     else:
+        #         # pass
+        #         new_stock = StockOp(opening_stock,price,item.id)
+        #         new_stock.save()
+
+        # return Response(render_template("stockindex.html",co="set"))
+        props = fetch_all_apartments_by_user(current_user)
+        perm = get_permissions(current_user)
+
+        from datetime import datetime, date
+
+        today = date.today()  # e.g., 2025-08-23
+        start_of_day = datetime(today.year, today.month, today.day)
+        end_of_day = datetime(today.year, today.month, today.day, 23, 59, 59)
+
+        # Query sales for today
+        todays_sales = db.session.query(StockTransaction)\
+            .filter(StockTransaction.transaction_date.between(start_of_day, end_of_day))\
+            .filter(StockTransaction.state == True)\
+            .filter(StockTransaction.transaction_type == 'Sale')\
+            .all()
+
+
+        # Calculate total amount sold
+        total_amount_sold = sum(s.quantity * s.price_per_unit * -1 for s in todays_sales)  # Invert negative quantity
+
+
+        items = StockItemOp.fetch_items_by_company_id(current_user.company_id)
+
+        total_remaining_value = 0.0
+
+        # Calculate remaining stock value for each item
+        for item in items:
+            # Get all transactions for the item
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .all()
+
+            # Calculate stock balance
+            stock_balance = sum(t.quantity for t in transactions)
+
+            # Calculate weighted average buying price (only for purchases and opening stock)
+            purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
+            if purchase_transactions and sum(t.quantity for t in purchase_transactions) > 0:
+                total_buying_cost = sum(t.quantity * t.price_per_unit for t in purchase_transactions)
+                total_buying_qty = sum(t.quantity for t in purchase_transactions)
+                weighted_avg_buying_price = round(total_buying_cost / total_buying_qty, 2)
+            else:
+                weighted_avg_buying_price = 0.0
+
+            # Calculate value for this item
+            item_value = stock_balance * weighted_avg_buying_price if stock_balance > 0 else 0.0
+            total_remaining_value += item_value
+
+        stockvalue = f"KES {total_remaining_value:,.2f}"
+
+        total_stock_remaining = 0
+
+        # Calculate stock remaining for each item
+        for item in items:
+            # Get all transactions for the item
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .all()
+
+            # Calculate stock balance for this item
+            stock_balance = sum(t.quantity for t in transactions)
+            total_stock_remaining += stock_balance if stock_balance > 0 else 0  # Avoid negative totals
+
+        stock = f"{total_stock_remaining:,.0f} items"
+
+
+        # Aggregate sales data
+        sales_data = {}
+        for item in items:
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .filter(StockTransaction.transaction_type == 'Sale')\
+                .all()
+
+            if transactions:
+                total_quantity_sold = sum(t.quantity * -1 for t in transactions)  # Invert negative quantity
+                total_amount_sold = sum(t.quantity * t.price_per_unit * -1 for t in transactions)
+                sales_data[item.id] = {
+                    "total_quantity_sold": total_quantity_sold,
+                    "total_amount_sold": total_amount_sold,
+                    "item_name": item.name
+                }
+
+        # Check if there are any sales
+        if not sales_data:
+            top_item = f"No sales data"
+
+        # Find the top-selling product (highest quantity sold)
+        top_product_id = max(sales_data.items(), key=lambda x: x[1]["total_quantity_sold"])[0]
+        top_product = sales_data[top_product_id]
+        formatted_response = f"{top_product['item_name']} Total sold: {top_product['total_quantity_sold']} Amount sold: {round(top_product['total_amount_sold'], 2)}"
+        top_item = formatted_response
+
+
+
+        return Response(render_template(
+            "agentstock.html",
+            co="set",
+            properties=props,
+            branches=[],
+            sales=f"KES {total_amount_sold:,.2f}",
+            value=stockvalue,
+            stock=stock,
+            top_item=top_item,
+            pendingcollections= f'Kes 0.0',
+            cashintransit= f'Kes 0.0',
+            totalbankings= f'Kes 0.0',
+            totaltransfers=f'Kes 0.0',
+            permissions=perm,
+            user_logged_in=current_user
+            ))
 
 class Index(Resource):
     """class"""
@@ -10127,32 +10263,7 @@ class AI(Resource):
         return json_tenants
         # return "json_tenants"
 
-    
-class StockModule(Resource):
-    def get(self):
 
-        items = ItemOp.fetch_all_items()
-
-        for item in items:
-            if item.stocks:
-                prev_stock = item.stocks
-                price = prev_stock[0].selling_price
-                opening_stock =prev_stock[0].opening_stock
-            else:
-                price = 0.0
-                opening_stock =0.0
-                
-            date = datetime.datetime.now().date()
-            existing_stock = Stock.query.filter_by(item_id=item.id, date=date).first()
-
-            if existing_stock:
-                continue
-            else:
-                # pass
-                new_stock = StockOp(opening_stock,price,item.id)
-                new_stock.save()
-
-        return Response(render_template("stockindex.html",co="set"))
 
 class GardenRestaurant(Resource):
     def get(self):
@@ -12091,6 +12202,227 @@ class DepartmentView(Resource):
         department_obj = DepartmentOp(department.title(),"description",current_user.company.id,current_user.id)
         department_obj.save()
 
+class StockItems(Resource):
+    @login_required
+    def get(self):
+        items = []
+        raw_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
+        
+        for i in raw_items:
+            item_dict = StockItemOp.view(i)
+            items.append(item_dict)
+
+        print("items ", items)
+        return items
+    
+    @login_required
+    def post(self):
+        item_name = request.form.get("name")
+        item_qty = request.form.get("qty")
+        item_sprice = request.form.get("sprice")
+
+        item_obj = StockItemOp.fetch_an_item_by_name(item_name)
+        if item_obj:
+            return "item exists already"
+        else:
+            valid_qty = validate_int_input(item_qty)
+            valid_sprice = validate_input(item_sprice)
+            new_item = StockItemOp(item_name,valid_qty,valid_sprice,current_user.id,current_user.company.id)
+            new_item.save()
+            return "item added successfully"
+
+class StockSuppliers(Resource):
+    @login_required
+    def get(self):
+        suppliers = SupplierOp.fetch_suppliers_by_company_id(current_user.company.id)
+        items = []
+        for s in suppliers:
+            supplier_dict = SupplierOp.view(s)
+            items.append(supplier_dict)
+        return items
+    
+    @login_required
+    def post(self):
+        supplier_name = request.form.get("name")
+        supplier_contact = request.form.get("contact")
+        supplier_address = request.form.get("address")
+
+        supplier_obj = SupplierOp.fetch_supplier_by_name(supplier_name)
+        if supplier_obj:
+            return "supplier exists already"
+        else:
+            new_supplier = SupplierOp(supplier_name,supplier_contact,supplier_address,current_user.id,current_user.company.id)
+            new_supplier.save()
+            return "supplier added successfully"
+
+class StockPurchases(Resource):
+    @login_required
+    def get(self):
+        purchases = PurchaseOp.fetch_purchases_by_company_id(current_user.company.id)
+        items = []
+
+        for i in purchases:
+             item_dict = PurchaseOp.view(i)
+             items.append(item_dict)
+
+        return items
+
+    @login_required
+    def post(self):
+        item_id = request.form.get("item")
+        supplier_id = request.form.get("supplier")
+        qty = request.form.get("qty")
+        price = request.form.get("price")
+
+        quantity = validate_int_input(qty)
+        price = validate_input(price)
+
+        stock_transaction_obj = StockTransactionOp(item_id,'Purchase',quantity,price,current_user.id,current_user.company.id)
+        stock_transaction_obj.save()
+
+        purchase_obj = PurchaseOp(stock_transaction_obj.id,supplier_id,current_user.id,current_user.company.id)
+        purchase_obj.save()
+        return "purchase recorded successfully"
+
+
+class StockTake(Resource):
+    @login_required
+    def get(self):
+        items = []
+        for i in range(1,6):
+            item_dict = {
+                "id":i,
+                "item":"Oranges",
+                "eqty":i*100,
+                "aqty":0,
+                "diff":f"{i*100 - 0:.2f}",
+                "status":f"{'Surplus' if (i*100 - 0)>0 else 'Deficit' if (i*100 - 0)<0 else 'Match'}",
+                "date":"10/May/2024",
+                "notes":"Some notes here"
+            }
+            items.append(item_dict)
+
+        return items
+
+class StockSales(Resource):
+    @login_required
+    def get(self):
+        sales = StockSaleOp.fetch_sales_by_company_id(current_user.company.id)
+        items = []
+
+        for i in sales:
+            item_dict = StockSaleOp.view(i)
+            items.append(item_dict)
+
+        return items
+
+    @login_required
+    def post(self):
+        item_id = request.form.get("item")
+        qty = request.form.get("qty")
+        price = request.form.get("price")
+        payment = request.form.get("payment")
+
+        quantity = validate_int_input(qty)
+        trans_quantity = quantity * -1
+        price = validate_input(price)
+
+        stock_transaction_obj = StockTransactionOp(item_id,'Sale',trans_quantity,price,current_user.id,current_user.company.id)
+        stock_transaction_obj.save()
+
+        sale_obj = StockSaleOp(stock_transaction_obj.id,item_id,quantity,price,payment,current_user.id,current_user.company.id)
+        sale_obj.save()
+        return "sale recorded successfully"
+
+class StockDamages(Resource):
+    @login_required
+    def get(self):
+        items = []
+        for i in range(1,6):
+            item_dict = {
+                "id":i,
+                "item":"Oranges",
+                "qty":i*10,
+                "date":"10/May/2024",
+                "reason":f"Accidental drop",
+                "approval":f"Approved",
+                "approvedby":"Admin User",
+                "notes":"Some notes here"
+            }
+            items.append(item_dict)
+        return items
+
+class StockExpenses(Resource):
+    @login_required
+    def get(self):
+        items = []
+        for i in range(1,6):
+            item_dict = {
+                "id":i,
+                "category":"Electricity",
+                "amount":f"{i*1500:.2f}",
+                "date":"10/May/2024",
+                "approval":f"Approved",
+                "approvedby":"Admin User",
+                "notes":"Some notes here"
+            }
+            items.append(item_dict)
+        return items   
+
+class StockSalesReport(Resource):
+    @login_required
+    def get(self):
+        stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
+        items = []
+
+        for item in stock_items:
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .all()
+
+            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
+            total_stock_qty = opening_stock_qty + purchases_qty
+            total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
+            stock_balance = sum(t.quantity for t in transactions)
+
+            # Weighted average buying price (only for purchases and opening stock)
+            purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
+            if purchase_transactions and sum(t.quantity for t in purchase_transactions) > 0:
+                total_buying_cost = sum(t.quantity * t.price_per_unit for t in purchase_transactions)
+                total_buying_qty = sum(t.quantity for t in purchase_transactions)
+                weighted_avg_buying_price = round(total_buying_cost / total_buying_qty, 2)
+            else:
+                weighted_avg_buying_price = 0.0
+
+            # Selling price (use default_selling_price or average from sales if available)
+            sales = [t for t in transactions if t.transaction_type == 'Sale']
+            if sales:
+                avg_selling_price = round(sum(s.price_per_unit for s in sales) / len(sales), 2)
+            else:
+                avg_selling_price = item.selling_price or 0.0
+
+            # Total amount sold (revenue)
+            total_amount_sold = sum(s.quantity * s.price_per_unit * -1 for s in sales) if sales else 0.0
+
+            # Profit (revenue - cost of goods sold)
+            cost_of_goods_sold = total_sold_qty * weighted_avg_buying_price if total_sold_qty > 0 else 0.0
+            profit = total_amount_sold - cost_of_goods_sold
+
+            # Prepare report for this item
+            item_report = {
+                "item": item.name,
+                "opening": opening_stock_qty,
+                "purchase": purchases_qty,
+                "total": total_stock_qty,
+                "sold": total_sold_qty if total_sold_qty > 0 else 0,
+                "balance": stock_balance,
+                "price": avg_selling_price,
+                "amount": round(total_amount_sold, 2),
+                "profit": round(profit, 2)
+            }
+            items.append(item_report)
+        return items
 
 class ItemView(Resource):
     @timer
@@ -12110,7 +12442,8 @@ class ItemView(Resource):
 
         houseids = get_obj_ids(houselist)
 
-        template = "stock_ajax_items_detail.html" 
+        template = "stock_ajax_items_detail.html"
+
         return render_template(template,items=houselist,houseids=houseids,pg=pg)
 
 

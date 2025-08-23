@@ -13826,7 +13826,8 @@ button.close:focus {
 
 .app-btn-secondary {
     background: #fff;
-    color: #5d6778;
+    /* color: #5d6778; */
+    color: #000000;
     border: 1px solid #bcc1cb
 }
 

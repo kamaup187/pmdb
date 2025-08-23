@@ -1971,6 +1971,164 @@ class SentMessages(db.Model):
 #     account_name = db.Column(db.String)
 #     account_number = db.Column(db.String)
 
+
+class StockItem(db.Model):
+    """db model class"""
+
+    __tablename__ = 'stockitems'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.VARCHAR)
+    description = db.Column(db.VARCHAR)
+    selling_price = db.Column(db.Float)  # Optional initial selling price
+    state = db.Column(db.Boolean, default=True)
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+
+    # Relationships
+    stock_transactions = db.relationship('StockTransaction', backref='item', lazy=True)
+    sales = db.relationship('StockSale', backref='item', lazy=True)
+    stocktakes = db.relationship('StockTakeDb', backref='item', lazy=True)
+    damages = db.relationship('Damage', backref='item', lazy=True)
+
+class Purchase(db.Model):
+    """db model class"""
+
+    __tablename__ = 'purchases'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    purchase_order_number = db.Column(db.VARCHAR, nullable=True)
+    status = db.Column(db.String, default="pending")
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    state = db.Column(db.Boolean, default=True)
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'))
+    supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'))
+
+class Supplier(db.Model):
+    """db model class"""
+
+    __tablename__ = 'suppliers'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    name = db.Column(db.VARCHAR)
+    contact_person = db.Column(db.VARCHAR)
+    contact_details = db.Column(db.VARCHAR)
+    address = db.Column(db.VARCHAR)
+    payment_terms = db.Column(db.VARCHAR)
+    notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    purchases = db.relationship('Purchase', backref='supplier', lazy=True)
+
+class StockTransaction(db.Model):
+    """db model class"""
+
+    __tablename__ = 'stock_transactions'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
+    transaction_type = db.Column(db.VARCHAR)  # e.g., Purchase, Sale, Damage, Opening Stock
+    quantity = db.Column(db.Integer)
+    price_per_unit = db.Column(db.Float)
+    transaction_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    purchase = db.relationship('Purchase', backref='stock_transaction', uselist=False, lazy=True)
+    sale = db.relationship('StockSale', backref='stock_transaction', uselist=False, lazy=True)
+    damage = db.relationship('Damage', backref='stock_transaction', uselist=False, lazy=True)
+    expense = db.relationship('Expense', backref='stock_transaction', uselist=False, lazy=True)
+
+class StockSale(db.Model):
+    """db model class"""
+
+    __tablename__ = 'stocksales'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
+    quantity = db.Column(db.Integer)
+    sale_price = db.Column(db.Float)
+    sale_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    payment_method = db.Column(db.VARCHAR)
+    discount = db.Column(db.Float, nullable=True)  # Optional discount amount
+    status = db.Column(db.String, default="completed")
+    notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'))
+
+class Damage(db.Model):
+    """db model class"""
+
+    __tablename__ = 'damages'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
+    quantity = db.Column(db.Integer)
+    damage_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    damage_reason = db.Column(db.VARCHAR)
+    approval_status = db.Column(db.String, default="pending")
+    approved_by = db.Column(db.VARCHAR, nullable=True)
+    notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'))
+
+class Expense(db.Model):
+    """db model class"""
+
+    __tablename__ = 'stockexpenses'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    category = db.Column(db.VARCHAR)
+    amount = db.Column(db.Float)
+    expense_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    approval_status = db.Column(db.String, default="pending")
+    approved_by = db.Column(db.VARCHAR, nullable=True)
+    notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    # Relationships
+    stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'), nullable=True)
+
+class StockTakeDb(db.Model):
+    """db model class"""
+
+    __tablename__ = 'stocktakedbs'
+
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
+    stock_take_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    expected_quantity = db.Column(db.Integer)
+    actual_quantity = db.Column(db.Integer, nullable=True)
+    discrepancy_notes = db.Column(db.VARCHAR, nullable=True)
+    state = db.Column(db.Boolean, default=True)
+
+    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
 class Department(db.Model):
     """db model class"""
 

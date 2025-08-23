@@ -6357,6 +6357,332 @@ class DepartmentOp(Department, Base):
         return Department.query.all()
 
 
+class StockItemOp(StockItem, Base):
+    def __init__(self, name, description, selling_price,user_id,company_id):
+        self.name = name
+        self.description = description
+        self.selling_price = selling_price
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_an_item_by_id(id):
+        return StockItem.query.filter_by(id=id).first()
+
+    def fetch_an_item_by_name(name):
+        return StockItem.query.filter_by(name=name).first()
+    
+    def fetch_items_by_company_id(company_id):
+        return StockItem.query.filter_by(company_id=company_id).order_by(StockItem.name.asc()).all()
+
+    def update_name(self, name):
+        self.name = name
+        db.session.commit()
+
+    def update_description(self, description):
+        self.description = description
+        db.session.commit()
+
+    def update_selling_price(self, selling_price):
+        self.selling_price = selling_price
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def get_quantity(self):
+        return db.session.query(db.func.sum(StockTransaction.quantity)).filter_by(item_id=self.id).scalar() or 0
+
+    def get_weighted_average_buying_price(self):
+        """
+        Returns the weighted average buying price based on purchase transactions.
+        """
+        # Query for purchase and opening stock transactions
+        transactions = db.session.query(StockTransaction)\
+            .filter_by(item_id=self.id, state=True)\
+            .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock']))\
+            .all()
+
+        if not transactions or sum(t.quantity for t in transactions) == 0:
+            return 0.0  # Return 0 if no valid transactions or zero quantity
+
+        # Calculate total cost and total quantity
+        total_cost = sum(t.quantity * t.price_per_unit for t in transactions)
+        total_quantity = sum(t.quantity for t in transactions)
+
+        # print("choooooooooy >>>>>>>>>",round(total_cost / total_quantity, 2))
+
+        return round(total_cost / total_quantity, 2)  # Rounded to 2 decimal places
+
+
+    def view(self):
+        return {
+            "id":self.id,
+            "name":self.name,
+            "quantity":StockItemOp.get_quantity(self),
+            "bprice":StockItemOp.get_weighted_average_buying_price(self),
+            "sprice":f"{self.selling_price:.2f}",
+            "updatedon":"N/A",
+        }
+
+class SupplierOp(Supplier, Base):
+    def __init__(self, name, contact_details, address,user_id,company_id):
+        self.name = name
+        self.contact_details = contact_details
+        self.address = address
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_supplier_by_id(id):
+        return Supplier.query.filter_by(id=id).first()
+
+    def fetch_suppliers_by_company_id(company_id):
+        return Supplier.query.filter_by(company_id=company_id).order_by(Supplier.name.asc()).all()
+
+    def fetch_supplier_by_name(name):
+        return Supplier.query.filter_by(name=name).first()
+
+    def update_name(self, name):
+        self.name = name
+        db.session.commit()
+
+    def update_contact_details(self, contact_details):
+        self.contact_details = contact_details
+        db.session.commit()
+
+    def update_address(self, address):
+        self.address = address
+        db.session.commit()
+
+    def update_payment_terms(self, payment_terms):
+        self.payment_terms = payment_terms
+        db.session.commit()
+
+    def update_notes(self, notes):
+        self.notes = notes
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def view(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'contact_person': self.contact_person,
+            'contact_details': self.contact_details,
+            'address': self.address,
+            'payment_terms': self.payment_terms,
+            'notes': self.notes,
+            'state': self.state
+        }
+
+class PurchaseOp(Purchase, Base):
+    def __init__(self,transaction_id, supplier_id, user_id, company_id):
+        self.stock_transaction_id = transaction_id
+        self.supplier_id = supplier_id
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_purchase_by_id(id):
+        return Purchase.query.filter_by(id=id).first()
+
+    def fetch_purchases_by_company_id(company_id):
+        return Purchase.query.filter_by(company_id=company_id).order_by(Purchase.date.desc()).all()
+
+    def update_purchase_order_number(self, purchase_order_number):
+        self.purchase_order_number = purchase_order_number
+        db.session.commit()
+
+    def update_status(self, status):
+        self.status = status
+        db.session.commit()
+
+    def update_supplier_id(self, supplier_id):
+        self.supplier_id = supplier_id
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def date_format(self):
+        year = str(self.date.year)
+        abr_year = year[:2]
+        month = str(self.date.month)
+        day = str(self.date.day)
+        return day + "/" + month
+
+    def view(self):
+        return {
+            'id': self.id,
+            "name":self.stock_transaction.item.name if self.stock_transaction else "N/A",
+            "supplier":self.supplier.name if self.supplier else "N/A",
+            "quantity":self.stock_transaction.quantity if self.stock_transaction else "N/A",
+            "pprice":self.stock_transaction.price_per_unit if self.stock_transaction else "N/A",
+            "ptotal":self.stock_transaction.quantity * self.stock_transaction.price_per_unit if self.stock_transaction else "N/A",
+            "porder":f"PO/00{self.id}",
+            "pdate":self.date.strftime("%d/%m/%Y"),
+            "pnotes":"N/A"
+        }
+
+class StockTransactionOp(StockTransaction, Base):
+    def __init__(self, item_id, transaction_type, quantity, price_per_unit,user_id,company_id):
+        self.item_id = item_id
+        self.transaction_type = transaction_type
+        self.quantity = quantity
+        self.price_per_unit = price_per_unit
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_transaction_by_id(id):
+        return StockTransaction.query.filter_by(id=id).first()
+
+    def update_quantity(self, quantity):
+        self.quantity = quantity
+        db.session.commit()
+
+    def update_price_per_unit(self, price_per_unit):
+        self.price_per_unit = price_per_unit
+        db.session.commit()
+
+    def update_notes(self, notes):
+        self.notes = notes
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def date_format(self):
+        year = str(self.transaction_date.year)
+        abr_year = year[:2]
+        month = str(self.transaction_date.month)
+        day = str(self.transaction_date.day)
+        return day + "/" + month
+
+    def view(self):
+        return {
+            'id': self.id,
+            'item_id': self.item_id,
+            'transaction_type': self.transaction_type,
+            'quantity': self.quantity,
+            'price_per_unit': self.price_per_unit,
+            'date': StockTransactionOp.date_format(self),
+            'notes': self.notes,
+            'state': self.state
+        }
+
+class StockTakeOp(StockTakeDb, Base):
+    def __init__(self, item_id, expected_quantity, actual_quantity, discrepancy_notes, user_id,company_id):
+        self.item_id = item_id
+        self.expected_quantity = expected_quantity
+        self.actual_quantity = actual_quantity
+        self.discrepancy_notes = discrepancy_notes
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_stock_take_by_id(id):
+        return StockTakeDb.query.filter_by(id=id).first()
+
+    def update_actual_quantity(self, actual_quantity):
+        self.actual_quantity = actual_quantity
+        db.session.commit()
+
+    def update_discrepancy_notes(self, discrepancy_notes):
+        self.discrepancy_notes = discrepancy_notes
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def date_format(self):
+        year = str(self.stock_take_date.year)
+        abr_year = year[:2]
+        month = str(self.stock_take_date.month)
+        day = str(self.stock_take_date.day)
+        return day + "/" + month
+
+    def view(self):
+        return {
+            'id': self.id,
+            'item_id': self.item_id,
+            'expected_quantity': self.expected_quantity,
+            'actual_quantity': self.actual_quantity,
+            'discrepancy_notes': self.discrepancy_notes,
+            'date': StockTakeOp.date_format(self),
+            'state': self.state
+        }
+
+class StockSaleOp(StockSale, Base):
+    def __init__(self, stock_transaction_id, item_id, quantity, sale_price, payment_method, user_id,company_id):
+        self.stock_transaction_id = stock_transaction_id
+        self.item_id = item_id
+        self.quantity = quantity
+        self.sale_price = sale_price
+        self.payment_method = payment_method
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_sale_by_id(id):
+        return Sale.query.filter_by(id=id).first()
+
+    def fetch_sales_by_company_id(company_id):
+        return StockSale.query.filter_by(company_id=company_id).order_by(StockSale.sale_date.desc()).all()
+
+    def update_quantity(self, quantity):
+        self.quantity = quantity
+        db.session.commit()
+
+    def update_sale_price(self, sale_price):
+        self.sale_price = sale_price
+        db.session.commit()
+
+    def update_payment_method(self, payment_method):
+        self.payment_method = payment_method
+        db.session.commit()
+
+    def update_discount(self, discount):
+        self.discount = discount
+        db.session.commit()
+
+    def update_status(self, status):
+        self.status = status
+        db.session.commit()
+
+    def update_notes(self, notes):
+        self.notes = notes
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def date_format(self):
+        year = str(self.sale_date.year)
+        abr_year = year[:2]
+        month = str(self.sale_date.month)
+        day = str(self.sale_date.day)
+        return day + "/" + month
+
+    def view(self):
+        return {
+            'id': self.id,
+            'item': self.item.name,
+            'qty': self.quantity,
+            'price': self.sale_price,
+            'date': StockSaleOp.date_format(self),
+            "amount":f"Kes {self.sale_price*self.quantity:.2f}",
+            "discount":"0%",
+            "status":"Paid",
+            "payment":"Cash",
+            "soldby":"Admin User",
+            "notes":"N/A"
+        }
+
+
 class ItemOp(Item, Base):
     """Class to house item operations"""
 

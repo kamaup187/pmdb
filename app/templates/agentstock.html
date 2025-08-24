@@ -4274,6 +4274,32 @@
 							toastIt(`${response}`, 'danger');
 						}
 						$('#addItemModal').modal('hide');
+
+
+						$.ajax({
+							url: "/v2/stock/items",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+								renderItemsTemplate("allItemsTable",$("#items-all-table")); //create table and replace ID
+								var t1 = runDataTable("allItemsTable") // reBUILD datatable instance
+								addItemsToTable(response,t1) // pass data to the new table
+								$("#items-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#items-spinner").addClass("d-none")
+							}
+						});
+
                     },
                     error: function (xhr) {
 						toastIt(`${xhr}`, 'danger');

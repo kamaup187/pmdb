@@ -4724,6 +4724,34 @@
 						$("#buyItemPrice").val("")
 						$("#buyItemSupplier").val("")
 
+
+						$.ajax({
+							url: "/v2/stock/purchases",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderPurchasesTemplate("allPurchasesTable",$("#purchases-all-table")); //create table and replace ID
+								var t1 = runDataTable("allPurchasesTable") // reBUILD datatable instance
+								addPurchasesToTable(response,t1) // pass data to the new table
+								$("#purchases-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#purchases-spinner").addClass("d-none")
+							}
+						});
+
+
+
 					} else{
 						toastIt(`${response}`, 'danger');
 					}
@@ -4757,6 +4785,35 @@
 						$("#saleItem").val("")
 						$("#saleQty").val("")
 						$("#salePrice").val("")
+
+
+
+						$.ajax({
+							url: "/v2/stock/sales",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderSalesTemplate("allSalesTable",$("#sales-all-table")); //create table and replace ID
+								var t1 = runDataTable("allSalesTable") // reBUILD datatable instance
+								addSalesToTable(response,t1) // pass data to the new table
+								$("#sales-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#sales-spinner").addClass("d-none")
+							}
+						});
+
+
 
 					} else{
 						toastIt(`${response}`, 'danger');

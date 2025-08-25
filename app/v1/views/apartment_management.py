@@ -366,7 +366,7 @@ class StockModule(Resource):
         try:
             top_product_id = max(sales_data.items(), key=lambda x: x[1]["total_quantity_sold"])[0]
             top_product = sales_data[top_product_id]
-            formatted_response = f"{top_product['item_name']} Total sold: {top_product['total_quantity_sold']} Amount sold: {round(top_product['total_amount_sold'], 2)}"
+            formatted_response = f"{top_product['item_name']}, Total sold: {top_product['total_quantity_sold']}, Amount: {round(top_product['total_amount_sold'], 2)}"
             top_item = formatted_response
         except:
             top_item = f"No sales data"

@@ -12299,8 +12299,12 @@ class StockPurchases(Resource):
         items = []
 
         for i in purchases:
-             item_dict = PurchaseOp.view(i)
-             items.append(item_dict)
+            try:
+                item_dict = PurchaseOp.view(i)
+            except:
+                PurchaseOp.delete(i)
+                continue
+            items.append(item_dict)
 
         return items
 

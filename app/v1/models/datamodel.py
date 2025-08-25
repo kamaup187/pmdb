@@ -1987,10 +1987,10 @@ class StockItem(db.Model):
 
 
     # Relationships
-    stock_transactions = db.relationship('StockTransaction', backref='item', lazy=True)
-    sales = db.relationship('StockSale', backref='item', lazy=True)
-    stocktakes = db.relationship('StockTakeDb', backref='item', lazy=True)
-    damages = db.relationship('Damage', backref='item', lazy=True)
+    stock_transactions = db.relationship('StockTransaction', backref='item', lazy=True, cascade="all, delete-orphan")
+    sales = db.relationship('StockSale', backref='item', lazy=True, cascade="all, delete-orphan")
+    stocktakes = db.relationship('StockTakeDb', backref='item', lazy=True, cascade="all, delete-orphan")
+    damages = db.relationship('Damage', backref='item', lazy=True, cascade="all, delete-orphan")
 
 class Purchase(db.Model):
     """db model class"""

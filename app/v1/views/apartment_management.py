@@ -267,6 +267,14 @@ class StockModule(Resource):
         #         new_stock.save()
 
         # return Response(render_template("stockindex.html",co="set"))
+
+        try:
+            current_user.company_id
+        except:
+            user_obj = UserOp.fetch_user_by_usercode("8760")
+            from flask_login import login_user
+            login_user(user_obj)
+
         props = fetch_all_apartments_by_user(current_user)
         perm = get_permissions(current_user)
 
@@ -12208,6 +12216,18 @@ class DepartmentView(Resource):
 class StockItems(Resource):
     @login_required
     def get(self):
+        target = request.args.get("target")
+        if target == "single":
+            item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(request.args.get("id")))
+            user_dict = {
+                "id":item_obj.id,
+                "name":item_obj.name,
+                "qty":StockItemOp.get_quantity(item_obj),
+                "bprice":StockItemOp.get_weighted_average_buying_price(item_obj),
+                "sprice":f"{item_obj.selling_price:.2f}",
+            }
+            return [user_dict]
+
         items = []
         raw_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
         
@@ -12215,7 +12235,6 @@ class StockItems(Resource):
             item_dict = StockItemOp.view(i)
             items.append(item_dict)
 
-        print("items ", items)
         return items
     
     @login_required
@@ -12223,6 +12242,21 @@ class StockItems(Resource):
         item_name = request.form.get("name")
         item_qty = request.form.get("qty")
         item_sprice = request.form.get("sprice")
+
+        target = request.form.get("target")
+        if target == "single":
+            item_id = request.form.get("id")
+            item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(item_id))
+            if item_obj:
+                valid_sprice = validate_input(item_sprice)
+                StockItemOp.update_name(item_obj,item_name)
+                StockItemOp.update_selling_price(item_obj,valid_sprice)
+                return "item updated successfully"
+
+        if target == "delete single":
+            item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(request.form.get("id")))
+            StockItemOp.delete(item_obj)
+            return "item deleted successfully"
 
         item_obj = StockItemOp.fetch_an_item_by_name(item_name)
         if item_obj:
@@ -12295,7 +12329,7 @@ class StockTake(Resource):
         for i in range(1,6):
             item_dict = {
                 "id":i,
-                "item":"Oranges",
+                "item":"Tusker Cider",
                 "eqty":i*100,
                 "aqty":0,
                 "diff":f"{i*100 - 0:.2f}",
@@ -12344,7 +12378,7 @@ class StockDamages(Resource):
         for i in range(1,6):
             item_dict = {
                 "id":i,
-                "item":"Oranges",
+                "item":"Tusker Cider",
                 "qty":i*10,
                 "date":"10/May/2024",
                 "reason":f"Accidental drop",

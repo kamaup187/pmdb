@@ -29,11 +29,16 @@ function addItemsToTable(data,table) {
             item.sprice,
             item.updatedon,        // Region
             // Branch
+            '<button class="btn app-button editItem" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateItemModal"><i class="feather-18 feather-bold pb-1" data-feather="edit-2"></i></button>',  // Remove button
+            '<button class="btn app-button-danger deleteItem" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#deleteItemModal"><i class="feather-18 feather-bold pb-1" data-feather="trash"></i></button>',  // Remove button
+
+
         ]);
     });
 
     // Draw the updated table
     table.draw();
+    feather.replace();
 }
 
 function addPurchasesToTable(data,table) {
@@ -320,6 +325,8 @@ var itemsTableTemplate = `
             <th class="fw-bold">Buying Price</th>
             <th class="fw-bold">Selling Price</th>
             <th class="fw-bold">Last Updated</th>
+            <th class="fw-bold">Edit</th>
+            <th class="fw-bold">Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -548,6 +555,85 @@ var accountDataTableTemplate = `
     </tbody>
 </table>
 `
+
+    var itemUpdateForm = (memberobj) => {
+
+        
+        return `
+    
+        
+                                    <form class="settings-form">
+                                        <div class="mb-3">
+                                            <label for="item-update-name" class="form-label">Update item name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+      <circle cx="8" cy="4.5" r="1"/>
+    </svg></span></label>
+                                            <input type="text" class="form-control" id="item-update-name" value="${memberobj.name}" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="item-update-qty" class="form-label">Update quantity</label>
+                                            <input type="text" class="form-control" id="item-update-qty" value="${memberobj.qty}" disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="item-update-bprice" class="form-label">Update buying price</label>
+                                            <input type="text" class="form-control" id="item-update-bprice" value="${memberobj.bprice}" disabled>
+                                        </div>
+    
+                                        <div class="mb-3">
+                                            <label for="item-update-sprice" class="form-label">Update selling price</label>
+                                            <input type="text" class="form-control" id="item-update-sprice" value="${memberobj.sprice}" required>
+                                        </div>
+    
+                                        <input type="hidden" class="form-control" id="item-update-id" value="${memberobj.id}">
+    
+                                        <button type="button" id="update-item-btn" class="btn app-btn-primary" >Submit</button>
+                                    </form>
+    
+    `;
+        };
+
+
+    var itemDeleteForm = (memberobj) => {
+
+        
+        return `
+    
+        
+                                    <form class="settings-form">
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Update item name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+      <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+      <circle cx="8" cy="4.5" r="1"/>
+    </svg></span></label>
+                                            <input type="text" class="form-control" id="" value="${memberobj.name}" disabled>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Update quantity</label>
+                                            <input type="text" class="form-control" id="" value="${memberobj.qty}" disabled>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Update buying price</label>
+                                            <input type="text" class="form-control" id="" value="${memberobj.bprice}" disabled>
+                                        </div>
+    
+                                        <div class="mb-3">
+                                            <label for="" class="form-label">Update selling price</label>
+                                            <input type="text" class="form-control" id="" value="${memberobj.sprice}" disabled>
+                                        </div>
+    
+                                        <input type="hidden" class="form-control" id="item-delete-id" value="${memberobj.id}">
+    
+                                        <button type="button" id="delete-item-btn" class="btn btn-danger" >Delete?</button>
+                                    </form>
+    
+    `;
+        };
 
 var roleUpdateForm = (roleobj,roles) => {
     console.log("perms", roles)

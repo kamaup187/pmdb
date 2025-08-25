@@ -572,12 +572,12 @@ var accountDataTableTemplate = `
                                             <input type="text" class="form-control" id="item-update-name" value="${memberobj.name}" required>
                                         </div>
                                         
-                                        <div class="mb-3">
+                                        <div class="mb-3 d-none">
                                             <label for="item-update-qty" class="form-label">Update quantity</label>
                                             <input type="text" class="form-control" id="item-update-qty" value="${memberobj.qty}" disabled>
                                         </div>
 
-                                        <div class="mb-3">
+                                        <div class="mb-3 d-none">
                                             <label for="item-update-bprice" class="form-label">Update buying price</label>
                                             <input type="text" class="form-control" id="item-update-bprice" value="${memberobj.bprice}" disabled>
                                         </div>

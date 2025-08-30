@@ -1353,14 +1353,26 @@ var itemsTemplate = `
 
 
 <div class="tab-content" id="balances-table-tab-content">
-
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white items-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show items
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="items-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-
 
     <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
         <div class="app-card app-card-requests-table mb-5">
@@ -1421,6 +1433,20 @@ var purchaseTemplate = `
 
 <div class="tab-content" id="balances-table-tab-content">
 
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white purchase-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show purchases
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="purchases-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
@@ -1489,6 +1515,20 @@ var stocktakeTemplate = `
 
 <div class="tab-content" id="balances-table-tab-content">
 
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white stocktake-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show stock takes
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="stocktake-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
@@ -1554,7 +1594,20 @@ var salesTemplate = `
 
 
 <div class="tab-content" id="balances-table-tab-content">
-
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white sales-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show Sales
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="sales-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
@@ -1621,6 +1674,20 @@ var damagesTemplate = `
 
 <div class="tab-content" id="balances-table-tab-content">
 
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white damages-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show damages
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="damages-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
@@ -1687,7 +1754,20 @@ var expensesTemplate = `
 
 
 <div class="tab-content" id="balances-table-tab-content">
-
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white expenses-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show expenses
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="expenses-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
@@ -1738,6 +1818,20 @@ var salesReportTemplate = `
 
 <div class="tab-content" id="balances-table-tab-content">
 
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white sales-report" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show report
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
 
     <div id="sales-report-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">

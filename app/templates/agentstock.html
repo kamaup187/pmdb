@@ -456,7 +456,7 @@
 					        </a>
 					        <div id="submenu-3" class="collapse submenu submenu-3 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link button sale-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Sales report</a></li>
+							        <li class="submenu-item"><a class="submenu-link button sales-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Sales report</a></li>
 							        <li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases report</a></li>
 									<li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take report</a></li>
 									<li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="activity"></i> Profit & Loss report</a></li>
@@ -549,7 +549,7 @@
 						</div>
 						<div class="col-6 col-lg-3 mb-3">
 							<div class="app-card-stat">
-								<a class="btn app-btn-secondary form-control app-button sale-report" href="#"><i data-feather="monitor" class="feather-18 pb-1"></i> View report</a>
+								<a class="btn app-btn-secondary form-control app-button sales-report" href="#"><i data-feather="monitor" class="feather-18 pb-1"></i> View report</a>
 							</div>						
 						</div>
 					</div>
@@ -2204,7 +2204,7 @@
 		})
 
 
-		$(".items-btn").on("click",function(){
+		$(document).on("click", ".items-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2337,7 +2337,7 @@
 			});
 		})
 
-		$(".purchase-btn").on("click",function(){
+		$(document).on("click", ".purchase-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2382,7 +2382,7 @@
 			
 		})
 
-		$(".stocktake-btn").on("click",function(){
+		$(document).on("click", ".stocktake-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2427,7 +2427,7 @@
 			
 		})
 
-		$(".sales-btn").on("click",function(){
+		$(document).on("click", ".sales-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2472,7 +2472,7 @@
 			
 		})
 
-		$(".sale-report").on("click",function(){
+		$(document).on("click", ".sales-report",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2514,7 +2514,7 @@
 			feather.replace();
 		})
 
-		$(".damages-btn").on("click",function(){
+		$(document).on("click", ".damages-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");
@@ -2559,7 +2559,7 @@
 			
 		})
 
-		$(".expenses-btn").on("click",function(){
+		$(document).on("click", ".expenses-btn",function(){
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
 				$("#app-sidepanel").removeClass("sidepanel-visible");

@@ -4448,7 +4448,8 @@ class StockReceipt(Resource):
         outline = "text-black"
         bal = f"Kes 0.0"
 
-        server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+        # server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+        server = "Counter"
 
         co = current_user.company
 

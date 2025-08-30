@@ -149,6 +149,7 @@ function addSalesReportToTable(data,table) {
 
         table.row.add([
              // PNo
+            item.id,
             item.item,
             item.opening,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
@@ -415,6 +416,7 @@ var salesReportTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
+            <th class="fw-bold">#</th>
             <th class="fw-bold">Item</th>
             <th class="fw-bold">OpeningStock</th>
             <th class="fw-bold">PurchasedStock</th>
@@ -1838,6 +1840,12 @@ var salesReportTemplate = `
                         <a class="btn btn-success text-white sales-report" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
                             Show report
+                        </a>
+                    </div>
+                    <div class="col-auto d-none">						    
+                        <a class="btn btn-success text-white" href="#">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print report
                         </a>
                     </div>
                 </div><!--//row-->

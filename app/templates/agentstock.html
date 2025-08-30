@@ -1943,9 +1943,16 @@
 	<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --> <!-- this is the one that is valid for use-->
 	  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 
-	<script src="{{ url_for('static', filename='assets/js/stock_templates_v3.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/stock_templates_v4.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
+
+
+		<!-- Buttons Extension JS -->
+	<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+	<!-- Buttons CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
 	
 	<script>feather.replace();</script>
 
@@ -1965,6 +1972,60 @@
 			"searching":true,
 			columnDefs: [ { targets: 0, type: 'natural' } ],
 			"order": [[ 0, "asc" ]],
+			"bLengthChange": false,
+			destroy: true, // Added to handle re-initialization
+        	stateSave: false // Prevent state persistence
+			});
+		return t1;	
+	}
+</script>
+
+<script>
+	function runDataTableReport(table_id){
+		var t1 = $('#'+table_id).DataTable({
+			// "dom": '<"top"f>rt<"bottom"lp><"clear">',
+			// dom: 'Bfrtip', // B: Buttons, f: Filtering, r: Processing, t: Table, i: Info, p: Pagination
+
+			// buttons: [
+			// 	'print', // Adds the print button
+			// ],
+
+			"dom": '<"top"Bf>rt<"bottom"lp><"clear">', // Added B for buttons
+			buttons: [
+				{
+					extend: 'print',
+					text: 'Print', // Custom button text
+					title: 'Sales report', // Title for print page
+					customize: function(win) {
+						// Optional: Customize print view
+						$(win.document.body).prepend('<h1>Base</h1>');
+						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+					}
+				}
+			],
+
+			"pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+			"pageLength": 100,
+			"searching":true,
+			// columnDefs: [ { targets: 0, type: 'natural' } ],
+			// "order": [[ 0, "asc" ]],
+			columnDefs: [
+				{
+					targets: 0, // First column for row numbers
+					data: null, // No specific data source
+					searchable: false, // Exclude from search
+					orderable: false, // Prevent sorting on this column
+					render: function (data, type, row, meta) {
+						// meta.row is the 0-based index of the row in the current draw
+						// Add 1 to make it 1-based (1, 2, 3, ...)
+						return meta.row + 1;
+					}
+				},
+				{ targets: 1, type: 'natural' } // Adjust original columnDefs (shift index by 1)
+			],
+			"order": [[1, "asc"]], // Sort by second column (original first column)
+
+
 			"bLengthChange": false,
 			destroy: true, // Added to handle re-initialization
         	stateSave: false // Prevent state persistence
@@ -2500,7 +2561,7 @@
 					// });
 
 					renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
-					var t1 = runDataTable("allSalesReportTable") // reBUILD datatable instance
+					var t1 = runDataTableReport("allSalesReportTable") // reBUILD datatable instance
 					addSalesReportToTable(response,t1) // pass data to the new table
 					$("#sales-report-spinner").addClass("d-none") // complete the table update process
 

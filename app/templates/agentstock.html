@@ -242,6 +242,14 @@
 		  .then(() => console.log('Successfully registered and subscribed!'))
 		  .catch(console.error);
 	</script> -->
+
+    <style>
+        .dataTables_wrapper { margin-bottom: 20px; }
+        #summarySection { margin-top: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        @media print {
+            #summarySection { display: block !important; }
+        }
+    </style>
 	
 </head> 
 
@@ -1999,7 +2007,12 @@
 					customize: function(win) {
 						// Optional: Customize print view
 						$(win.document.body).prepend('<h1>Base</h1>');
-						$(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+						// $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
+						$(win.document.body)
+                                        .find('table')
+                                        .after('<div id="printSummary"></div>');
+                        $('#printSummary', win.document.body).html(
+                                        $('#summarySection').html());
 					}
 				}
 			],
@@ -2562,7 +2575,23 @@
 
 					renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
 					var t1 = runDataTableReport("allSalesReportTable") // reBUILD datatable instance
-					addSalesReportToTable(response,t1) // pass data to the new table
+					addSalesReportToTable(response[0],t1) // pass data to the new table
+
+					summary = response[1];
+
+                    const summaryHtml = `
+                        <h4>Summary</h4>
+                        <ul>
+                            <li>Total Stock Remaining: <span class="text-black font-weight bold">${summary.total_stock_remaining}</span></li>
+                            <li>Total Stock Value: <span class="text-black font-weight bold">KES ${summary.total_stock_value}</span></li>
+                            <li>Total Amount Sold: <span class="text-black font-weight bold">KES ${summary.total_amount_sold}</span></li>
+                            <li>Gross Profit: <span class="text-black font-weight bold">KES ${summary.gross_profit}</span></li>
+                            <li>Total items in stock: <span class="text-black font-weight bold">${summary.total_items}</span></li>
+                        </ul>
+                    `;
+                    $('#summarySection').html(summaryHtml);
+
+
 					$("#sales-report-spinner").addClass("d-none") // complete the table update process
 
 				},

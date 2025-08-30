@@ -12442,6 +12442,11 @@ class StockSalesReport(Resource):
         stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
         items = []
 
+        total_stock_remaining = 0
+        total_stock_value = 0.0
+        total_amount_sold = 0.0
+        gross_profit = 0.0
+
         for item in stock_items:
             transactions = db.session.query(StockTransaction)\
                 .filter_by(item_id=item.id, state=True)\
@@ -12470,11 +12475,11 @@ class StockSalesReport(Resource):
                 avg_selling_price = item.selling_price or 0.0
 
             # Total amount sold (revenue)
-            total_amount_sold = sum(s.quantity * s.price_per_unit * -1 for s in sales) if sales else 0.0
+            total_amount_sold_item = sum(s.quantity * s.price_per_unit * -1 for s in sales) if sales else 0.0
 
-            # Profit (revenue - cost of goods sold)
+            # Profit for this item
             cost_of_goods_sold = total_sold_qty * weighted_avg_buying_price if total_sold_qty > 0 else 0.0
-            profit = total_amount_sold - cost_of_goods_sold
+            profit = total_amount_sold_item - cost_of_goods_sold
 
             # Prepare report for this item
             item_report = {
@@ -12485,11 +12490,28 @@ class StockSalesReport(Resource):
                 "sold": total_sold_qty if total_sold_qty > 0 else 0,
                 "balance": stock_balance,
                 "price": avg_selling_price,
-                "amount": round(total_amount_sold, 2),
+                "amount": round(total_amount_sold_item, 2),
                 "profit": round(profit, 2)
             }
             items.append(item_report)
-        return items
+
+            # Update summary totals
+            total_stock_remaining += stock_balance
+            total_stock_value += stock_balance * weighted_avg_buying_price if stock_balance > 0 else 0.0
+            total_amount_sold += total_amount_sold_item
+            gross_profit += profit
+
+
+        # Prepare summary
+        summary = {
+            "total_stock_remaining": total_stock_remaining,
+            "total_stock_value": round(total_stock_value, 2),
+            "total_amount_sold": round(total_amount_sold, 2),
+            "gross_profit": round(gross_profit, 2),
+            "total_items": len(items)
+        }
+
+        return [items, summary]
 
 class ItemView(Resource):
     @timer

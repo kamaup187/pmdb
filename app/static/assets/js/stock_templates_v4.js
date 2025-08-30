@@ -433,6 +433,8 @@ var salesReportTableTemplate = `
     </tbody>
 </table>
 
+<div id="summarySection"></div>
+
 `
 
 var damagesTableTemplate = `

@@ -6421,7 +6421,7 @@ class StockItemOp(StockItem, Base):
             "name":self.name,
             "quantity":StockItemOp.get_quantity(self),
             "bprice":StockItemOp.get_weighted_average_buying_price(self),
-            "sprice":f"{self.selling_price:.2f}",
+            "sprice":f"{self.selling_price:.1f}",
             "updatedon":"N/A",
         }
 
@@ -6539,12 +6539,17 @@ class StockTransactionOp(StockTransaction, Base):
     def fetch_a_transaction_by_id(id):
         return StockTransaction.query.filter_by(id=id).first()
 
+    def fetch_tranasction_by_item_id_and_transaction_type(item_id, transaction_type):
+        return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).first()
+
     def update_quantity(self, quantity):
-        self.quantity = quantity
+        if quantity:
+            self.quantity = quantity
         db.session.commit()
 
     def update_price_per_unit(self, price_per_unit):
-        self.price_per_unit = price_per_unit
+        if price_per_unit:
+            self.price_per_unit = price_per_unit
         db.session.commit()
 
     def update_notes(self, notes):

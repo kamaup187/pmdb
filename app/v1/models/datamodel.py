@@ -1982,7 +1982,7 @@ class StockItem(db.Model):
     description = db.Column(db.VARCHAR)
     selling_price = db.Column(db.Float)  # Optional initial selling price
     state = db.Column(db.Boolean, default=True)
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
 
@@ -2002,7 +2002,7 @@ class Purchase(db.Model):
     status = db.Column(db.String, default="pending")
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
     state = db.Column(db.Boolean, default=True)
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2022,7 +2022,7 @@ class Supplier(db.Model):
     payment_terms = db.Column(db.VARCHAR)
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2041,7 +2041,7 @@ class StockTransaction(db.Model):
     transaction_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2066,7 +2066,7 @@ class StockSale(db.Model):
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2087,7 +2087,7 @@ class Damage(db.Model):
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2107,7 +2107,7 @@ class Expense(db.Model):
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
@@ -2126,7 +2126,7 @@ class StockTakeDb(db.Model):
     discrepancy_notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
-    user_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
 class Department(db.Model):

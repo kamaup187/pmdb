@@ -15,6 +15,11 @@ function addItemsToTable(data,table) {
     // Assuming data is an array of objects
     // var table = $('#primaryData').DataTable();
 
+    if (!table) {
+        console.error("Table is not initialized");
+        return;
+    }
+
     // Clear the existing data
     table.clear();
 
@@ -572,14 +577,14 @@ var accountDataTableTemplate = `
                                             <input type="text" class="form-control" id="item-update-name" value="${memberobj.name}" required>
                                         </div>
                                         
-                                        <div class="mb-3 d-none">
+                                        <div class="mb-3">
                                             <label for="item-update-qty" class="form-label">Update quantity</label>
-                                            <input type="text" class="form-control" id="item-update-qty" value="${memberobj.qty}" disabled>
+                                            <input type="text" class="form-control" id="item-update-qty" value="${memberobj.qty}">
                                         </div>
 
-                                        <div class="mb-3 d-none">
+                                        <div class="mb-3">
                                             <label for="item-update-bprice" class="form-label">Update buying price</label>
-                                            <input type="text" class="form-control" id="item-update-bprice" value="${memberobj.bprice}" disabled>
+                                            <input type="text" class="form-control" id="item-update-bprice" value="${memberobj.bprice}">
                                         </div>
     
                                         <div class="mb-3">
@@ -1734,7 +1739,7 @@ var salesReportTemplate = `
 <div class="tab-content" id="balances-table-tab-content">
 
 
-    <div id="items-spinner" class="d-flex justify-content-center d-none">
+    <div id="sales-report-spinner" class="d-flex justify-content-center d-none">
         <div class="spinner-border text-success m-2" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>

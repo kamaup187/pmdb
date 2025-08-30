@@ -869,15 +869,15 @@
 										<label for="itemName" class="form-label">Item name:</label>
 										<input type="text" id="itemName" class="form-control" placeholder="e.g Premium Lager">
 									</div>
-									<div class="mb-3 d-none">
+									<div class="mb-3">
 										<label for="itemQty" class="form-label">Initial quantity:</label>
 										<input type="number" id="itemQty" class="form-control" placeholder="e.g 100">
 									</div>
 
-									<!-- <div class="mb-3">
+									<div class="mb-3">
 										<label for="itemBuyPrice" class="form-label">Buying price:</label>
 										<input type="number" id="itemBuyPrice" class="form-control" placeholder="e.g 170">
-									</div> -->
+									</div>
 
 									<div class="mb-3">
 										<label for="itemSprice" class="form-label">Selling price:</label>
@@ -1107,8 +1107,8 @@
 									</div>
 
 									<div class="mb-3">
-										<label for="saleQty" class="form-label">Quantity:</label>
-										<input type="number" id="saleQty" class="form-control" placeholder="e.g 2">
+										<label for="saleQty" class="form-label">Quantity: (Available: <span id="availableStock"> - </span>)</label>
+										<input type="number" id="saleQty" class="form-control" placeholder="Enter quantity">
 									</div>
 
 									<div class="mb-3">
@@ -1965,7 +1965,9 @@
 			"searching":true,
 			columnDefs: [ { targets: 0, type: 'natural' } ],
 			"order": [[ 0, "asc" ]],
-			"bLengthChange": false
+			"bLengthChange": false,
+			destroy: true, // Added to handle re-initialization
+        	stateSave: false // Prevent state persistence
 			});
 		return t1;	
 	}
@@ -2309,6 +2311,25 @@
 						$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
 					});
 
+				},
+				error: function (xhr) {
+				alert("Error")
+				}
+			});
+		})
+
+		$("#saleItem").on("change",function(){
+			let itemId = $(this).val();
+			$.ajax({
+				url: "/v2/stock/items",
+				type: "get",
+				data: {
+				target: "price-stock",
+				id: itemId
+				},
+				success: function (response) {
+					$("#salePrice").val(response[0].price);
+					$("#availableStock").text(response[0].quantity);
 				},
 				error: function (xhr) {
 				alert("Error")
@@ -2859,7 +2880,8 @@
 				$('#primaryData').attr('id', newId);
 
 				// Resolve the promise after rendering
-				resolve();
+				// resolve();
+				setTimeout(resolve, 0);
 			});
 		}
 
@@ -4603,6 +4625,7 @@
                     data: {
                     name: $("#itemName").val(),
 					qty:$("#itemQty").val(),
+					bprice:$("#itemBuyPrice").val(),
 					sprice:$("#itemSprice").val(),
                     },
                     success: function (response) {
@@ -4612,7 +4635,8 @@
 						} else{
 							toastIt(`${response}`, 'danger');
 						}
-						$('#addItemModal').modal('hide');
+						// $('#addItemModal').modal('hide');
+						$("#itemName").focus();
 
 
 						$.ajax({
@@ -4770,6 +4794,13 @@
 <script>
 	$("#submitSaleBtn").on("click", function() {
 		if(validate("saleItem","saleQty","salePrice")){
+			if($("#saleQty").val() <= 0){
+				toastIt("Quantity must be greater than zero", 'danger');
+				return;
+			}else if($("#saleQty").val() > parseInt($("#availableStock").text())){
+				toastIt("Quantity cannot be more than available stock", 'danger');
+				return;
+			}
 			$.ajax({
 				url: "/v2/stock/sales",
 				type: "post",

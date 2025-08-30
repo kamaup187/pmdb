@@ -6632,7 +6632,7 @@ class StockSaleOp(StockSale, Base):
         self.company_id = company_id
 
     def fetch_a_sale_by_id(id):
-        return Sale.query.filter_by(id=id).first()
+        return StockSale.query.filter_by(id=id).first()
 
     def fetch_sales_by_company_id(company_id):
         return StockSale.query.filter_by(company_id=company_id).order_by(StockSale.sale_date.desc()).all()
@@ -6680,6 +6680,7 @@ class StockSaleOp(StockSale, Base):
             'price': self.sale_price,
             'date': StockSaleOp.date_format(self),
             "amount":f"Kes {self.sale_price*self.quantity:.2f}",
+            "url":"/stock/print/"+str(self.id),
             "discount":"0%",
             "status":"Paid",
             "payment":"Cash",

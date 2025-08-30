@@ -12399,7 +12399,7 @@ class StockSales(Resource):
 
         sale_obj = StockSaleOp(stock_transaction_obj.id,item_id,quantity,price,payment,current_user.id,current_user.company.id)
         sale_obj.save()
-        return "sale recorded successfully"
+        return ["sale recorded successfully",sale_obj.id]
 
 class StockDamages(Resource):
     @login_required

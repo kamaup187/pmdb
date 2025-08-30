@@ -125,13 +125,16 @@ function addSalesToTable(data,table) {
             item.status,
             item.payment,       // Region
             item.soldby,
-            item.notes
+            item.notes,
+            '<a href="'+ item.url +'" target="_blank" class="btn btn-success viewReceipt" data-id="' + item.id + '"><i class="feather-18 feather-bold pb-1" data-feather="printer"></i></a>',  // Remove button
+            '<button class="btn btn-danger viewReceipt" data-id="' + item.id + '"><i class="feather-18 feather-bold pb-1" data-feather="trash"></i></button>',  // Remove button
             // Branch
         ]);
     });
 
     // Draw the updated table
     table.draw();
+    feather.replace();
 }
 
 function addSalesReportToTable(data,table) {
@@ -397,6 +400,8 @@ var salesTableTemplate = `
             <th class="fw-bold">Payment</th>
             <th class="fw-bold">SoldBy</th>
             <th class="fw-bold">Comments</th>
+            <th class="fw-bold">Receipt</th>
+            <th class="fw-bold">Void</th>
         </tr>
     </thead>
     <tbody>
@@ -1604,6 +1609,13 @@ var salesTemplate = `
                             Show Sales
                         </a>
                     </div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-warning" id="recentReceipt" href="#" target="_blank">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print receipt
+                        </a>
+                    </div>
+
                 </div><!--//row-->
             </div><!--//table-utilities-->
         </div><!--//col-auto-->

@@ -457,9 +457,9 @@
 					        <div id="submenu-3" class="collapse submenu submenu-3 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
 							        <li class="submenu-item"><a class="submenu-link button sales-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Sales report</a></li>
-							        <li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases report</a></li>
-									<li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take report</a></li>
-									<li class="submenu-item"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="activity"></i> Profit & Loss report</a></li>
+							        <li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases report</a></li>
+									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take report</a></li>
+									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="activity"></i> Profit & Loss report</a></li>
 						        </ul>
 					        </div>
 					    </li>
@@ -2485,7 +2485,7 @@
 			$("#working-block").removeClass("d-none")
 		    $("#working-block").html(salesReportTemplate)
 			
-			$("sales-report-spinner").removeClass("d-none")
+			$("#sales-report-spinner").removeClass("d-none")
 			$("#sales-report-table").empty()
 			$.ajax({
 				url: "/v2/stock/sales/report",
@@ -2502,12 +2502,12 @@
 					renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
 					var t1 = runDataTable("allSalesReportTable") // reBUILD datatable instance
 					addSalesReportToTable(response,t1) // pass data to the new table
-					$("sales-report-spinner").addClass("d-none") // complete the table update process
+					$("#sales-report-spinner").addClass("d-none") // complete the table update process
 
 				},
 				error: function (xhr) {
 				alert("Error")
-				$("sales-report-spinner").addClass("d-none")
+				$("#sales-report-spinner").addClass("d-none")
 				}
 			});
 
@@ -4811,13 +4811,18 @@
 					payment:$("#salePaymentMethod").val(),
 				},
 				success: function (response) {
-					if (response.includes("success")){
-						toastIt(`${response}`, 'success');
+					if (response[0].includes("success")){
+						toastIt(`${response[0]}`, 'success');
 						$("#saleItem").val("")
 						$("#saleQty").val("")
 						$("#salePrice").val("")
 
+						$("#recentReceipt").attr("href", `/stock/print/${response[1]}`);
+						$("#recentReceipt").removeClass("d-none");
+						$("#recentReceipt").trigger("click");
 
+						const clickEvent = new Event("click", { bubbles: true, cancelable: true });
+						$("#recentReceipt")[0].dispatchEvent(clickEvent);
 
 						$.ajax({
 							url: "/v2/stock/sales",

@@ -4421,6 +4421,77 @@ class PrintActualReceipt(Resource):
                 randid=payment_obj.rand_id if payment_obj.rand_id else "a"
             ))
 
+class StockReceipt(Resource):
+    def get(self,ri):
+        print("ri",ri)
+        pay_id = get_identifier(ri)
+        print("pay_id",pay_id)
+        payment_obj = StockSaleOp.fetch_a_sale_by_id(pay_id)
+        print("payyyyiiiii",payment_obj)
+        db.session.expire(payment_obj)
+
+        disp = "dispnone"
+
+        p = inflect.engine()
+        int_amount = int(payment_obj.sale_price * payment_obj.quantity)
+        str_amount = p.number_to_words(int_amount)
+        stramount = str_amount.capitalize()
+
+        paydate = payment_obj.sale_date
+        payperiod = "N/A"
+
+        bill = f"KES {payment_obj.sale_price * payment_obj.quantity:,.0f}"
+
+        paid = f'KES {payment_obj.sale_price * payment_obj.quantity:,.0f}'
+
+        baltitle = "Balance"
+        outline = "text-black"
+        bal = f"Kes 0.0"
+
+        server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
+
+        co = current_user.company
+
+        receiptno = payment_obj.id
+
+        prop = "Main counter"
+
+        address = None
+
+        # template = "pos_receipt2.html"
+
+        # template = "a4receipt.html"
+        template = "aa_stock.html"
+
+        return Response(render_template(
+            template,
+            voided = disp,
+            tenant = "Customer",
+            house= "Main counter",
+            amount=paid,
+            str_amount=stramount,
+            str_month="N/A",
+            paydate=paydate.strftime("%d %B, %Y"),
+            paytime=paydate.strftime("%X"),
+            rdate = payment_obj.sale_date.strftime("%d %B, %Y"),
+            bill=bill,
+            baltitle=baltitle,
+            outline=outline,
+            balance=bal,
+            item=f"{payment_obj.item.name} @ Kes {payment_obj.sale_price:,.1f}",
+            qty=payment_obj.quantity,
+            price= f"KES {payment_obj.sale_price * payment_obj.quantity :,.1f}",
+            receiptno=receiptno,
+            refnum=payment_obj.id,
+            paymode=payment_obj.payment_method,
+            logopath=logo(current_user.company)[0],
+            company=current_user.company,
+            address=address,
+            user= server,
+            prop=prop,
+            randid="a"
+        ))
+
 class UpdateBalance(Resource):
     def get(self):
         tenant_id = request.args.get("tenantid")

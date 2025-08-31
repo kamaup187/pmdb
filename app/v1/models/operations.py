@@ -6579,47 +6579,23 @@ class StockTransactionOp(StockTransaction, Base):
             'state': self.state
         }
 
-class StockTakeOp(StockTakeDb, Base):
-    def __init__(self, item_id, expected_quantity, actual_quantity, discrepancy_notes, user_id,company_id):
-        self.item_id = item_id
-        self.expected_quantity = expected_quantity
-        self.actual_quantity = actual_quantity
-        self.discrepancy_notes = discrepancy_notes
+class StockTakeOp(StockTake, Base):
+    def __init__(self, stocktake_type, notes, user_id,company_id):
+        self.stocktake_type = stocktake_type
+        self.notes = notes
         self.user_id = user_id
         self.company_id = company_id
 
     def fetch_a_stock_take_by_id(id):
-        return StockTakeDb.query.filter_by(id=id).first()
+        return StockTake.query.filter_by(id=id).first()
 
-    def update_actual_quantity(self, actual_quantity):
-        self.actual_quantity = actual_quantity
-        db.session.commit()
-
-    def update_discrepancy_notes(self, discrepancy_notes):
-        self.discrepancy_notes = discrepancy_notes
-        db.session.commit()
+    def fetch_current_stocktake_by_company_id(company_id):
+        return StockTake.query.filter_by(company_id=company_id).order_by(StockTake.id.desc()).first()
 
     def update_state(self, state):
         self.state = state
         db.session.commit()
 
-    def date_format(self):
-        year = str(self.stock_take_date.year)
-        abr_year = year[:2]
-        month = str(self.stock_take_date.month)
-        day = str(self.stock_take_date.day)
-        return day + "/" + month
-
-    def view(self):
-        return {
-            'id': self.id,
-            'item_id': self.item_id,
-            'expected_quantity': self.expected_quantity,
-            'actual_quantity': self.actual_quantity,
-            'discrepancy_notes': self.discrepancy_notes,
-            'date': StockTakeOp.date_format(self),
-            'state': self.state
-        }
 
 class StockSaleOp(StockSale, Base):
     def __init__(self, stock_transaction_id, item_id, quantity, sale_price, payment_method, user_id,company_id):
@@ -6688,6 +6664,71 @@ class StockSaleOp(StockSale, Base):
             "notes":"N/A"
         }
 
+class StockDamageOp(StockDamage, Base):
+    def __init__(self, trans_id, reason, notes, user_id,company_id):
+        self.stock_transaction_id = trans_id
+        self.damage_reason = reason
+        self.notes = notes
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_a_damage_record_by_id(id):
+        return StockDamage.query.filter_by(id=id).first()
+
+    def fetch_damage_records_by_company_id(company_id):
+        return StockDamage.query.filter_by(company_id=company_id).order_by(StockDamage.damage_date.desc()).all()
+
+    def update_reason(self, reason):
+        self.reason = reason
+        db.session.commit()
+
+    def update_state(self, state):
+        self.state = state
+        db.session.commit()
+
+    def date_format(self):
+        year = str(self.damage_date.year)
+        abr_year = year[:2]
+        month = str(self.damage_date.month)
+        day = str(self.damage_date.day)
+        return day + "/" + month
+
+    def view(self):
+        return {
+            'id': self.id,
+            'item': self.stock_transaction.item.name,
+            'qty': -1*self.stock_transaction.quantity if self.stock_transaction else "N/A",
+            'reason': self.damage_reason,
+            'date': StockDamageOp.date_format(self),
+            'notes': self.notes if self.notes else "None"
+        }
+
+class StockExpenseOp(StockExpense, Base):
+    """Class to house expense operations"""
+
+    def __init__(self, category,cost,date,notes,user_id,company_id):
+        self.category = category
+        self.amount = cost
+        self.expense_date = date
+        self.notes = notes
+        self.user_id = user_id
+        self.company_id = company_id
+
+    def fetch_expense_by_id(id):
+        return StockExpense.query.filter_by(id=id).first()
+
+    def fetch_expenses_by_company_id(company_id):
+        return StockExpense.query.filter_by(company_id=company_id).order_by(StockExpense.expense_date.desc()).all()
+
+    def view(self):
+
+        return {
+            'id':self.id,
+            'category':self.category,
+            'cost': self.amount,
+            'date': self.expense_date.strftime("%d/%m/%Y"),
+            'notes':self.notes
+        }
 
 class ItemOp(Item, Base):
     """Class to house item operations"""

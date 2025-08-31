@@ -12352,24 +12352,57 @@ class StockPurchases(Resource):
         return "purchase recorded successfully"
 
 
-class StockTake(Resource):
+class StockTakes(Resource):
     @login_required
     def get(self):
         items = []
-        for i in range(1,6):
+
+        raw_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
+
+        current_stocktake_obj = StockTakeOp.fetch_current_stocktake_by_company_id(current_user.company.id)
+        if not current_stocktake_obj:
+            return items
+        
+        for i in raw_items:
             item_dict = {
-                "id":i,
-                "item":"Tusker Cider",
-                "eqty":i*100,
+                "stockid":f"ST{current_stocktake_obj.id:03}",
+                "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
+                "stocktype":current_stocktake_obj.stocktake_type,
+                "item":i.name,
+                "eqty":StockItemOp.get_quantity(i),
                 "aqty":0,
-                "diff":f"{i*100 - 0:.2f}",
-                "status":f"{'Surplus' if (i*100 - 0)>0 else 'Deficit' if (i*100 - 0)<0 else 'Match'}",
-                "date":"10/May/2024",
-                "notes":"Some notes here"
+                "diff":f"{StockItemOp.get_quantity(i) - 0:.2f}",
+                "status":f"{'Surplus' if (StockItemOp.get_quantity(i) - 0)>0 else 'Deficit' if (StockItemOp.get_quantity(i) - 0)<0 else 'Match'}",
+                "notes":current_stocktake_obj.notes
             }
             items.append(item_dict)
 
-        return items
+        # for i in range(1,6):
+        #     item_dict = {
+        #         "stockid":"ST001",
+        #         "date":"10/May/2024",
+        #         "stocktype":"Closing",
+        #         "item":"Tusker Cider",
+        #         "eqty":i*100,
+        #         "aqty":0,
+        #         "diff":f"{i*100 - 0:.2f}",
+        #         "status":f"{'Surplus' if (i*100 - 0)>0 else 'Deficit' if (i*100 - 0)<0 else 'Match'}",
+        #         "notes":"Some notes here"
+        #     }
+        #     items.append(item_dict)
+
+        return [items,current_stocktake_obj.id]
+
+
+    def post(self):
+        stocktake_type = request.form.get('category')
+        notes = request.form.get('notes')
+
+        stocktake_obj = StockTakeOp(stocktake_type,notes,current_user.id,current_user.company.id)
+        stocktake_obj.save()
+
+        return ["Stocktake started successfully"]
+
 
 class StockSales(Resource):
     @login_required
@@ -12404,37 +12437,52 @@ class StockSales(Resource):
 class StockDamages(Resource):
     @login_required
     def get(self):
+        damages = StockDamageOp.fetch_damage_records_by_company_id(current_user.company.id)
         items = []
-        for i in range(1,6):
-            item_dict = {
-                "id":i,
-                "item":"Tusker Cider",
-                "qty":i*10,
-                "date":"10/May/2024",
-                "reason":f"Accidental drop",
-                "approval":f"Approved",
-                "approvedby":"Admin User",
-                "notes":"Some notes here"
-            }
+        for i in damages:
+            item_dict = StockDamageOp.view(i)
             items.append(item_dict)
         return items
+
+
+    def post(self):
+        item_id = request.form.get("item")
+        qty = request.form.get("qty")
+        reason = request.form.get("reason")
+        notes = request.form.get("notes")
+
+        item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(item_id))
+        if not item_obj:
+            return "invalid item"
+
+        stock_transaction_obj = StockTransactionOp(item_obj.id,'Damage',validate_int_input(qty)*-1,0.0,current_user.id,current_user.company.id)
+        stock_transaction_obj.save()
+
+        damage_obj = StockDamageOp(stock_transaction_obj.id,reason,notes,current_user.id,current_user.company.id)
+        damage_obj.save()
+
+        return ["damage recorded successfully"]
 
 class StockExpenses(Resource):
     @login_required
     def get(self):
         items = []
-        for i in range(1,6):
-            item_dict = {
-                "id":i,
-                "category":"Electricity",
-                "amount":f"{i*1500:.2f}",
-                "date":"10/May/2024",
-                "approval":f"Approved",
-                "approvedby":"Admin User",
-                "notes":"Some notes here"
-            }
+        expenses = StockExpenseOp.fetch_expenses_by_company_id(current_user.company.id)
+        for i in expenses:
+            item_dict = StockExpenseOp.view(i)
             items.append(item_dict)
-        return items   
+        return items
+
+    def post(self):
+        category = request.form.get('category')
+        cost = request.form.get('amount')
+        date = request.form.get('date')
+        notes = request.form.get('notes')
+
+        expense_obj = StockExpenseOp(category,validate_input(cost),None,notes,current_user.id,current_user.company.id)
+        expense_obj.save()
+
+        return ["expense recorded successfully"]
 
 class StockSalesReport(Resource):
     @login_required

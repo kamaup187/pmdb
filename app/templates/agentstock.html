@@ -35,6 +35,10 @@
     <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='assets/css/v2_portal.css') }}">
 
 	<style>
+
+.editable { padding: 5px; }
+.editable:focus { outline: 1px solid #007bff; background-color: #f8f9fa; }
+
 		.feather {
 			stroke-width: 1; /* Decrease the value to make the icons thinner */
 			vertical-align: middle;
@@ -1054,7 +1058,7 @@
 										</select>
 									</div>
 
-									<div class="mb-3">
+									<div class="mb-3 d-none">
 										<label for="stocktakeItem" class="form-label">Select item</label>
 										<select class="form-select" id="stocktakeItem">
 											<option value="All items"  selected>All items</option>
@@ -1065,8 +1069,13 @@
 									</div>
 
 									<div class="mb-3">
-										<label for="stocktakeNotes" class="form-label">Additional notes:</label>
+										<label for="stocktakeNotes" class="form-label">Comments:</label>
 										<textarea type="text" id="stocktakeNotes" class="form-control" placeholder="e.g Counted during store closure"></textarea>
+									</div>
+
+									<div class="mb-3">
+										<label for="stocktakeId" class="form-label">Stocktake ID:</label>
+										<input type="text" id="stocktakeId" class="form-control" placeholder="e.g STK20250820" value="" readonly>
 									</div>
 
 									<button type="button" id="submitStocktakeBtn" class="mt-2 form-control btn app-btn-primary text-white" >Submit</button>
@@ -1197,11 +1206,6 @@
 									</div>
 
 									<div class="mb-3">
-										<label for="damageDate" class="form-label">Damage date:</label>
-										<input type="date" id="damageDate" class="form-control">
-									</div>
-
-									<div class="mb-3">
 										<label for="damageReason" class="form-label">Reason:</label>
 										<input type="text" id="damageReason" class="form-control" placeholder="e.g Expired, Broken bottle">
 									</div>
@@ -1257,12 +1261,12 @@
 									</div>
 
 									<div class="mb-3">
-										<label for="expenseAmount" class="form-label">Quantity:</label>
-										<input type="number" id="expenseAmount" class="form-control" placeholder="e.g 200">
+										<label for="expenseAmount" class="form-label">Cost:</label>
+										<input type="number" id="expenseAmount" class="form-control" placeholder="Enter cost amount here">
 									</div>
 
 									<div class="mb-3">
-										<label for="expenseDate" class="form-label">Damage date:</label>
+										<label for="expenseDate" class="form-label">Expense date:</label>
 										<input type="date" id="expenseDate" class="form-control">
 									</div>
 
@@ -1989,6 +1993,85 @@
 </script>
 
 <script>
+
+
+function runDataTableEditable(tableId) {
+    let table = $('#' + tableId).DataTable({
+        destroy: true, // Destroy previous instance to reinitialize
+        columns: [
+            { data: 'stockid' },    // Item ID
+            { data: 'date' },       // Date
+            { data: 'stocktype' },  // Stocktake type
+            { data: 'item' },       // Item name
+            { data: 'eqty' },       // Expected quantity
+            {
+                data: 'aqty',       // Actual quantity (editable)
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        return '<span contenteditable="true" class="editable" data-item-id="' + row.stockid + '">' + (data || 0) + '</span>';
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'diff',       // Difference (calculated)
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        return calculateDifference(row.eqty, row.aqty || 0);
+                    }
+                    return data;
+                }
+            },
+            { data: 'status' },     // Status
+            { data: 'notes' }       // Notes
+        ],
+        drawCallback: function(settings) {
+            let api = this.api();
+            // Delegate event to table body to handle dynamically added elements
+            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
+                let $cell = $(this);
+                let $row = $cell.closest('tr');
+                let rowIdx = api.row($row).index();
+                if (rowIdx === undefined) {
+                    console.error('Row index not found for:', $row);
+                    return;
+                }
+                let rowData = api.row(rowIdx).data();
+                let newValue = parseInt($cell.text()) || 0;
+                rowData.aqty = newValue; // Update row data
+                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw(); // Update diff column (index 6)
+            });
+        }
+    });
+    return table; // Return the instance for external use
+}
+
+// Updated addStocktakeToTable function
+function addStocktakeToTableEditable(data, table) {
+    table.clear();
+
+    let tableData = data.map(item => ({
+        stockid: item.stockid,
+        date: item.date,
+        stocktype: item.stocktype,
+        item: item.item,
+        eqty: item.eqty || 0,
+        aqty: item.aqty || 0,
+        diff: item.diff || 0,
+        status: item.status,
+        notes: item.notes
+    }));
+
+    table.rows.add(tableData).draw();
+}
+function calculateDifference(expected, actual) {
+	console.log("Calculating difference: expected=" + expected + ", actual=" + actual);
+    return actual - expected;
+}
+
+</script>
+
+<script>
 	function runDataTableReport(table_id){
 		var t1 = $('#'+table_id).DataTable({
 			// "dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -2392,6 +2475,30 @@
 			});
 		})
 
+
+		$("#damagesModal").on("shown.bs.modal",function(){
+			$.ajax({
+				url: "/v2/stock/items",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					$select = $("#damageItem")
+					$select.empty();
+					$select.append('<option selected disabled value="">Choose item below</option>');
+					console.log(response)
+					$.each(response, function (index, item) {
+						$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+					});
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				}
+			});
+		})
+
 		$("#saleItem").on("change",function(){
 			let itemId = $(this).val();
 			$.ajax({
@@ -2473,7 +2580,7 @@
 			$("#stocktake-spinner").removeClass("d-none")
 			$("#stocktake-all-table").empty()
 			$.ajax({
-				url: "/v2/stock/take",
+				url: "/v2/stock/takes",
 				type: "get",
 				data: {
 				target: "all"
@@ -2486,8 +2593,9 @@
 
 
 					renderStocktakeTemplate("allStocktakeTable",$("#stocktake-all-table")); //create table and replace ID
-					var t1 = runDataTable("allStocktakeTable") // reBUILD datatable instance
-					addStocktakeToTable(response,t1) // pass data to the new table
+					var t1 = runDataTableEditable("allStocktakeTable") // reBUILD datatable instance
+					addStocktakeToTableEditable(response[0],t1) // pass data to the new table
+					$("#stocktakeId").val(response[1])
 					$("#stocktake-spinner").addClass("d-none") // complete the table update process
 
 				},
@@ -4944,7 +5052,7 @@
 					} else{
 						toastIt(`${response}`, 'danger');
 					}
-					$('#saleItemModal').modal('hide');
+					$('#salesModal').modal('hide');
 				},
 				error: function (xhr) {
 					toastIt(`${xhr}`, 'danger');
@@ -4955,6 +5063,183 @@
 		}
 	})
 </script>
+
+<script>
+	$("#submitDamageBtn").on("click", function() {
+		if(validate("damageItem","damageQty","damageReason")){
+			$.ajax({
+				url: "/v2/stock/damages",
+				type: "post",
+				data: {
+					item: $("#damageItem").val(),
+					qty:$("#damageQty").val(),
+					reason:$("#damageReason").val(),
+					notes:$("#damageNotes").val(),
+				},
+				success: function (response) {
+					if (response[0].includes("success")){
+						toastIt(`${response[0]}`, 'success');
+						$("#damageItem").val("")
+						$("#damageQty").val("")
+						$("#damageReason").val("")
+
+						$.ajax({
+							url: "/v2/stock/damages",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderDamagesTemplate("allDamagesTable",$("#damages-all-table")); //create table and replace ID
+								var t1 = runDataTable("allDamagesTable") // reBUILD datatable instance
+								addDamagesToTable(response,t1) // pass data to the new table
+								$("#damages-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#damages-spinner").addClass("d-none")
+							}
+						});
+
+					} else{
+						toastIt(`${response}`, 'danger');
+					}
+					$('#damagesModal').modal('hide');
+				},
+				error: function (xhr) {
+					toastIt(`${xhr}`, 'danger');
+				}
+			});
+		} else{
+			toastIt("check your inputs", 'danger');
+		}
+	})
+</script>
+
+<script>
+	$("#submitExpenseBtn").on("click", function() {
+		if(validate("expenseCategory","expenseAmount")){
+			$.ajax({
+				url: "/v2/stock/expenses",
+				type: "post",
+				data: {
+					category: $("#expenseCategory").val(),
+					amount:$("#expenseAmount").val(),
+					date:$("#expenseDate").val(),
+					notes:$("#expenseNotes").val(),
+				},
+				success: function (response) {
+					if (response[0].includes("success")){
+						toastIt(`${response[0]}`, 'success');
+						$("#expenseCategory").val("")
+						$("#expenseAmount").val("")
+						$("#expenseDate").val("")
+
+						$.ajax({
+							url: "/v2/stock/expenses",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderExpensesTemplate("allExpensesTable",$("#expenses-all-table")); //create table and replace ID
+								var t1 = runDataTable("allExpensesTable") // reBUILD datatable instance
+								addExpensesToTable(response,t1) // pass data to the new table
+								$("#expenses-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#expenses-spinner").addClass("d-none")
+							}
+						});
+
+					} else{
+						toastIt(`${response}`, 'danger');
+					}
+					$('#expensesModal').modal('hide');
+				},
+				error: function (xhr) {
+					toastIt(`${xhr}`, 'danger');
+				}
+			});
+		} else{
+			toastIt("check your inputs", 'danger');
+		}
+	})
+</script>
+
+<script>
+	$("#submitStocktakeBtn").on("click", function() {
+		if(validate("stocktakeType")){
+			$.ajax({
+				url: "/v2/stock/takes",
+				type: "post",
+				data: {
+					category: $("#stocktakeType").val(),
+					notes:$("#stocktakeNotes").val(),
+				},
+				success: function (response) {
+					if (response[0].includes("success")){
+						toastIt(`${response[0]}`, 'success');
+						$("#stocktakeType").val("")
+						$("#stocktakeNotes").val("")
+
+						$.ajax({
+							url: "/v2/stock/takes",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderStocktakeTemplate("allStocktakeTable",$("#stocktake-all-table")); //create table and replace ID
+								var t1 = runDataTableEditable("allStocktakeTable") // reBUILD datatable instance
+								addStocktakeToTableEditable(response[0],t1) // pass data to the new table
+								$("#stocktakeId").val(response[1])
+								$("#stocktake-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#stocktake-spinner").addClass("d-none")
+							}
+						});
+
+
+					} else{
+						toastIt(`${response}`, 'danger');
+					}
+					$('#stocktakeModal').modal('hide');
+				},
+				error: function (xhr) {
+					toastIt(`${xhr}`, 'danger');
+				}
+			});
+		} else{
+			toastIt("check your inputs", 'danger');
+		}
+	})
+</script>
+
 
 <script>
     $("#submit-user-btn").on('click', function () {

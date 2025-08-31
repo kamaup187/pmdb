@@ -1989,8 +1989,6 @@ class StockItem(db.Model):
     # Relationships
     stock_transactions = db.relationship('StockTransaction', backref='item', lazy=True, cascade="all, delete-orphan")
     sales = db.relationship('StockSale', backref='item', lazy=True, cascade="all, delete-orphan")
-    stocktakes = db.relationship('StockTakeDb', backref='item', lazy=True, cascade="all, delete-orphan")
-    damages = db.relationship('Damage', backref='item', lazy=True, cascade="all, delete-orphan")
 
 class Purchase(db.Model):
     """db model class"""
@@ -2035,6 +2033,7 @@ class StockTransaction(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
+    stock_take_id = db.Column(db.Integer, db.ForeignKey('stock_takes.id'), nullable=True)
     transaction_type = db.Column(db.VARCHAR)  # e.g., Purchase, Sale, Damage, Opening Stock
     quantity = db.Column(db.Integer)
     price_per_unit = db.Column(db.Float)
@@ -2047,8 +2046,7 @@ class StockTransaction(db.Model):
     # Relationships
     purchase = db.relationship('Purchase', backref='stock_transaction', uselist=False, lazy=True)
     sale = db.relationship('StockSale', backref='stock_transaction', uselist=False, lazy=True)
-    damage = db.relationship('Damage', backref='stock_transaction', uselist=False, lazy=True)
-    expense = db.relationship('Expense', backref='stock_transaction', uselist=False, lazy=True)
+    damage = db.relationship('StockDamage', backref='stock_transaction', uselist=False, lazy=True)
 
 class StockSale(db.Model):
     """db model class"""
@@ -2072,18 +2070,14 @@ class StockSale(db.Model):
     # Relationships
     stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'))
 
-class Damage(db.Model):
+class StockDamage(db.Model):
     """db model class"""
 
-    __tablename__ = 'damages'
+    __tablename__ = 'stock_damages'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
-    quantity = db.Column(db.Integer)
     damage_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     damage_reason = db.Column(db.VARCHAR)
-    approval_status = db.Column(db.String, default="pending")
-    approved_by = db.Column(db.VARCHAR, nullable=True)
     notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
@@ -2093,10 +2087,10 @@ class Damage(db.Model):
     # Relationships
     stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'))
 
-class Expense(db.Model):
+class StockExpense(db.Model):
     """db model class"""
 
-    __tablename__ = 'stockexpenses'
+    __tablename__ = 'stock_expenses'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     category = db.Column(db.VARCHAR)
@@ -2110,24 +2104,21 @@ class Expense(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
-    # Relationships
-    stock_transaction_id = db.Column(db.Integer, db.ForeignKey('stock_transactions.id'), nullable=True)
-
-class StockTakeDb(db.Model):
+class StockTake(db.Model):
     """db model class"""
 
-    __tablename__ = 'stocktakedbs'
+    __tablename__ = 'stock_takes'
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
-    stock_take_date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    expected_quantity = db.Column(db.Integer)
-    actual_quantity = db.Column(db.Integer, nullable=True)
-    discrepancy_notes = db.Column(db.VARCHAR, nullable=True)
+    stocktake_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    stocktake_type = db.Column(db.VARCHAR, default="Opening")  # e.g., Annual, Quarterly, Monthly
+    notes = db.Column(db.VARCHAR, nullable=True)
     state = db.Column(db.Boolean, default=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+
+    adjustments = db.relationship('StockTransaction', backref='stock_take', uselist=False, lazy=True)
 
 class Department(db.Model):
     """db model class"""

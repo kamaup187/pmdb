@@ -85,14 +85,15 @@ function addStocktakeToTable(data,table) {
     data.forEach(function(item) {
 
         table.row.add([
-            item.id,             // PNo
+            item.stockid,             // PNo
+            item.date,
+            item.stocktype,
             item.item,
             item.eqty,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
             item.aqty,           // Name
             item.diff,
             item.status,        // Region
-            item.date,
             item.notes
             // Branch
         ]);
@@ -185,8 +186,6 @@ function addDamagesToTable(data,table) {
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
             item.date,
             item.reason,
-            item.approval,       // Region
-            item.approvedby,
             item.notes
             // Branch
         ]);
@@ -211,10 +210,10 @@ function addExpensesToTable(data,table) {
             item.id,             // PNo
             item.category,
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
-            item.amount,
+            item.cost,
             item.date,
-            item.approval,       // Region
-            item.approvedby,
+            // item.approval,       // Region
+            // item.approvedby,
             item.notes
             // Branch
         ]);
@@ -369,13 +368,14 @@ var stocktakeTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
-            <th class="fw-bold">#</th>
+            <th class="fw-bold">STID</th>
+            <th class="fw-bold">Date</th>
+            <th class="fw-bold">Type</th>
             <th class="fw-bold">Item</th>
             <th class="fw-bold">Expected</th>
             <th class="fw-bold">Actual</th>
             <th class="fw-bold">Diff</th>
             <th class="fw-bold">Status</th>
-            <th class="fw-bold">Date</th>
             <th class="fw-bold">Comments</th>
         </tr>
     </thead>
@@ -446,8 +446,6 @@ var damagesTableTemplate = `
             <th class="fw-bold">Quantity</th>
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Reason</th>
-            <th class="fw-bold">Approval</th>
-            <th class="fw-bold">ApprovedBy</th>
             <th class="fw-bold">Comments</th>
         </tr>
     </thead>
@@ -466,8 +464,6 @@ var expensesTableTemplate = `
             <th class="fw-bold">Category</th>
             <th class="fw-bold">Amount</th>
             <th class="fw-bold">Date</th>
-            <th class="fw-bold">Approval</th>
-            <th class="fw-bold">ApprovedBy</th>
             <th class="fw-bold">Comments</th>
         </tr>
     </thead>

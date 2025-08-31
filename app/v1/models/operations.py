@@ -6528,7 +6528,8 @@ class PurchaseOp(Purchase, Base):
         }
 
 class StockTransactionOp(StockTransaction, Base):
-    def __init__(self, item_id, transaction_type, quantity, price_per_unit,user_id,company_id):
+    def __init__(self,stocktake_id, item_id, transaction_type, quantity, price_per_unit,user_id,company_id):
+        self.stock_take_id =stocktake_id
         self.item_id = item_id
         self.transaction_type = transaction_type
         self.quantity = quantity

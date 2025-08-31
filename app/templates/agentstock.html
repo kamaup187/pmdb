@@ -469,7 +469,7 @@
 					        <div id="submenu-3" class="collapse submenu submenu-3 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
 							        <li class="submenu-item"><a class="submenu-link button sales-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Sales report</a></li>
-							        <li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases report</a></li>
+							        <li class="submenu-item"><a class="submenu-link button balance-stock" type="button"><i class="feather-18 feather-bold pb-1" data-feather="layers"></i> Balance stock</a></li>
 									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take report</a></li>
 									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="activity"></i> Profit & Loss report</a></li>
 						        </ul>
@@ -1994,18 +1994,18 @@
 
 <script>
 
-
+// Updated runDataTable function with debounced update
 function runDataTableEditable(tableId) {
     let table = $('#' + tableId).DataTable({
-        destroy: true, // Destroy previous instance to reinitialize
+        destroy: true,
         columns: [
-            { data: 'stockid' },    // Item ID
-            { data: 'date' },       // Date
-            { data: 'stocktype' },  // Stocktake type
-            { data: 'item' },       // Item name
-            { data: 'eqty' },       // Expected quantity
+            { data: 'stockid' },
+            { data: 'date' },
+            { data: 'stocktype' },
+            { data: 'item' },
+            { data: 'eqty' },
             {
-                data: 'aqty',       // Actual quantity (editable)
+                data: 'aqty',
                 render: function(data, type, row) {
                     if (type === 'display') {
                         return '<span contenteditable="true" class="editable" data-item-id="' + row.stockid + '">' + (data || 0) + '</span>';
@@ -2014,7 +2014,7 @@ function runDataTableEditable(tableId) {
                 }
             },
             {
-                data: 'diff',       // Difference (calculated)
+                data: 'diff',
                 render: function(data, type, row) {
                     if (type === 'display') {
                         return calculateDifference(row.eqty, row.aqty || 0);
@@ -2022,14 +2022,13 @@ function runDataTableEditable(tableId) {
                     return data;
                 }
             },
-            { data: 'status' },     // Status
-            { data: 'notes' }       // Notes
+            { data: 'status' },
+            { data: 'notes' }
         ],
         drawCallback: function(settings) {
             let api = this.api();
-            // Delegate event to table body to handle dynamically added elements
-            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
-                let $cell = $(this);
+            // Debounced update function
+            let updateDiff = debounce(function($cell) {
                 let $row = $cell.closest('tr');
                 let rowIdx = api.row($row).index();
                 if (rowIdx === undefined) {
@@ -2038,12 +2037,26 @@ function runDataTableEditable(tableId) {
                 }
                 let rowData = api.row(rowIdx).data();
                 let newValue = parseInt($cell.text()) || 0;
-                rowData.aqty = newValue; // Update row data
-                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw(); // Update diff column (index 6)
+                rowData.aqty = newValue;
+                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw();
+            }, 1500); // 300ms delay
+
+            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
+                let $cell = $(this);
+                updateDiff($cell); // Trigger debounced update
             });
         }
     });
-    return table; // Return the instance for external use
+    return table;
+}
+
+// Debounce utility function
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
 }
 
 // Updated addStocktakeToTable function
@@ -2064,6 +2077,8 @@ function addStocktakeToTableEditable(data, table) {
 
     table.rows.add(tableData).draw();
 }
+
+
 function calculateDifference(expected, actual) {
 	console.log("Calculating difference: expected=" + expected + ", actual=" + actual);
     return actual - expected;
@@ -2598,6 +2613,8 @@ function calculateDifference(expected, actual) {
 					$("#stocktakeId").val(response[1])
 					$("#stocktake-spinner").addClass("d-none") // complete the table update process
 
+					initSubmitHandler(t1); // Initialize submit handler with t1
+
 				},
 				error: function (xhr) {
 				alert("Error")
@@ -2706,6 +2723,64 @@ function calculateDifference(expected, actual) {
 				error: function (xhr) {
 				alert("Error")
 				$("#sales-report-spinner").addClass("d-none")
+				}
+			});
+
+			feather.replace();
+		})
+
+		$(document).on("click", ".balance-stock",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(balanceStockTemplate)
+			
+			$("#balance-stock-spinner").removeClass("d-none")
+			$("#balance-stock-table").empty()
+			$.ajax({
+				url: "/v2/stock/balance/report",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					// $select = $("#select-balance-property")
+					// $.each(response[1], function (index, item) {
+					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+					// });
+
+					renderBalanceStockTemplate("allBalanceStockTable",$("#balance-stock-table")); //create table and replace ID
+					var t1 = runDataTableReport("allBalanceStockTable") // reBUILD datatable instance
+					addBalanceStockToTable(response[0],t1) // pass data to the new table
+
+					// summary = response[1];
+
+                    // const summaryHtml = `
+                    //     <h4>Summary</h4>
+                    //     <ul>
+                    //         <li>Total Stock Remaining: <span class="text-black font-weight bold">${summary.total_stock_remaining}</span></li>
+                    //         <li>Total Stock Value: <span class="text-black font-weight bold">KES ${summary.total_stock_value}</span></li>
+                    //         <li>Total Amount Sold: <span class="text-black font-weight bold">KES ${summary.total_amount_sold}</span></li>
+                    //         <li>Gross Profit: <span class="text-black font-weight bold">KES ${summary.gross_profit}</span></li>
+                    //         <li>Total items in stock: <span class="text-black font-weight bold">${summary.total_items}</span></li>
+                    //     </ul>
+                    // `;
+                    // $('#summarySection').html(summaryHtml);
+
+
+					$("#balance-stock-spinner").addClass("d-none") // complete the table update process
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#balance-stock-spinner").addClass("d-none")
 				}
 			});
 
@@ -3123,6 +3198,18 @@ function calculateDifference(expected, actual) {
 			return new Promise((resolve) => {
 				// Insert into the DOM
 				elem.html(salesReportTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				// Resolve the promise after rendering
+				resolve();
+			});
+		}
+
+		function renderBalanceStockTemplate(newId,elem) {
+			return new Promise((resolve) => {
+				// Insert into the DOM
+				elem.html(balanceStockTableTemplate);
 				
 				$('#primaryData').attr('id', newId);
 
@@ -5217,6 +5304,7 @@ function calculateDifference(expected, actual) {
 								$("#stocktakeId").val(response[1])
 								$("#stocktake-spinner").addClass("d-none") // complete the table update process
 
+								initSubmitHandler(t1); // Initialize submit handler with t1
 							},
 							error: function (xhr) {
 							alert("Error")
@@ -5238,6 +5326,59 @@ function calculateDifference(expected, actual) {
 			toastIt("check your inputs", 'danger');
 		}
 	})
+
+</script>
+
+
+<script>
+	// New initSubmitHandler function
+function initSubmitHandler(table) {
+    $('#submitStocktakeEdit').off('click').on('click', function() {
+        if (!confirm('Are you sure you want to submit these adjustments? This will create new stock transaction entries.')) {
+            return;
+        }
+
+        let stocktakeId = $("#stocktakeId").val();
+        let initialData = table.rows().data().toArray();
+        let items = table.rows().data().toArray().map(row => ({
+            item_id: row.stockid,
+            actual_count: row.aqty || 0
+        }));
+
+
+        // let hasChanges = initialData.some((row, index) => {
+        //     let newRow = table.row(index).data();
+        //     return newRow.aqty !== initialData[index].aqty;
+        // });
+
+        // if (!hasChanges) {
+        //     alert('No changes detected. Please edit at least one Actual Qty before submitting.');
+        //     return;
+        // }
+
+        // $.ajax({
+        //     url: '/v2/stock/takes',
+        //     type: 'POST',
+        //     contentType: 'application/json',
+        //     data: JSON.stringify({ stocktakeid: stocktakeId, target: "adjustments", items: items }),
+		$.ajax({
+			url: "/v2/stock/takes",
+			type: "post",
+			data: {
+				stocktakeid:stocktakeId,
+				items:JSON.stringify(items),
+				target: "adjustments"
+			},
+            success: function(data) {
+                alert('Stocktake adjustments recorded successfully!');
+                // table.ajax.reload();
+            },
+            error: function(xhr) {
+                alert('Error submitting adjustments');
+            }
+        });
+    });
+}
 </script>
 
 

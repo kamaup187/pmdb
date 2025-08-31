@@ -12262,7 +12262,7 @@ class StockItems(Resource):
 
                 opening_stock_transaction = StockTransactionOp.fetch_tranasction_by_item_id_and_transaction_type(item_obj.id,"Opening Stock")
                 if not opening_stock_transaction:
-                    opening_stock_transaction = StockTransactionOp(item_obj.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
+                    opening_stock_transaction = StockTransactionOp(None,item_obj.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
                     opening_stock_transaction.save()
                 else:
                     StockTransactionOp.update_price_per_unit(opening_stock_transaction,valid_bprice)
@@ -12289,7 +12289,7 @@ class StockItems(Resource):
             new_item = StockItemOp(item_name,"",valid_sprice,current_user.id,current_user.company.id)
             new_item.save()
 
-            opening_stock_transaction = StockTransactionOp(new_item.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
+            opening_stock_transaction = StockTransactionOp(None,new_item.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
             opening_stock_transaction.save()
 
             return "item added successfully"
@@ -12344,7 +12344,7 @@ class StockPurchases(Resource):
         quantity = validate_int_input(qty)
         price = validate_input(price)
 
-        stock_transaction_obj = StockTransactionOp(item_id,'Purchase',quantity,price,current_user.id,current_user.company.id)
+        stock_transaction_obj = StockTransactionOp(None,item_id,'Purchase',quantity,price,current_user.id,current_user.company.id)
         stock_transaction_obj.save()
 
         purchase_obj = PurchaseOp(stock_transaction_obj.id,supplier_id,current_user.id,current_user.company.id)
@@ -12365,7 +12365,8 @@ class StockTakes(Resource):
         
         for i in raw_items:
             item_dict = {
-                "stockid":f"ST{current_stocktake_obj.id:03}",
+                # "stockid":f"ST{current_stocktake_obj.id:03}",
+                "stockid":f"{i.id}",
                 "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
                 "stocktype":current_stocktake_obj.stocktake_type,
                 "item":i.name,
@@ -12395,6 +12396,37 @@ class StockTakes(Resource):
 
 
     def post(self):
+
+        target = request.form.get('target')
+        if target == "adjustments":
+            stocktake_id = request.form.get('stocktakeid')
+            stocktakeid = int(stocktake_id)
+            items = request.form.get("items")
+
+            import json
+            data = json.loads(items)
+
+            for i in data:
+                item_id = int(i["item_id"])
+                item_obj = StockItemOp.fetch_an_item_by_id(item_id)
+                eqty = StockItemOp.get_quantity(item_obj)
+                aqty = int(i["actual_count"])
+                diff = eqty - aqty
+                if diff < 0:
+                    bprice = 0.0
+                else:
+                    bprice = StockItemOp.get_weighted_average_buying_price(item_obj)
+                if diff != 0:
+                    if eqty > aqty: #VERY UNUSUAL REDO
+                        diff = diff * -1
+                    else:
+                        diff = diff * -1
+
+                    print("DIFFRENCE: ",diff)
+                    stock_transaction_obj = StockTransactionOp(stocktake_id,item_id,"Stocktake Adjustments",diff,bprice,current_user.id,current_user.company.id)
+                    stock_transaction_obj.save()
+            return "success"
+
         stocktake_type = request.form.get('category')
         notes = request.form.get('notes')
 
@@ -12427,7 +12459,7 @@ class StockSales(Resource):
         trans_quantity = quantity * -1
         price = validate_input(price)
 
-        stock_transaction_obj = StockTransactionOp(item_id,'Sale',trans_quantity,price,current_user.id,current_user.company.id)
+        stock_transaction_obj = StockTransactionOp(None,item_id,'Sale',trans_quantity,price,current_user.id,current_user.company.id)
         stock_transaction_obj.save()
 
         sale_obj = StockSaleOp(stock_transaction_obj.id,item_id,quantity,price,payment,current_user.id,current_user.company.id)
@@ -12455,7 +12487,7 @@ class StockDamages(Resource):
         if not item_obj:
             return "invalid item"
 
-        stock_transaction_obj = StockTransactionOp(item_obj.id,'Damage',validate_int_input(qty)*-1,0.0,current_user.id,current_user.company.id)
+        stock_transaction_obj = StockTransactionOp(None,item_obj.id,'Damage',validate_int_input(qty)*-1,0.0,current_user.id,current_user.company.id)
         stock_transaction_obj.save()
 
         damage_obj = StockDamageOp(stock_transaction_obj.id,reason,notes,current_user.id,current_user.company.id)
@@ -12560,6 +12592,11 @@ class StockSalesReport(Resource):
         }
 
         return [items, summary]
+
+
+class BalanceStockReport(Resource):
+    def get(self):
+        return []
 
 class ItemView(Resource):
     @timer

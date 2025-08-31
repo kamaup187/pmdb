@@ -169,6 +169,33 @@ function addSalesReportToTable(data,table) {
     table.draw();
 }
 
+function addBalanceStockToTable(data,table) {
+    // Assuming data is an array of objects
+    // var table = $('#primaryData').DataTable();
+
+    // Clear the existing data
+    table.clear();
+
+    // Add new data
+    data.forEach(function(item) {
+
+        table.row.add([
+             // PNo
+            item.id,
+            item.item,
+            item.current,             // PNo
+            // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.value,           // Name
+            item.minimum,
+            item.reorder, 
+            // Branch
+        ]);
+    });
+
+    // Draw the updated table
+    table.draw();
+}
+
 function addDamagesToTable(data,table) {
     // Assuming data is an array of objects
     // var table = $('#primaryData').DataTable();
@@ -384,6 +411,8 @@ var stocktakeTableTemplate = `
     </tbody>
 </table>
 
+<button id="submitStocktakeEdit" class="btn btn-primary mt-2">Submit Adjustments</button>
+
 `
 
 var salesTableTemplate = `
@@ -426,6 +455,27 @@ var salesReportTableTemplate = `
             <th class="fw-bold">SellingPrice</th>
             <th class="fw-bold">TotalSales</th>
             <th class="fw-bold">GrossProfit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+
+<div id="summarySection"></div>
+
+`
+
+var balanceStockTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Item</th>
+            <th class="fw-bold">CurrentStock</th>
+            <th class="fw-bold">StockValue</th>
+            <th class="fw-bold">MinimumLevel</th>
+            <th class="fw-bold">ReorderNeeded</th>
         </tr>
     </thead>
     <tbody>
@@ -1864,6 +1914,77 @@ var salesReportTemplate = `
                 <div class="row">
                     <div class="col-lg-12 no-padding">
                         <div id="sales-report-table" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+
+
+`
+var balanceStockTemplate = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Balance Stock</h1>
+    </div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Sales report table</a>
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white balance-stock" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show balances
+                        </a>
+                    </div>
+                    <div class="col-auto d-none">						    
+                        <a class="btn btn-success text-white" href="#">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print report
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
+
+    <div id="balance-stock-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="balance-stock-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
                 </div>

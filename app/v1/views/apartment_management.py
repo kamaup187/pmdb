@@ -12231,8 +12231,8 @@ class StockItems(Resource):
                 "id":item_obj.id,
                 "name":item_obj.name,
                 "qty":StockItemOp.get_quantity(item_obj),
-                "bprice":StockItemOp.get_weighted_average_buying_price(item_obj),
-                "sprice":f"{item_obj.selling_price:.2f}",
+                "bprice":f"{StockItemOp.get_weighted_average_buying_price(item_obj):,.1f}",
+                "sprice":f"{item_obj.selling_price:.1f}",
             }
             return [user_dict]
 

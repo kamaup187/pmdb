@@ -6425,8 +6425,8 @@ class StockItemOp(StockItem, Base):
         return {
             "id":self.id,
             "name":self.name,
-            "quantity":StockItemOp.get_quantity(self),
-            "bprice":StockItemOp.get_weighted_average_buying_price(self),
+            "quantity":f"{StockItemOp.get_quantity(self):,.1f}",
+            "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
             "updatedon":"N/A",
         }

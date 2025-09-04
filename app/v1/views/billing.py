@@ -4083,31 +4083,15 @@ class PrintActualReceipt(Resource):
 
             paid = f'KES {curr_tenant_invoice.paid_amount:,.0f}'
 
-            # if curr_tenant_invoice.balance:
-            #     if curr_tenant_invoice.balance > -1:
-            #         baltitle = "Balance"
-            #         outline = "text-danger"
-            #         bal = f"KES {curr_tenant_invoice.balance:,.0f}"
-            #     else:
-            #         baltitle = "Advance"
-            #         outline = "text-success"
-            #         bal = f"KES {curr_tenant_invoice.balance*-1:,.0f}"
-
-            # else:
-            #     baltitle = "Balance"
-            #     outline = "text-black"
-            #     bal = f"Kes 0.0"
-
-
-            if payment_obj.balance:
-                if payment_obj.balance > -1:
+            if curr_tenant_invoice.balance:
+                if curr_tenant_invoice.balance > -1:
                     baltitle = "Balance"
                     outline = "text-danger"
-                    bal = f"Kes {payment_obj.balance:,.0f}"
+                    bal = f"KES {curr_tenant_invoice.balance:,.0f}"
                 else:
                     baltitle = "Advance"
                     outline = "text-success"
-                    bal = f"Kes {payment_obj.balance*-1:,.0f}"
+                    bal = f"KES {curr_tenant_invoice.balance*-1:,.0f}"
 
             else:
                 baltitle = "Balance"
@@ -4353,6 +4337,8 @@ class PrintActualReceipt(Resource):
                 baltitle = "Balance"
                 outline = "text-black"
                 bal = f"Kes 0.0"
+
+            print("wewe chiiito ", baltitle)
 
             server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 

@@ -6540,7 +6540,7 @@ class StockTransactionOp(StockTransaction, Base):
     def fetch_a_transaction_by_id(id):
         return StockTransaction.query.filter_by(id=id).first()
 
-    def fetch_tranasction_by_item_id_and_transaction_type(item_id, transaction_type):
+    def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):
         return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).first()
 
     def update_quantity(self, quantity):
@@ -6695,14 +6695,20 @@ class StockDamageOp(StockDamage, Base):
         return day + "/" + month
 
     def view(self):
-        return {
-            'id': self.id,
-            'item': self.stock_transaction.item.name,
-            'qty': -1*self.stock_transaction.quantity if self.stock_transaction else "N/A",
-            'reason': self.damage_reason,
-            'date': StockDamageOp.date_format(self),
-            'notes': self.notes if self.notes else "None"
-        }
+
+        try:
+            return {
+                'id': self.id,
+                'item': self.stock_transaction.item.name,
+                'qty': -1*self.stock_transaction.quantity if self.stock_transaction else "N/A",
+                'reason': self.damage_reason,
+                'date': StockDamageOp.date_format(self),
+                'notes': self.notes if self.notes else "None"
+            }
+        except AttributeError:
+            StockDamageOp.delete(self)
+            return {}
+
 
 class StockExpenseOp(StockExpense, Base):
     """Class to house expense operations"""

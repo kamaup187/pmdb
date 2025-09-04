@@ -2044,9 +2044,9 @@ class StockTransaction(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     # Relationships
-    purchase = db.relationship('Purchase', backref='stock_transaction', uselist=False, lazy=True)
-    sale = db.relationship('StockSale', backref='stock_transaction', uselist=False, lazy=True)
-    damage = db.relationship('StockDamage', backref='stock_transaction', uselist=False, lazy=True)
+    purchase = db.relationship('Purchase', backref='stock_transaction', uselist=False, lazy=True,cascade="all, delete-orphan")
+    sale = db.relationship('StockSale', backref='stock_transaction', uselist=False, lazy=True,cascade="all, delete-orphan")
+    damage = db.relationship('StockDamage', backref='stock_transaction', uselist=False, lazy=True,cascade="all, delete-orphan")
 
 class StockSale(db.Model):
     """db model class"""

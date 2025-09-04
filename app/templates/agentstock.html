@@ -346,7 +346,7 @@
 		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
 		        <div class="app-branding">
 		            <!-- <a class="app-logo" href="/stock/module"><h1 class="logo-icon">BASE</h1><img class="logo-icon me-2" src="{{ url_for('static', filename='img/logos/rentlib/l-logo.png') }}" alt="logo"></a> -->
-					<a class="app-logo" href="/stock/module"><h1 class="logo-icon mt-2" style="color: #4e1a1a;">BASE</h1></a>
+					<a class="app-logo" href="/stock/module"><h1 class="logo-icon mt-2" style="color: #b16b0f;">BASE</h1></a>
 
 	
 		        </div><!--//app-branding-->  
@@ -468,9 +468,9 @@
 					        </a>
 					        <div id="submenu-3" class="collapse submenu submenu-3 show" data-bs-parent="#menu-accordion">
 						        <ul class="submenu-list list-unstyled">
-							        <li class="submenu-item"><a class="submenu-link button sales-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Sales report</a></li>
-							        <li class="submenu-item"><a class="submenu-link button balance-stock" type="button"><i class="feather-18 feather-bold pb-1" data-feather="layers"></i> Balance stock</a></li>
-									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take report</a></li>
+							        <li class="submenu-item"><a class="submenu-link button sales-report" type="button"><i class="feather-18 feather-bold pb-1" data-feather="dollar-sign"></i> Daily Sales Report</a></li>
+							        <li class="submenu-item"><a class="submenu-link button balance-stock" type="button"><i class="feather-18 feather-bold pb-1" data-feather="layers"></i> Balance Stock Report</a></li>
+									<li class="submenu-item"><a class="submenu-link button stock-value" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock Value Report</a></li>
 									<li class="submenu-item"><a class="submenu-link button d-none" type="button"><i class="feather-18 feather-bold pb-1" data-feather="activity"></i> Profit & Loss report</a></li>
 						        </ul>
 					        </div>
@@ -512,6 +512,29 @@
 		    <div class="container-xl">
 
 				<span class="d-none" id="rights-span">{{permissions}}</span>
+									<div class="row">
+						<div class="col-6 col-lg-3 mb-3">
+							<div class="app-card-stat">
+								<a class="btn app-btn-secondary form-control app-button items-btn" href="#"><i data-feather="list" class="feather-18 pb-1"></i>  View items</a>
+							</div>
+						</div>
+						<div class="col-6 col-lg-3 mb-3">
+							<div class="app-card-stat">
+								<a class="btn app-btn-secondary form-control app-button sales-btn" href="#"><i data-feather="dollar-sign" class="feather-18 pb-1"></i> Sell item</a>
+							</div>						
+						</div>
+						<div class="col-6 col-lg-3 mb-3">
+							<div class="app-card-stat">
+								<a class="btn app-btn-secondary form-control app-button purchase-btn" href="#"><i data-feather="shopping-cart" class="feather-18 pb-1"></i> Purchase item</a>
+							</div>						
+						</div>
+
+						<div class="col-6 col-lg-3 mb-3">
+							<div class="app-card-stat">
+								<a class="btn app-btn-secondary form-control app-button stocktake-btn" href="#"><i data-feather="database" class="feather-18 pb-1"></i> Take stock</a>
+							</div>						
+						</div>
+					</div>
 				<div id="home-block">
 					<h1 class="app-page-title d-flex justify-content-between align-items-center"> 
 						<!-- <span class="d-inline d-sm-none"><img class="logo-icon me-2" src="{{ url_for('static', filename='img/logos/rentlib/l-logo.png') }}" alt="logo" width="140"></span> -->
@@ -543,7 +566,7 @@
 						</div><!--//inner-->
 					</div><!--//app-card-->
 
-					<div class="row">
+					<!-- <div class="row">
 						<div class="col-6 col-lg-3 mb-3">
 							<div class="app-card-stat">
 								<a class="btn app-btn-secondary form-control app-button items-btn" href="#"><i data-feather="list" class="feather-18 pb-1"></i>  View items</a>
@@ -564,7 +587,7 @@
 								<a class="btn app-btn-secondary form-control app-button sales-report" href="#"><i data-feather="monitor" class="feather-18 pb-1"></i> View report</a>
 							</div>						
 						</div>
-					</div>
+					</div> -->
 						
 					<div class="row g-4 mb-4">
 						<div class="col-6 col-lg-3 sales-btn">
@@ -1252,12 +1275,14 @@
 
 									<div class="mb-3">
 										<label for="expenseCategory" class="form-label">Select category</label>
-										<select class="form-select" id="expenseCategory">
+										<!-- <select class="form-select" id="expenseCategory">
 											<option disabled  selected>Select category below</option>
 											<option value="transport">Transport</option>
 											<option value="storage" selected>Storage</option>
 											<option value="other">Other</option>
-										</select>
+										</select> -->
+										<input type="text" id="expenseCategory" class="form-control" placeholder="Type expense description here...">
+
 									</div>
 
 									<div class="mb-3">
@@ -1677,7 +1702,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">CONFIRM DELETION</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">CONFIRM ITEM DELETION</h5>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -1685,13 +1710,93 @@
 
                 <div class="row g-4 settings-section">
 	                <div class="col-12 col-md-4">
-		                <h3 class="section-title">Item update</h3>
+		                <h3 class="section-title">Item deletion</h3>
 		                <div class="section-intro">Item details</div>
 	                </div>
 	                <div class="col-12 col-md-8">
 		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
 						    
 						    <div id="delete-item-bed" class="app-card-body">
+								<div class="d-flex justify-content-center">
+									<div class="spinner-border text-success m-2" role="status">
+										<span class="visually-hidden">Loading...</span>
+									</div>
+								</div>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+
+	  	<div class="modal fade" id="updatePurchaseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">UPDATE PURCHASE</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Purchase update</h3>
+		                <div class="section-intro">Purchase details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div id="update-purchase-bed" class="app-card-body">
+								<div class="d-flex justify-content-center">
+									<div class="spinner-border text-success m-2" role="status">
+										<span class="visually-hidden">Loading...</span>
+									</div>
+								</div>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+
+	  	<div class="modal fade" id="deletePurchaseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">CONFIRMATION PURCHASE DELETION </h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Purchase deletion</h3>
+		                <div class="section-intro">Purchase details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div id="delete-purchase-bed" class="app-card-body">
 								<div class="d-flex justify-content-center">
 									<div class="spinner-border text-success m-2" role="status">
 										<span class="visually-hidden">Loading...</span>
@@ -1955,7 +2060,7 @@
 	<!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --> <!-- this is the one that is valid for use-->
 	  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 
-	<script src="{{ url_for('static', filename='assets/js/stock_templates_v5.js') }}"></script> 
+	<script src="{{ url_for('static', filename='assets/js/stock_templates_v6.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/datatables.min.js') }}"></script> 
 	<script src="{{ url_for('static', filename='assets/js/float_validate.js') }}"></script> 
 
@@ -2087,8 +2192,50 @@ function calculateDifference(expected, actual) {
 </script>
 
 <script>
-	function runDataTableReport(table_id){
+	function runDataTableReport(table_id,summary,pageTitle){
+		
 		var t1 = $('#'+table_id).DataTable({
+			footerCallback: function(row, data, start, end, display) {
+				// Use footerCallback for persistent updates
+				var api = this.api();
+				
+
+
+				if(pageTitle == "Sales Report"){
+					const totalSales = summary.total_amount_sold || 0;
+					const grossProfit = summary.gross_profit || 0;
+
+					$(api.column(5).footer()).html("Kes "+totalSales.toFixed(2)); // T.Sales
+					$(api.column(6).footer()).html("Kes "+grossProfit.toFixed(2)); // G.Profit
+
+
+				}else if(pageTitle == "Balance Stock Report"){
+					const totalOpening = summary.total_opening || 0;
+					const totalAdded = summary.total_added || 0;
+					const totalcombined = summary.total_combined || 0;
+					const totalSold = summary.total_sold || 0;
+					const totalDamage = summary.total_damage || 0;
+					const totalBalance = summary.total_remaining || 0;
+
+					$(api.column(2).footer()).html(totalOpening); // T.Sales
+					$(api.column(3).footer()).html(totalAdded); // T.Sales
+					$(api.column(4).footer()).html(totalcombined); // T.Sales
+
+					$(api.column(5).footer()).html(totalSold); // T.Sales
+					$(api.column(6).footer()).html(totalDamage); // G.Profit	
+					$(api.column(7).footer()).html(totalBalance); // G.Profit	
+				}else{
+					const totalCurrent = summary.total_stock_remaining || 0;
+					const stockValue = summary.total_stock_value || 0;
+
+					$(api.column(2).footer()).html(totalCurrent); // T.Sales
+					$(api.column(4).footer()).html("Kes "+stockValue.toFixed(2)); // G.Profit
+				}
+
+
+			},
+			processing: true, // Show processing indicator
+			serverSide: false, // Ensure client-side processing
 			// "dom": '<"top"f>rt<"bottom"lp><"clear">',
 			// dom: 'Bfrtip', // B: Buttons, f: Filtering, r: Processing, t: Table, i: Info, p: Pagination
 
@@ -2101,16 +2248,30 @@ function calculateDifference(expected, actual) {
 				{
 					extend: 'print',
 					text: 'Print', // Custom button text
-					title: 'Sales report', // Title for print page
+					title: pageTitle, // Title for print page
 					customize: function(win) {
 						// Optional: Customize print view
-						$(win.document.body).prepend('<h1>Base</h1>');
+						// $(win.document.body).prepend('<h1>Base</h1>');
 						// $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
-						$(win.document.body)
+						var table = $(win.document.body)
                                         .find('table')
+										.css('width', '100%')
+										.css('border-collapse', 'collapse')
                                         .after('<div id="printSummary"></div>');
+
+						                    // Clone and append the original footer to ensure it’s included
+						var originalFooter = $('#' + table_id + ' tfoot').clone();
+						table.append(originalFooter);
+
                         $('#printSummary', win.document.body).html(
                                         $('#summarySection').html());
+
+
+						$(win.document.body)
+                        .find('tfoot')
+                        .css('display', 'table-footer-group') // Force footer to print
+                        .css('font-weight', 'bold')
+						.css('font-size','18px');
 					}
 				}
 			],
@@ -2138,8 +2299,7 @@ function calculateDifference(expected, actual) {
 
 
 			"bLengthChange": false,
-			destroy: true, // Added to handle re-initialization
-        	stateSave: false // Prevent state persistence
+
 			});
 		return t1;	
 	}
@@ -2699,7 +2859,7 @@ function calculateDifference(expected, actual) {
 					// });
 
 					renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
-					var t1 = runDataTableReport("allSalesReportTable") // reBUILD datatable instance
+					var t1 = runDataTableReport("allSalesReportTable",response[1],"Sales Report") // reBUILD datatable instance
 					addSalesReportToTable(response[0],t1) // pass data to the new table
 
 					summary = response[1];
@@ -2707,11 +2867,31 @@ function calculateDifference(expected, actual) {
                     const summaryHtml = `
                         <h4>Summary</h4>
                         <ul>
-                            <li>Total Stock Remaining: <span class="text-black font-weight bold">${summary.total_stock_remaining}</span></li>
-                            <li>Total Stock Value: <span class="text-black font-weight bold">KES ${summary.total_stock_value}</span></li>
-                            <li>Total Amount Sold: <span class="text-black font-weight bold">KES ${summary.total_amount_sold}</span></li>
-                            <li>Gross Profit: <span class="text-black font-weight bold">KES ${summary.gross_profit}</span></li>
-                            <li>Total items in stock: <span class="text-black font-weight bold">${summary.total_items}</span></li>
+                            <li>
+								<div class="row col-md-4">
+									<div class="col-6 text-black h5">Total Amount Sold: </div>
+									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_amount_sold}</span></div>
+								</div>
+							</li>
+
+							<li>
+								<div class="row col-md-4">
+									<div class="col-6 text-black h5">Gross Profit: </div>
+									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.gross_profit}</span></div>
+								</div>
+							</li>
+                            <li>
+								<div class="row col-md-4">
+									<div class="col-6 text-black h5">Total Expenses: </div>
+									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_expenses}</span></div>
+								</div>
+							</li>
+                            <li>
+								<div class="row col-md-4">
+									<div class="col-6 text-black h4">Net Profit: </div>
+									<div class="col-6"><span class="text-black font-weight-bold h4">KES ${summary.net_profit}</span></div>
+								</div>
+							</li>
                         </ul>
                     `;
                     $('#summarySection').html(summaryHtml);
@@ -2757,22 +2937,8 @@ function calculateDifference(expected, actual) {
 					// });
 
 					renderBalanceStockTemplate("allBalanceStockTable",$("#balance-stock-table")); //create table and replace ID
-					var t1 = runDataTableReport("allBalanceStockTable") // reBUILD datatable instance
-					addBalanceStockToTable(response[0],t1) // pass data to the new table
-
-					// summary = response[1];
-
-                    // const summaryHtml = `
-                    //     <h4>Summary</h4>
-                    //     <ul>
-                    //         <li>Total Stock Remaining: <span class="text-black font-weight bold">${summary.total_stock_remaining}</span></li>
-                    //         <li>Total Stock Value: <span class="text-black font-weight bold">KES ${summary.total_stock_value}</span></li>
-                    //         <li>Total Amount Sold: <span class="text-black font-weight bold">KES ${summary.total_amount_sold}</span></li>
-                    //         <li>Gross Profit: <span class="text-black font-weight bold">KES ${summary.gross_profit}</span></li>
-                    //         <li>Total items in stock: <span class="text-black font-weight bold">${summary.total_items}</span></li>
-                    //     </ul>
-                    // `;
-                    // $('#summarySection').html(summaryHtml);
+					var t1 = runDataTableReport("allBalanceStockTable",response[1],"Balance Stock Report") // reBUILD datatable instance
+					addBalanceStockReportToTable(response[0],t1) // pass data to the new table
 
 
 					$("#balance-stock-spinner").addClass("d-none") // complete the table update process
@@ -2781,6 +2947,49 @@ function calculateDifference(expected, actual) {
 				error: function (xhr) {
 				alert("Error")
 				$("#balance-stock-spinner").addClass("d-none")
+				}
+			});
+
+			feather.replace();
+		})
+
+		$(document).on("click", ".stock-value",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(stockValueTemplate)
+			
+			$("#stock-value-spinner").removeClass("d-none")
+			$("#stock-value-table").empty()
+			$.ajax({
+				url: "/v2/stock/value/report",
+				type: "get",
+				data: {
+				target: "all"
+				},
+				success: function (response) {
+					// $select = $("#select-balance-property")
+					// $.each(response[1], function (index, item) {
+					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+					// });
+
+					renderStockValueTemplate("allValueStockTable",$("#stock-value-table")); //create table and replace ID
+					var t1 = runDataTableReport("allValueStockTable",response[1],"Stock Value Report") // reBUILD datatable instance
+					addStockValueReportToTable(response[0],t1) // pass data to the new table
+
+					$("#stock-value-spinner").addClass("d-none") // complete the table update process
+
+				},
+				error: function (xhr) {
+				alert("Error")
+				$("#stock-value-spinner").addClass("d-none")
 				}
 			});
 
@@ -3210,6 +3419,18 @@ function calculateDifference(expected, actual) {
 			return new Promise((resolve) => {
 				// Insert into the DOM
 				elem.html(balanceStockTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				// Resolve the promise after rendering
+				resolve();
+			});
+		}
+
+		function renderStockValueTemplate(newId,elem) {
+			return new Promise((resolve) => {
+				// Insert into the DOM
+				elem.html(stockValueTableTemplate);
 				
 				$('#primaryData').attr('id', newId);
 
@@ -4337,6 +4558,55 @@ function calculateDifference(expected, actual) {
 			});
 		});
 
+		$(document).on('click', '.editPurchase', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+
+			$.ajax({
+				url: '/v2/stock/purchases',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var updatePurchaseForm = purchaseUpdateForm(response[0]);
+
+					$("#update-purchase-bed").html(updatePurchaseForm)
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
+
+		// Attach a click event to the button
+		$(document).on('click', '.deletePurchase', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+
+			$.ajax({
+				url: '/v2/stock/purchases',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var deletePurchaseForm = purchaseDeleteForm(response[0]);
+
+					$("#delete-purchase-bed").html(deletePurchaseForm)
+
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
 
 				// Attach a click event to the button
 		$(document).on('click', '.update-user-button', function () {
@@ -4609,6 +4879,122 @@ function calculateDifference(expected, actual) {
 			});
 
 		})
+
+		$(document).on("click", "#update-purchase-btn", function () {
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
+
+			$.ajax({
+				url: '/v2/stock/purchases',
+				method: 'post',
+				data:{
+					id:$("#purchase-update-id").val(),
+					qty:$("#purchase-update-qty").val(),
+					price:$("#purchase-update-bprice").val(),
+					target:"single"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Updated successfully", 'success');
+						$('#updatePurchaseModal').modal('hide');
+
+
+						$.ajax({
+							url: "/v2/stock/purchases",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderPurchasesTemplate("allPurchasesTable",$("#purchases-all-table")); //create table and replace ID
+								var t1 = runDataTable("allPurchasesTable") // reBUILD datatable instance
+								addPurchasesToTable(response,t1) // pass data to the new table
+								$("#purchases-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#purchases-spinner").addClass("d-none")
+							}
+						});
+
+
+					}else{
+						toastIt(response, 'danger');
+					}
+				},error: function (xhr, status, error) {
+					console.error('Error updating item: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update item');
+				}
+			});
+
+		})
+
+
+		$(document).on("click", "#delete-purchase-btn", function () {
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Removing...');
+
+			$.ajax({
+				url: '/v2/stock/purchases',
+				method: 'post',
+				data:{
+					id:$("#purchase-delete-id").val(),
+					target:"delete single"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Deleted successfully", 'success');
+						$('#deletePurchaseModal').modal('hide');
+
+
+						$.ajax({
+							url: "/v2/stock/purchases",
+							type: "get",
+							data: {
+							target: "all"
+							},
+							success: function (response) {
+								// $select = $("#select-balance-property")
+								// $.each(response[1], function (index, item) {
+								// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+								// });
+
+
+								renderPurchasesTemplate("allPurchasesTable",$("#purchases-all-table")); //create table and replace ID
+								var t1 = runDataTable("allPurchasesTable") // reBUILD datatable instance
+								addPurchasesToTable(response,t1) // pass data to the new table
+								$("#purchases-spinner").addClass("d-none") // complete the table update process
+
+							},
+							error: function (xhr) {
+							alert("Error")
+							$("#purchases-spinner").addClass("d-none")
+							}
+						});
+
+
+					}else{
+						toastIt(response, 'danger');
+					}
+				},error: function (xhr, status, error) {
+					console.error('Error deleting item: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Delete?');
+				}
+			});
+
+		})
+
 
 		$(document).on("click", "#update-user-btn", function () {
 			const $btn = $(this); // Cache the button reference

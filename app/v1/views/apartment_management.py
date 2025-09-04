@@ -12260,7 +12260,7 @@ class StockItems(Resource):
                 valid_bprice = validate_input(request.form.get("bprice"))
                 valid_qty = validate_int_input(item_qty)
 
-                opening_stock_transaction = StockTransactionOp.fetch_tranasction_by_item_id_and_transaction_type(item_obj.id,"Opening Stock")
+                opening_stock_transaction = StockTransactionOp.fetch_transaction_by_item_id_and_transaction_type(item_obj.id,"Opening Stock")
                 if not opening_stock_transaction:
                     opening_stock_transaction = StockTransactionOp(None,item_obj.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
                     opening_stock_transaction.save()
@@ -12321,6 +12321,22 @@ class StockSuppliers(Resource):
 class StockPurchases(Resource):
     @login_required
     def get(self):
+        target = request.args.get("target")
+        if target == "single":
+            purchase_id = request.args.get("id")
+            purchase_obj = PurchaseOp.fetch_a_purchase_by_id(get_identifier(purchase_id))
+            if purchase_obj:
+                try:
+                    return [{
+                        "id":purchase_obj.id,
+                        "qty":purchase_obj.stock_transaction.quantity,
+                        "bprice":purchase_obj.stock_transaction.price_per_unit
+                    }]
+                except AttributeError:
+                    PurchaseOp.delete(purchase_obj)
+                    return [{}]
+            return [{}]
+
         purchases = PurchaseOp.fetch_purchases_by_company_id(current_user.company.id)
         items = []
 
@@ -12340,9 +12356,32 @@ class StockPurchases(Resource):
         supplier_id = request.form.get("supplier")
         qty = request.form.get("qty")
         price = request.form.get("price")
+        target = request.form.get("target")
+        try:
+            quantity = validate_int_input(qty)
+            price = validate_input(price)
+        except:
+            quantity = 0.0
+            price = 0
 
-        quantity = validate_int_input(qty)
-        price = validate_input(price)
+        if target == "single":
+            purchase_id = request.form.get("id")
+            purchase_obj = PurchaseOp.fetch_a_purchase_by_id(get_identifier(purchase_id))
+            if purchase_obj:
+                trans_obj = purchase_obj.stock_transaction
+                StockTransactionOp.update_price_per_unit(trans_obj,price)
+                StockTransactionOp.update_quantity(trans_obj,quantity)
+
+                return "success"
+            return "error"
+
+        if target == "delete single":
+            purchase_id = request.form.get("id")
+            purchase_obj = PurchaseOp.fetch_a_purchase_by_id(get_identifier(purchase_id))
+            if purchase_obj:
+                PurchaseOp.delete(purchase_obj)
+                return "success"
+            return "error"
 
         stock_transaction_obj = StockTransactionOp(None,item_id,'Purchase',quantity,price,current_user.id,current_user.company.id)
         stock_transaction_obj.save()
@@ -12536,6 +12575,7 @@ class StockSalesReport(Resource):
             purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
             total_stock_qty = opening_stock_qty + purchases_qty
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
+            total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
             stock_balance = sum(t.quantity for t in transactions)
 
             # Weighted average buying price (only for purchases and opening stock)
@@ -12564,14 +12604,16 @@ class StockSalesReport(Resource):
             # Prepare report for this item
             item_report = {
                 "item": item.name,
-                "opening": opening_stock_qty,
-                "purchase": purchases_qty,
-                "total": total_stock_qty,
+                # "opening": opening_stock_qty,
+                # "purchase": purchases_qty,
+                # "total": total_stock_qty,
                 "sold": total_sold_qty if total_sold_qty > 0 else 0,
-                "balance": stock_balance,
-                "price": avg_selling_price,
-                "amount": round(total_amount_sold_item, 2),
-                "profit": round(profit, 2)
+                # "damage":total_damage_qty if total_damage_qty > 0 else 0,
+                # "balance": stock_balance,
+                "selling": f"Kes {avg_selling_price:,.0f}.0",
+                "buying": f"Kes {weighted_avg_buying_price:,.0f}",
+                "amount": f"Kes {total_amount_sold_item:,.0f}.0",
+                "profit": f"Kes {profit:,.0f}.0"
             }
             items.append(item_report)
 
@@ -12581,22 +12623,160 @@ class StockSalesReport(Resource):
             total_amount_sold += total_amount_sold_item
             gross_profit += profit
 
+        total_expenses = 0.0
+        expenses = StockExpenseOp.fetch_expenses_by_company_id(current_user.company.id)
+        for i in expenses:
+            total_expenses += i.amount
+
 
         # Prepare summary
         summary = {
-            "total_stock_remaining": total_stock_remaining,
-            "total_stock_value": round(total_stock_value, 2),
             "total_amount_sold": round(total_amount_sold, 2),
+            "total_expenses": round(total_expenses, 2),
             "gross_profit": round(gross_profit, 2),
-            "total_items": len(items)
+            "net_profit": round((gross_profit-total_expenses), 2),
         }
 
         return [items, summary]
 
 
 class BalanceStockReport(Resource):
+    @login_required
     def get(self):
-        return []
+        stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
+        items = []
+
+        total_opening = 0
+        total_added = 0
+        total_combined = 0
+        total_sold = 0
+        total_damage = 0
+        total_remaining = 0
+
+        for item in stock_items:
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .all()
+
+            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
+            total_stock_qty = opening_stock_qty + purchases_qty
+            total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
+            total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
+            stock_balance = sum(t.quantity for t in transactions)
+
+            # Weighted average buying price (only for purchases and opening stock)
+            purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
+            if purchase_transactions and sum(t.quantity for t in purchase_transactions) > 0:
+                total_buying_cost = sum(t.quantity * t.price_per_unit for t in purchase_transactions)
+                total_buying_qty = sum(t.quantity for t in purchase_transactions)
+                weighted_avg_buying_price = round(total_buying_cost / total_buying_qty, 2)
+            else:
+                weighted_avg_buying_price = 0.0
+
+            # Selling price (use default_selling_price or average from sales if available)
+            sales = [t for t in transactions if t.transaction_type == 'Sale']
+
+
+            # Total amount sold (revenue)
+            total_amount_sold_item = sum(s.quantity * s.price_per_unit * -1 for s in sales) if sales else 0.0
+
+            # Profit for this item
+            cost_of_goods_sold = total_sold_qty * weighted_avg_buying_price if total_sold_qty > 0 else 0.0
+            profit = total_amount_sold_item - cost_of_goods_sold
+
+            # Prepare report for this item
+            item_report = {
+                "item": item.name,
+                "opening": opening_stock_qty,
+                "purchase": purchases_qty,
+                "total": total_stock_qty,
+                "sold": total_sold_qty if total_sold_qty > 0 else 0,
+                "damage":total_damage_qty if total_damage_qty > 0 else 0,
+                "balance": stock_balance,
+                # "selling": f"Kes {avg_selling_price:,.0f}.0",
+                # "buying": f"Kes {weighted_avg_buying_price:,.0f}",
+                # "amount": f"Kes {total_amount_sold_item:,.0f}.0",
+                # "profit": f"Kes {profit:,.0f}.0"
+            }
+            items.append(item_report)
+
+            # Update summary totals
+            total_opening += opening_stock_qty
+            total_added += purchases_qty
+            total_combined += opening_stock_qty
+            total_combined += purchases_qty
+            total_sold += total_sold_qty
+            total_damage += total_damage_qty
+            total_remaining += stock_balance
+        # Prepare summary
+        summary = {
+            "total_opening": total_opening,
+            "total_added": total_added,
+            "total_combined": total_combined,
+            "total_sold": total_sold,
+            "total_damage": total_damage,
+            "total_remaining":total_remaining
+        }
+
+        return [items, summary]
+
+class StockValueReport(Resource):
+    @login_required
+    def get(self):
+        stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
+        items = []
+
+        total_stock_remaining = 0
+        total_stock_value = 0.0
+
+        for item in stock_items:
+            transactions = db.session.query(StockTransaction)\
+                .filter_by(item_id=item.id, state=True)\
+                .all()
+
+            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
+            total_stock_qty = opening_stock_qty + purchases_qty
+            total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
+            total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
+            stock_balance = sum(t.quantity for t in transactions)
+
+            # Weighted average buying price (only for purchases and opening stock)
+            purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
+            if purchase_transactions and sum(t.quantity for t in purchase_transactions) > 0:
+                total_buying_cost = sum(t.quantity * t.price_per_unit for t in purchase_transactions)
+                total_buying_qty = sum(t.quantity for t in purchase_transactions)
+                weighted_avg_buying_price = round(total_buying_cost / total_buying_qty, 2)
+            else:
+                weighted_avg_buying_price = 0.0
+
+            # Selling price (use default_selling_price or average from sales if available)
+            sales = [t for t in transactions if t.transaction_type == 'Sale']
+
+
+            # Prepare report for this item
+            item_report = {
+                "item": item.name,
+                "balance": stock_balance,
+                "price": f"Kes {weighted_avg_buying_price:,.0f}",
+                "value": f"Kes {stock_balance * weighted_avg_buying_price:,.0f}.0" if stock_balance > 0 else "Kes 0.0",
+                "rlevel": f"-",
+                "rneeded": f"-",
+            }
+            items.append(item_report)
+
+            # Update summary totals
+            total_stock_remaining += stock_balance
+            total_stock_value += stock_balance * weighted_avg_buying_price if stock_balance > 0 else 0.0
+
+        # Prepare summary
+        summary = {
+            "total_stock_remaining": total_stock_remaining,
+            "total_stock_value": round(total_stock_value, 2),
+        }
+
+        return [items, summary]
 
 class ItemView(Resource):
     @timer

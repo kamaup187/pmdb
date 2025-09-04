@@ -65,13 +65,17 @@ function addPurchasesToTable(data,table) {
             item.ptotal,
             item.pdate,        // Region
             item.porder,
-            item.pnotes
+            item.pnotes,
+            '<button class="btn btn-success editPurchase" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updatePurchaseModal"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i></a>',  // Remove button
+            '<button class="btn btn-danger deletePurchase" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#deletePurchaseModal"><i class="feather-18 feather-bold pb-1" data-feather="trash"></i></button>',  // Remove button
             // Branch
         ]);
     });
 
     // Draw the updated table
     table.draw();
+    feather.replace();
+
 }
 
 function addStocktakeToTable(data,table) {
@@ -138,11 +142,10 @@ function addSalesToTable(data,table) {
     feather.replace();
 }
 
-function addSalesReportToTable(data,table) {
-    // Assuming data is an array of objects
-    // var table = $('#primaryData').DataTable();
+function addBalanceStockReportToTable(data,table) {
 
     // Clear the existing data
+
     table.clear();
 
     // Add new data
@@ -156,9 +159,34 @@ function addSalesReportToTable(data,table) {
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
             item.purchase,           // Name
             item.total,
-            item.sold, 
+            item.sold,
+            item.damage,
             item.balance,
-            item.price,
+            // Branch
+        ]);
+    });
+
+    // Draw the updated table
+    table.draw();
+
+}
+
+function addSalesReportToTable(data,table) {
+
+    // Clear the existing data
+
+    table.clear();
+
+    // Add new data
+    data.forEach(function(item) {
+
+        table.row.add([
+             // PNo
+            item.id,
+            item.item,
+            item.sold,
+            item.buying,
+            item.selling,
             item.amount,       // Region
             item.profit,
             // Branch
@@ -167,9 +195,10 @@ function addSalesReportToTable(data,table) {
 
     // Draw the updated table
     table.draw();
+
 }
 
-function addBalanceStockToTable(data,table) {
+function addStockValueReportToTable(data,table) {
     // Assuming data is an array of objects
     // var table = $('#primaryData').DataTable();
 
@@ -183,11 +212,12 @@ function addBalanceStockToTable(data,table) {
              // PNo
             item.id,
             item.item,
-            item.current,             // PNo
+            item.balance,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.price,           // Name
             item.value,           // Name
-            item.minimum,
-            item.reorder, 
+            item.rlevel,
+            item.rneeded, 
             // Branch
         ]);
     });
@@ -383,6 +413,8 @@ var purchasesTableTemplate = `
             <th class="fw-bold">Purchase date</th>
             <th class="fw-bold">Purchase Order</th>
             <th class="fw-bold">Comments</th>
+            <th class="fw-bold">Edit</th>
+            <th class="fw-bold">Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -399,8 +431,8 @@ var stocktakeTableTemplate = `
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Type</th>
             <th class="fw-bold">Item</th>
-            <th class="fw-bold">Expected</th>
-            <th class="fw-bold">Actual</th>
+            <th class="fw-bold">System</th>
+            <th class="fw-bold">Shelf</th>
             <th class="fw-bold">Diff</th>
             <th class="fw-bold">Status</th>
             <th class="fw-bold">Comments</th>
@@ -441,49 +473,97 @@ var salesTableTemplate = `
 
 `
 
-var salesReportTableTemplate = `
-<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
-    <thead class="custom-header">
-        <tr>
-            <th class="fw-bold">#</th>
-            <th class="fw-bold">Item</th>
-            <th class="fw-bold">OpeningStock</th>
-            <th class="fw-bold">PurchasedStock</th>
-            <th class="fw-bold">TotalStock</th>
-            <th class="fw-bold">SoldStock</th>
-            <th class="fw-bold">StockBalance</th>
-            <th class="fw-bold">SellingPrice</th>
-            <th class="fw-bold">TotalSales</th>
-            <th class="fw-bold">GrossProfit</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Populate dynamically -->
-    </tbody>
-</table>
-
-<div id="summarySection"></div>
-
-`
-
 var balanceStockTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
         <tr>
             <th class="fw-bold">#</th>
             <th class="fw-bold">Item</th>
-            <th class="fw-bold">CurrentStock</th>
-            <th class="fw-bold">StockValue</th>
-            <th class="fw-bold">MinimumLevel</th>
-            <th class="fw-bold">ReorderNeeded</th>
+            <th class="fw-bold">Opening</th>
+            <th class="fw-bold">Added</th>
+            <th class="fw-bold">Total</th>
+            <th class="fw-bold">Sold</th>
+            <th class="fw-bold">Damage</th>
+            <th class="fw-bold">Balance</th>
         </tr>
     </thead>
     <tbody>
         <!-- Populate dynamically -->
     </tbody>
+
+    <tfoot>
+        <tr>
+            <td colspan="2">Summary Totals</td> <!-- Span non-total columns -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Profit total -->
+        </tr>
+    </tfoot>
+</table>
+
+
+`
+var salesReportTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Item</th>
+            <th class="fw-bold">Quantity</th>
+            <th class="fw-bold">Buying</th>
+            <th class="fw-bold">Selling</th>
+            <th class="fw-bold">Total Sold</th>
+            <th class="fw-bold">G.Profit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <td colspan="5">Grand Total (Kes) </td> <!-- Span non-total columns -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- G.Profit total -->
+        </tr>
+    </tfoot>
 </table>
 
 <div id="summarySection"></div>
+
+`
+
+var stockValueTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Item</th>
+            <th class="fw-bold">CurrentStock</th>
+            <th class="fw-bold">StockPrice</th>
+            <th class="fw-bold">StockValue</th>
+            <th class="fw-bold">R.Level</th>
+            <th class="fw-bold">Reorder</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2">Summary Totals </td> <!-- Span non-total columns -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- T.Sales total -->
+            <td></td> <!-- G.Profit total -->
+            <td></td> <!-- G.Profit total -->
+            <td></td> <!-- G.Profit total -->
+
+        </tr>
+    </tfoot>
+</table>
 
 `
 
@@ -616,7 +696,7 @@ var accountDataTableTemplate = `
 </table>
 `
 
-    var itemUpdateForm = (memberobj) => {
+    var itemUpdateForm = (obj) => {
 
         
         return `
@@ -629,25 +709,25 @@ var accountDataTableTemplate = `
       <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
       <circle cx="8" cy="4.5" r="1"/>
     </svg></span></label>
-                                            <input type="text" class="form-control" id="item-update-name" value="${memberobj.name}" required>
+                                            <input type="text" class="form-control" id="item-update-name" value="${obj.name}" required>
                                         </div>
                                         
                                         <div class="mb-3">
                                             <label for="item-update-qty" class="form-label">Update quantity</label>
-                                            <input type="text" class="form-control" id="item-update-qty" value="${memberobj.qty}">
+                                            <input type="text" class="form-control" id="item-update-qty" value="${obj.qty}">
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="item-update-bprice" class="form-label">Update buying price</label>
-                                            <input type="text" class="form-control" id="item-update-bprice" value="${memberobj.bprice}">
+                                            <input type="text" class="form-control" id="item-update-bprice" value="${obj.bprice}">
                                         </div>
     
                                         <div class="mb-3">
                                             <label for="item-update-sprice" class="form-label">Update selling price</label>
-                                            <input type="text" class="form-control" id="item-update-sprice" value="${memberobj.sprice}" required>
+                                            <input type="text" class="form-control" id="item-update-sprice" value="${obj.sprice}" required>
                                         </div>
     
-                                        <input type="hidden" class="form-control" id="item-update-id" value="${memberobj.id}">
+                                        <input type="hidden" class="form-control" id="item-update-id" value="${obj.id}">
     
                                         <button type="button" id="update-item-btn" class="btn app-btn-primary" >Submit</button>
                                     </form>
@@ -656,7 +736,7 @@ var accountDataTableTemplate = `
         };
 
 
-    var itemDeleteForm = (memberobj) => {
+    var itemDeleteForm = (obj) => {
 
         
         return `
@@ -669,31 +749,69 @@ var accountDataTableTemplate = `
       <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
       <circle cx="8" cy="4.5" r="1"/>
     </svg></span></label>
-                                            <input type="text" class="form-control" id="" value="${memberobj.name}" disabled>
+                                            <input type="text" class="form-control" id="" value="${obj.name}" disabled>
                                         </div>
                                         
                                         <div class="mb-3">
                                             <label for="" class="form-label">Update quantity</label>
-                                            <input type="text" class="form-control" id="" value="${memberobj.qty}" disabled>
+                                            <input type="text" class="form-control" id="" value="${obj.qty}" disabled>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="" class="form-label">Update buying price</label>
-                                            <input type="text" class="form-control" id="" value="${memberobj.bprice}" disabled>
+                                            <input type="text" class="form-control" id="" value="${obj.bprice}" disabled>
                                         </div>
     
                                         <div class="mb-3">
                                             <label for="" class="form-label">Update selling price</label>
-                                            <input type="text" class="form-control" id="" value="${memberobj.sprice}" disabled>
+                                            <input type="text" class="form-control" id="" value="${obj.sprice}" disabled>
                                         </div>
     
-                                        <input type="hidden" class="form-control" id="item-delete-id" value="${memberobj.id}">
+                                        <input type="hidden" class="form-control" id="item-delete-id" value="${obj.id}">
     
                                         <button type="button" id="delete-item-btn" class="btn btn-danger" >Delete?</button>
                                     </form>
     
     `;
         };
+
+
+    var purchaseUpdateForm = (obj) => {
+        return `
+            <form class="settings-form">
+                
+                <div class="mb-3">
+                    <label for="purchase-update-qty" class="form-label">Update quantity</label>
+                    <input type="text" class="form-control" id="purchase-update-qty" value="${obj.qty}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="purchase-update-bprice" class="form-label">Update buying price</label>
+                    <input type="text" class="form-control" id="purchase-update-bprice" value="${obj.bprice}">
+                </div>
+
+                <input type="hidden" class="form-control" id="purchase-update-id" value="${obj.id}">
+
+                <button type="button" id="update-purchase-btn" class="btn app-btn-primary" >Submit</button>
+            </form>
+        `;
+    };
+
+    var purchaseDeleteForm = (obj) => {
+        return `
+            <form class="settings-form">
+                
+                <div class="mb-3">
+                    <label for="" class="form-label">Purchase quantity</label>
+                    <input type="text" class="form-control" id="" value="${obj.qty}" disabled>
+                </div>
+
+                <input type="hidden" class="form-control" id="purchase-delete-id" value="${obj.id}">
+
+                <button type="button" id="delete-purchase-btn" class="btn btn-danger" >Delete?</button>
+            </form>
+        `;
+    };
 
 var roleUpdateForm = (roleobj,roles) => {
     console.log("perms", roles)
@@ -766,14 +884,14 @@ var roleUpdateForm = (roleobj,roles) => {
     };
 
 
-    var userUpdateForm = (memberobj,rolesArray,branchesArray) => {
+    var userUpdateForm = (obj,rolesArray,branchesArray) => {
 
         const roleOptions = rolesArray.map(r => `
-            <option value="${r.value}" ${r.value === memberobj.role ? 'selected' : ''}>${r.label}</option>
+            <option value="${r.value}" ${r.value === obj.role ? 'selected' : ''}>${r.label}</option>
         `).join('');
 
         const branchOptions = branchesArray.map(r => `
-            <option value="${r.value}" ${r.value === memberobj.branch ? 'selected' : ''}>${r.label}</option>
+            <option value="${r.value}" ${r.value === obj.branch ? 'selected' : ''}>${r.label}</option>
         `).join('');
         
         return `
@@ -787,17 +905,17 @@ var roleUpdateForm = (roleobj,roles) => {
       <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
       <circle cx="8" cy="4.5" r="1"/>
     </svg></span></label>
-                                            <input type="text" class="form-control" id="user-update-name" value="${memberobj.name}" required>
+                                            <input type="text" class="form-control" id="user-update-name" value="${obj.name}" required>
                                         </div>
                                         <div class=row>
                                             <div class="col-6 mb-3">
                                                 <label for="user-update-mobile" class="form-label">Update contact</label>
-                                                <input type="text" class="form-control" id="user-update-mobile" value="${memberobj.tel}" required>
+                                                <input type="text" class="form-control" id="user-update-mobile" value="${obj.tel}" required>
                                             </div>
 
                                             <div class="col-6 mb-3">
                                                 <label for="user-update-staff" class="form-label">Update staffId</label>
-                                                <input type="text" class="form-control" id="user-update-staff" value="${memberobj.code}" required>
+                                                <input type="text" class="form-control" id="user-update-staff" value="${obj.code}" required>
                                             </div>
                                         </div>
     
@@ -812,7 +930,7 @@ var roleUpdateForm = (roleobj,roles) => {
                                             </div>
                                         </div>
     
-                                        <input type="hidden" class="form-control" id="user-update-id" value="${memberobj.id}">
+                                        <input type="hidden" class="form-control" id="user-update-id" value="${obj.id}">
     
                                         <div class="mb-3 row">
                                             <div class="col-6">
@@ -1873,8 +1991,9 @@ var salesReportTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Sales report table</a>
-</nav>
+<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
+<a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a></nav>
 
 
 
@@ -1944,8 +2063,9 @@ var balanceStockTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Sales report table</a>
-</nav>
+<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
+<a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a></nav>
 
 
 
@@ -1998,7 +2118,81 @@ var balanceStockTemplate = `
 
 
 `
+var stockValueTemplate = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Stock Value Report</h1>
+    </div>
 
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
+<a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a>
+
+
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white stock-value" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show stocks
+                        </a>
+                    </div>
+                    <div class="col-auto d-none">						    
+                        <a class="btn btn-success text-white" href="#">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print report
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
+
+    <div id="stock-value-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="stock-value-table" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+
+
+`
 var floatTemplate = `
 <div class="row g-3 mb-4 align-items-center justify-content-between">
     <div class="col-auto">

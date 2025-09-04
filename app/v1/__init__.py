@@ -505,6 +505,7 @@ api.add_resource(StockDamages,"/v2/stock/damages")
 api.add_resource(StockExpenses,"/v2/stock/expenses")
 api.add_resource(StockSalesReport,"/v2/stock/sales/report")
 api.add_resource(BalanceStockReport,"/v2/stock/balance/report")
+api.add_resource(StockValueReport,"/v2/stock/value/report")
 
 api.add_resource(AI,"/api/tenants")
 

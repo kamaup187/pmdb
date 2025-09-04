@@ -307,9 +307,13 @@ class StockModule(Resource):
                 .filter_by(item_id=item.id, state=True)\
                 .all()
 
-            for t in transactions:
-                if not t.quantity:
-                    StockTransactionOp.update_quantity(t,0.0)
+            # for t in transactions:
+            #     if not t.quantity:
+            #         print("QUANTITY  ",t.quantity)
+            #         StockTransactionOp.update_quantity(t,1.0)
+            #     else:
+            #         print("WEWEWEWE  ",t.quantity)
+
 
             # Calculate stock balance
             stock_balance = sum(t.quantity for t in transactions)

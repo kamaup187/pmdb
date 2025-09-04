@@ -6403,15 +6403,14 @@ class StockItemOp(StockItem, Base):
             .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock']))\
             .all()
 
-        for t in transactions:
-            if not t.quantity:
-                StockTransactionOp.update_quantity(t,0.0)
+        # for t in transactions:
+        #     if not t.quantity:
+        #         StockTransactionOp.update_quantity(t,0.0)
         
-        try:
-            if not transactions or sum(t.quantity for t in transactions) == 0:
-                return 0.0  # Return 0 if no valid transactions or zero quantity
-        except TypeError:
-            return 0.0
+
+        if not transactions or sum(t.quantity for t in transactions) == 0:
+            return 0.0  # Return 0 if no valid transactions or zero quantity
+
 
         # Calculate total cost and total quantity
         total_cost = sum(t.quantity * t.price_per_unit for t in transactions)

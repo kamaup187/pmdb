@@ -153,7 +153,7 @@ function addBalanceStockReportToTable(data,table) {
 
         table.row.add([
              // PNo
-            item.id,
+            item.num,
             item.item,
             item.opening,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
@@ -210,7 +210,7 @@ function addStockValueReportToTable(data,table) {
 
         table.row.add([
              // PNo
-            item.id,
+            item.num,
             item.item,
             item.balance,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button

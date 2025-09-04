@@ -12658,6 +12658,8 @@ class BalanceStockReport(Resource):
         total_damage = 0
         total_remaining = 0
 
+        num = 1
+
         for item in stock_items:
             transactions = db.session.query(StockTransaction)\
                 .filter_by(item_id=item.id, state=True)\
@@ -12692,6 +12694,7 @@ class BalanceStockReport(Resource):
 
             # Prepare report for this item
             item_report = {
+                "num":num,
                 "item": item.name,
                 "opening": opening_stock_qty,
                 "purchase": purchases_qty,
@@ -12705,6 +12708,7 @@ class BalanceStockReport(Resource):
                 # "profit": f"Kes {profit:,.0f}.0"
             }
             items.append(item_report)
+            num += 1
 
             # Update summary totals
             total_opening += opening_stock_qty
@@ -12735,6 +12739,8 @@ class StockValueReport(Resource):
         total_stock_remaining = 0
         total_stock_value = 0.0
 
+        num = 1
+
         for item in stock_items:
             transactions = db.session.query(StockTransaction)\
                 .filter_by(item_id=item.id, state=True)\
@@ -12762,6 +12768,7 @@ class StockValueReport(Resource):
 
             # Prepare report for this item
             item_report = {
+                "num":num,
                 "item": item.name,
                 "balance": stock_balance,
                 "price": f"Kes {weighted_avg_buying_price:,.0f}",
@@ -12770,6 +12777,7 @@ class StockValueReport(Resource):
                 "rneeded": f"-",
             }
             items.append(item_report)
+            num += 1
 
             # Update summary totals
             total_stock_remaining += stock_balance

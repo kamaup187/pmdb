@@ -184,9 +184,9 @@ function addSalesReportToTable(data,table) {
              // PNo
             item.id,
             item.item,
-            item.sold,
             item.buying,
             item.selling,
+            item.sold,
             item.amount,       // Region
             item.profit,
             // Branch
@@ -512,11 +512,11 @@ var salesReportTableTemplate = `
         <tr>
             <th class="fw-bold">#</th>
             <th class="fw-bold">Item</th>
-            <th class="fw-bold">Quantity</th>
             <th class="fw-bold">Buying</th>
             <th class="fw-bold">Selling</th>
-            <th class="fw-bold">Total Sold</th>
-            <th class="fw-bold">G.Profit</th>
+            <th class="fw-bold">QuantitySold</th>
+            <th class="fw-bold">TotalSold</th>
+            <th class="fw-bold">GrossProfit</th>
         </tr>
     </thead>
     <tbody>

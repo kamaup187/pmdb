@@ -437,13 +437,13 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
+        cl = CompanyOp.fetch_company_by_name("Premier Realty")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
             clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
+            cl = CompanyOp.fetch_company_by_name("Premier Realty")
             if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
@@ -453,7 +453,7 @@ class ClientBilling(Resource):
         for c in clients:
             print("printing clients",c)
             if not c.bills:
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,7000.0,0.0,0.0,0.0,0.0,7000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                 new_month_bill.save()
             else: 
                 result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -464,14 +464,14 @@ class ClientBilling(Resource):
                 if current_month_bill:
                     # pass
                     ClientBillOp.delete(current_month_bill)
-                    new_month_bill = ClientBillOp(timenow.year,timenow.month,7000.0,0.0,0.0,0.0,0.0,7000.0,c.id)
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                     new_month_bill.save()
                 else:
                     try:
                         ClientBillOp.delete(current_month_bill)
                     except:
                         pass
-                    current_month_bill = ClientBillOp(timenow.year,timenow.month,7000.0,0.0,0.0,0.0,0.0,7000.0,c.id)
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                     current_month_bill.save()
 
         if not current_month_bill:
@@ -537,7 +537,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
+        comm = CompanyOp.fetch_company_by_name("Premier Realty")
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -558,7 +558,7 @@ class ClientInvoice(Resource):
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(10,8,2025)
+        invdate = generate_exact_date(1,8,2025)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)
@@ -4083,20 +4083,37 @@ class PrintActualReceipt(Resource):
 
             paid = f'KES {curr_tenant_invoice.paid_amount:,.0f}'
 
-            if curr_tenant_invoice.balance:
-                if curr_tenant_invoice.balance > -1:
+            # if curr_tenant_invoice.balance:
+            #     if curr_tenant_invoice.balance > -1:
+            #         baltitle = "Balance"
+            #         outline = "text-danger"
+            #         bal = f"KES {curr_tenant_invoice.balance:,.0f}"
+            #     else:
+            #         baltitle = "Advance"
+            #         outline = "text-success"
+            #         bal = f"KES {curr_tenant_invoice.balance*-1:,.0f}"
+
+            # else:
+            #     baltitle = "Balance"
+            #     outline = "text-black"
+            #     bal = f"Kes 0.0"
+
+
+            if payment_obj.balance:
+                if payment_obj.balance > -1:
                     baltitle = "Balance"
                     outline = "text-danger"
-                    bal = f"KES {curr_tenant_invoice.balance:,.0f}"
+                    bal = f"Kes {payment_obj.balance:,.0f}"
                 else:
                     baltitle = "Advance"
                     outline = "text-success"
-                    bal = f"KES {curr_tenant_invoice.balance*-1:,.0f}"
+                    bal = f"Kes {payment_obj.balance*-1:,.0f}"
 
             else:
                 baltitle = "Balance"
                 outline = "text-black"
                 bal = f"Kes 0.0"
+
 
             server = fname_extracter(UserOp.fetch_user_by_id(payment_obj.user_id).name)
 

@@ -12258,7 +12258,7 @@ class StockItems(Resource):
             if item_obj:
                 valid_sprice = validate_input(item_sprice)
                 valid_bprice = validate_input(request.form.get("bprice"))
-                valid_qty = validate_int_input(item_qty)
+                valid_qty = validate_stock_input(item_qty)
 
                 opening_stock_transaction = StockTransactionOp.fetch_transaction_by_item_id_and_transaction_type(item_obj.id,"Opening Stock")
                 if not opening_stock_transaction:
@@ -12283,7 +12283,7 @@ class StockItems(Resource):
         if item_obj:
             return "item exists already"
         else:
-            valid_qty = validate_int_input(item_qty)
+            valid_qty = validate_stock_input(item_qty)
             valid_sprice = validate_input(item_sprice)
             valid_bprice = validate_input(request.form.get("bprice"))
             new_item = StockItemOp(item_name,"",valid_sprice,current_user.id,current_user.company.id)
@@ -12358,7 +12358,7 @@ class StockPurchases(Resource):
         price = request.form.get("price")
         target = request.form.get("target")
         try:
-            quantity = validate_int_input(qty)
+            quantity = validate_stock_input(qty)
             price = validate_input(price)
         except:
             quantity = 0.0
@@ -12494,7 +12494,7 @@ class StockSales(Resource):
         price = request.form.get("price")
         payment = request.form.get("payment")
 
-        quantity = validate_int_input(qty)
+        quantity = validate_stock_input(qty)
         trans_quantity = quantity * -1
         price = validate_input(price)
 
@@ -12526,7 +12526,7 @@ class StockDamages(Resource):
         if not item_obj:
             return "invalid item"
 
-        stock_transaction_obj = StockTransactionOp(None,item_obj.id,'Damage',validate_int_input(qty)*-1,0.0,current_user.id,current_user.company.id)
+        stock_transaction_obj = StockTransactionOp(None,item_obj.id,'Damage',validate_stock_input(qty)*-1,0.0,current_user.id,current_user.company.id)
         stock_transaction_obj.save()
 
         damage_obj = StockDamageOp(stock_transaction_obj.id,reason,notes,current_user.id,current_user.company.id)

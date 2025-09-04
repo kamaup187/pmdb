@@ -4597,13 +4597,13 @@ def validate_input(arg):
         
     return float_amount
 
-def validate_int_input(arg):
+def validate_stock_input(arg):
     # print("VALIDATION STARTING....")
     # print("USER DATA >>> ",arg)
 
     amount = arg.replace(',', '')
     try:
-        int_amount = int(amount)
+        int_amount = float(amount)
     except:
         int_amount = 0
 

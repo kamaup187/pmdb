@@ -2035,7 +2035,7 @@ class StockTransaction(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
     stock_take_id = db.Column(db.Integer, db.ForeignKey('stock_takes.id'), nullable=True)
     transaction_type = db.Column(db.VARCHAR)  # e.g., Purchase, Sale, Damage, Opening Stock
-    quantity = db.Column(db.Integer)
+    quantity = db.Column(db.Float,default=0.0)
     price_per_unit = db.Column(db.Float)
     transaction_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     notes = db.Column(db.VARCHAR, nullable=True)
@@ -2055,7 +2055,7 @@ class StockSale(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('stockitems.id'))
-    quantity = db.Column(db.Integer)
+    quantity = db.Column(db.Float,default=0.0)
     sale_price = db.Column(db.Float)
     sale_date = db.Column(db.DateTime, default=db.func.current_timestamp())
     payment_method = db.Column(db.VARCHAR)

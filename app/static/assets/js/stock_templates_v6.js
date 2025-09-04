@@ -1991,7 +1991,7 @@ var salesReportTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link sales-report" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
 <a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
 <a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a></nav>
 
@@ -2063,7 +2063,7 @@ var balanceStockTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link sales-report" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
 <a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
 <a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a></nav>
 
@@ -2135,7 +2135,7 @@ var stockValueTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link sales-report active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
+<a class="flex-sm-fill text-sm-center nav-link sales-report" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Daily Sales Report table</a>
 <a class="flex-sm-fill text-sm-center nav-link balance-stock" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock report table</a>
 <a class="flex-sm-fill text-sm-center nav-link stock-value" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stock Value report table</a>
 

@@ -182,7 +182,7 @@ function addSalesReportToTable(data,table) {
 
         table.row.add([
              // PNo
-            item.id,
+            item.num,
             item.item,
             item.buying,
             item.selling,

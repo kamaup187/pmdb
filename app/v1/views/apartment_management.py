@@ -12566,6 +12566,8 @@ class StockSalesReport(Resource):
         total_amount_sold = 0.0
         gross_profit = 0.0
 
+        num = 1
+
         for item in stock_items:
             transactions = db.session.query(StockTransaction)\
                 .filter_by(item_id=item.id, state=True)\
@@ -12603,6 +12605,7 @@ class StockSalesReport(Resource):
 
             # Prepare report for this item
             item_report = {
+                "num":num,
                 "item": item.name,
                 # "opening": opening_stock_qty,
                 # "purchase": purchases_qty,
@@ -12616,6 +12619,8 @@ class StockSalesReport(Resource):
                 "profit": f"Kes {profit:,.0f}.0"
             }
             items.append(item_report)
+
+            num += 1
 
             # Update summary totals
             total_stock_remaining += stock_balance

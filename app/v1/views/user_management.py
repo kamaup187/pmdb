@@ -1674,6 +1674,11 @@ class UserLogin(Resource):
 
         if user:
             if UserOp.password_is_valid(user,password):
+                if user.company.name == "KEVMA REAL ESTATE":
+                    if user.username.startswith('qc'):
+                        pass
+                    else:
+                        return redirect(url_for('api.userlogin'))
                 login_user(user, remember=remember)
                 return redirect(url_for('api.index'))
             flash('Incorrect password!','fail')

@@ -1678,7 +1678,8 @@ class UserLogin(Resource):
                     if user.username.startswith('qc'):
                         pass
                     else:
-                        return redirect(url_for('api.userlogin'))
+                        # return redirect(url_for('api.userlogin'))
+                        pass
                 login_user(user, remember=remember)
                 return redirect(url_for('api.index'))
             flash('Incorrect password!','fail')

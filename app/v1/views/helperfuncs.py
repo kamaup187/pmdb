@@ -13132,7 +13132,10 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                 tenant_id = tenant.id
 
                 if house.apartment_id == 765 and not tenant.monthly_charges:
+                    sms_sender("RENTLIB",f"SIRENGA service is working",["+254716674695"])
                     maintenance += 200.0
+                else:
+                    sms_sender("RENTLIB",f"SIRENGA service is not working",["+254716674695"])
 
 
                 if tenant.accumulated_fine:

@@ -1628,7 +1628,8 @@ def sms_sender(company,sms_text,phonenum):
     elif company.title() == "Sirenga Investments Ltd":
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"SirengaRent")
         if not report:
-            report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
+            print("SIRENGA SENDING IS FAILING")
+            # report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"SirengaRent")
 
 
     elif company.title() == "Lymax Properties":
@@ -1636,8 +1637,8 @@ def sms_sender(company,sms_text,phonenum):
         # report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
 
     elif company.title() == "Mutiee":
-        # report = None
-        report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
+        report = None
+        # report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
 
         # report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"LYMAXPROPER")
 
@@ -1645,9 +1646,10 @@ def sms_sender(company,sms_text,phonenum):
     else:
         # report = None
         report = advanta_send_sms(sms_text,phonenum,kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
-        if not report:
-            if company.title() == "Colmar Estate Management":
-                report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
+        print("SENT USING DEFAULT MECHANISMS")
+        # if not report:
+        #     if company.title() == "Colmar Estate Management":
+        #         report = advanta_send_sms(sms_text,phonenum,kevma_api_key,kevma_partner_id,"KIOTAPAY")
         
     if report:
         param1 = report["apikey"]

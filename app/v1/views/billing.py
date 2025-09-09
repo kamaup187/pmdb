@@ -8012,6 +8012,9 @@ class CallBackUrlSirenga(Resource):
 
             CtoBop.update_status(ctob_obj,"claimed")
 
+            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} captured automatically",["+254716674695"])
+
+
         else:
             sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",["+254716674695"])
             sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",["+2540711896925"])

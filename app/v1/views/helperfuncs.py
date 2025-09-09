@@ -13132,11 +13132,7 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                 tenant_id = tenant.id
 
                 if house.apartment_id == 765 and not tenant.monthly_charges:
-                    sms_sender("RENTLIB",f"SIRENGA service is working",["+254716674695"])
                     maintenance += 200.0
-                else:
-                    sms_sender("RENTLIB",f"SIRENGA service is not working",["+254716674695"])
-
 
                 if tenant.accumulated_fine:
                     print("Calculating fines for ",house)
@@ -13295,6 +13291,9 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
                 else:
                     temp_maintenance_total = maintenance
 
+
+                if co.id == 121 and not tenant.monthly_charges:
+                    water_total = 0.0 #reset to zero for new tenants
 
                 total_amount = water_total+rent+garbage+electricity+security+fines+arrears+deposit+agreement+maintenance+booking+instalment
 

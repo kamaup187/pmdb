@@ -3425,6 +3425,10 @@ class DepositPaymentOp(DepositPayment,Base):
         self.status = status
         self.deposit_id = deposit_id
 
+    def update_date(self,date):
+        self.date = date
+        db.session.commit()
+
     def view(self):
         return {
             'id': self.id,
@@ -4482,10 +4486,12 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         if self.tenant:
             if self.tenant.deposits:
                 if self.tenant.deposits.payments:
-                    print("some payments exists for tenant: ",self.tenant.name)
+                    # print("some payments exists for tenant: ",self.tenant.name)
                     payments = 0.0
                     for pp in self.tenant.deposits.payments:
                         # print(self.tenant.name, " ",pp.date.month, pp.date.year)
+                        # if self.tenant.name == "James  Mutheke":
+                        #     DepositPaymentOp.update_date(pp,datetime.datetime.now())
                         if pp.date.month == self.month and  pp.date.year == self.year:
                             payments += pp.amount
                     return f'{payments:,.1f}'

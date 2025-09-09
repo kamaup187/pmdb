@@ -2806,7 +2806,8 @@ function calculateDifference(expected, actual) {
 				url: "/v2/stock/sales",
 				type: "get",
 				data: {
-				target: "all"
+					date:$("#saleDate").val(),
+					target: "all"
 				},
 				success: function (response) {
 					// $select = $("#select-balance-property")
@@ -2850,7 +2851,8 @@ function calculateDifference(expected, actual) {
 				url: "/v2/stock/sales/report",
 				type: "get",
 				data: {
-				target: "all"
+					date:$("#saleReportDate").val(),
+					target: "all"
 				},
 				success: function (response) {
 					// $select = $("#select-balance-property")

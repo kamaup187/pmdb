@@ -7944,6 +7944,8 @@ class CallBackUrlSirenga(Resource):
 
         # response = sms.send("SIRENGA MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
+        sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} received",["+254716674695"])
+
         com = CompanyOp.fetch_company_by_id(company_id)
         props = com.props
 

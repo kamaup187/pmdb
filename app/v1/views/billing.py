@@ -7944,7 +7944,7 @@ class CallBackUrlSirenga(Resource):
 
         # response = sms.send("SIRENGA MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
-        sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} received",["+254716674695"])
+        sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} received",sms_phone_number_formatter("0716674695"))
 
         com = CompanyOp.fetch_company_by_id(company_id)
         props = com.props
@@ -7974,7 +7974,7 @@ class CallBackUrlSirenga(Resource):
             else:
                 formatted_ref = bill_ref_num
 
-            sms_sender("Sirenga Investments Ltd",f"SIRENGA MPESA DATA JUST IN from {formatted_ref}",["+254716674695"])
+            sms_sender("Sirenga Investments Ltd",f"SIRENGA MPESA DATA JUST IN from {formatted_ref}",sms_phone_number_formatter("0716674695"))
 
             for prp in props:
                 for house in prp.houses:
@@ -7986,7 +7986,7 @@ class CallBackUrlSirenga(Resource):
 
         if not target_house:
             print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-            sms_sender("Sirenga Investments Ltd",f"SIRENGA DATA did not find house from {bill_ref_num}",["+254716674695"])
+            sms_sender("Sirenga Investments Ltd",f"SIRENGA DATA did not find house from {bill_ref_num}",sms_phone_number_formatter("0716674695"))
 
             return {"message": "House not found"}, 404
 
@@ -8014,12 +8014,12 @@ class CallBackUrlSirenga(Resource):
 
             CtoBop.update_status(ctob_obj,"claimed")
 
-            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} captured automatically",["+254716674695"])
+            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} captured automatically",sms_phone_number_formatter("0716674695"))
 
 
         else:
-            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",["+254716674695"])
-            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",["+2540711896925"])
+            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",sms_phone_number_formatter("0716674695"))
+            sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",sms_phone_number_formatter("0711896925"))
 
 
         # auto_consume_ctob2(ctob_obj)

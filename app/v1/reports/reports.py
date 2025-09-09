@@ -2162,6 +2162,14 @@ class CombinedReport(Resource):
 
         ###################################################################################################
         availables = []
+        # missing_out = []
+        all_houses = houseauto(propid)
+        # for hs in all_houses:
+        #     if not any(bl.house == hs for bl in current_month_bills):
+        #         missing_out.append(hs)
+
+        missing_out = [hs for hs in all_houses if not any(bl.house == hs for bl in current_month_bills)]
+
         for bill in current_month_bills:
             """compute subtotals"""
 
@@ -2283,6 +2291,9 @@ class CombinedReport(Resource):
             availables.append(bill.house.name)
 
         vacants = filter_out_occupied_houses(apartment_obj.name)
+
+        vacants_set = set(vacants)  # Convert vacants to a set for O(1) lookup
+        vacants.extend(hs for hs in missing_out if hs not in vacants_set)
 
         for vac in vacants:
             if vac.name in availables:

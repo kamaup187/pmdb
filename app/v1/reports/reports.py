@@ -2168,7 +2168,9 @@ class CombinedReport(Resource):
         #     if not any(bl.house == hs for bl in current_month_bills):
         #         missing_out.append(hs)
 
-        missing_out = [hs for hs in all_houses if not any(bl.house == hs for bl in current_month_bills)]
+        # missing_out = [hs for hs in all_houses if not any(bl.house == hs for bl in current_month_bills)]
+        bill_houses = {bl.house for bl in current_month_bills}  # Set of houses from bills
+        missing_out = [hs for hs in all_houses if hs not in bill_houses]  # Houses without bills
 
         for bill in current_month_bills:
             """compute subtotals"""

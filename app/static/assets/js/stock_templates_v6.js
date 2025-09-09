@@ -1767,10 +1767,13 @@ var salesTemplate = `
 
 
 <div class="tab-content" id="balances-table-tab-content">
-    <div class="col-12 row mb-3">
+    <div class="col-12 row mb-4">
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                	<div class="col-auto">
+						<input type="date" id="saleDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white sales-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -1999,10 +2002,13 @@ var salesReportTemplate = `
 
 <div class="tab-content" id="balances-table-tab-content">
 
-    <div class="col-12 row mb-3">
+    <div class="col-12 row mb-4">
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="saleReportDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white sales-report" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>

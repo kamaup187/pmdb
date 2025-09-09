@@ -4482,6 +4482,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         if self.tenant:
             if self.tenant.deposits:
                 if self.tenant.deposits.payments:
+                    print("some payments exists for tenant: ",self.tenant.name)
                     payments = 0.0
                     for pp in self.tenant.deposits.payments:
                         # print(self.tenant.name, " ",pp.date.month, pp.date.year)
@@ -4489,7 +4490,9 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                             payments += pp.amount
                     return f'{payments:,.1f}'
                 else:
-                    return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
+                    print("no segregated payments")
+                    # return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
+                    return 0.0
             return 0.0
         return 0.0
 

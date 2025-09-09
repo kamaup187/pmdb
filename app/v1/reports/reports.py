@@ -2220,7 +2220,7 @@ class CombinedReport(Resource):
             else:
                 tenant_id = bill.tenant_id
 
-                print("BILL ID: ",bill.id)
+                # print("BILL ID: ",bill.id)
 
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
                 try:

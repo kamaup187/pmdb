@@ -7970,7 +7970,7 @@ class CallBackUrlSirenga(Resource):
             if unformatted_ref:
                 formatted_ref = bill_ref_num.upper()
 
-            sms_sender("RENTLIB",f"SIRENGA MPESA DATA JUST IN from {formatted_ref}")
+            sms_sender("RENTLIB",f"SIRENGA MPESA DATA JUST IN from {formatted_ref}",["+254716674695"])
 
             for prp in props:
                 for house in prp.houses:
@@ -7982,7 +7982,7 @@ class CallBackUrlSirenga(Resource):
 
         if not target_house:
             print("NOT FINDING HOUSE >>>>>>>>>>>>>>>>>>>>>>>>>")
-            sms_sender("RENTLIB",f"SIRENGA DATA did not find house from {formatted_ref}")
+            sms_sender("RENTLIB",f"SIRENGA DATA did not find house from {formatted_ref}",["+254716674695"])
 
             return {"message": "House not found"}, 404
 

@@ -117,7 +117,7 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-center btn-outline-primary text-black {{bill['delid']}}" data-toggle="modal" data-target="#discardBillModal">{{ bill['house'] }}</td>
+                      <td class="data-cell text-center btn-outline-primary text-black {{bill['delid']}}" data-toggle="modal" data-target="#discardBillModal">{{ bill['actualhouse'] }}</td>
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
 
@@ -308,7 +308,7 @@
               <tbody>
                 {% for bill in bills%}
                 <tr>
-                  <td class="data-cell text-center">{{ bill['house'] }}</td>
+                  <td class="data-cell text-center">{{ bill['actualhouse'] }}</td>
                   <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                   <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right rent">{{ bill['rent'] }}</td>

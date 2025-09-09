@@ -2158,10 +2158,14 @@ class CombinedReport(Resource):
         year = target_period.year
         current_month_bills = MonthlyChargeOp.fetch_all_monthlycharges_by_apartment_id_by_period(propid,month,year)
 
+        # print("BILLS: ",current_month_bills)
+
         ###################################################################################################
         availables = []
         for bill in current_month_bills:
             """compute subtotals"""
+
+            # print("BILL DETAILS: ID: ", bill.id, "HOUSE ID: ", bill.house_id)
 
             if current_user.company_id == 11444444444: # DEPOSITS SEPARATED FROM INVOICES
                 # bill_item = LandlordSummaryOp.external_view(bill)
@@ -2205,6 +2209,8 @@ class CombinedReport(Resource):
 
             else:
                 tenant_id = bill.tenant_id
+
+                print("BILL ID: ",bill.id)
 
                 tenant_obj = TenantOp.fetch_tenant_by_id(tenant_id)
                 try:

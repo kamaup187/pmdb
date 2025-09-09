@@ -4559,6 +4559,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 return f"{t_current_house.name}-(formerly {hh.name})"
         # return f"{hh.name}(Vacated)"
         return f"{hh.name}"
+
+    def get_actual_house(self):
+        hh = self.house
+        return f"{hh.name}"
     
     def view_summary(self):
 
@@ -4595,6 +4599,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'hst':MonthlyChargeOp.combine_house_tenant_alt(self),
             'idno':self.tenant.national_id if self.tenant else "-",
             'house':MonthlyChargeOp.get_house(self),
+            'actualhouse':MonthlyChargeOp.get_actual_house(self),
             'desc':self.house.description,
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-arr':MonthlyChargeOp.fig_format(self.rent_balance),

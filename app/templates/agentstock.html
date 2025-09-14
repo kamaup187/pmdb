@@ -2593,9 +2593,28 @@ function calculateDifference(expected, actual) {
 						// $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
 						var table = $(win.document.body)
                                         .find('table')
-										.css('width', '100%')
-										.css('border-collapse', 'collapse')
+										.addClass('compact') // DataTables compact class
+										.css({
+											'width': '100%',
+											'border-collapse': 'collapse',
+											'font-size': '12px', // Smaller font for compactness
+										})
                                         .after('<div id="printSummary"></div>');
+
+
+						            // Reduce row and cell padding
+									$(win.document.body)
+										.find('table tr')
+										.css({
+											'line-height': '1.2', // Tighter line height
+											'height': 'auto' // Let browser optimize row height
+										});
+									$(win.document.body)
+										.find('table th, table td')
+										.css({
+											'padding': '4px', // Reduced from default ~8px
+											'border': '1px solid #ddd' // Add borders for clarity
+										});
 
 						                    // Clone and append the original footer to ensure it’s included
 						var originalFooter = $('#' + table_id + ' tfoot').clone();

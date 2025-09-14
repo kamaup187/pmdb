@@ -12458,35 +12458,37 @@ class StockTakes(Resource):
 
             print(data)
 
-            # import pdb; pdb.set_trace()
-            # return "success"
-
             for i in data:
+                status = i["stock_adjust"]
                 item_id = int(i["item_id"])
                 item_obj = StockItemOp.fetch_an_item_by_id(item_id)
                 eqty = StockItemOp.get_quantity(item_obj)
-                aqty = int(i["actual_count"])
-                status = i["stock_adjust"]
 
                 print("status ",status,"type ",type(status))
-                import pdb; pdb.set_trace()
 
-                diff = eqty - aqty
+                weighted_bprice = StockItemOp.get_weighted_average_buying_price(item_obj)
 
-                if diff < 0:
-                    bprice = 0.0
-                else:
-                    bprice = StockItemOp.get_weighted_average_buying_price(item_obj)
+                if status == True:
+                    aqty = round(float(i["actual_count"]),2)
 
-                if diff != 0:
-                    if eqty > aqty: #VERY UNUSUAL REDO
-                        diff = diff * -1
-                    else:
-                        diff = diff * -1
+                    sold_qty = eqty - aqty
+                    sqty = round(sold_qty,2)
 
-                    print("DIFFRENCE: ",diff)
-                    stock_transaction_obj = StockTransactionOp(stocktake_id,item_id,"Stocktake Adjustments",diff,bprice,current_user.id,current_user.company.id)
+                    stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",aqty,weighted_bprice,current_user.id,current_user.company.id)
                     stock_transaction_obj.save()
+
+                    price = item_obj.selling_price
+
+                    sale_transaction_obj = StockTransactionOp(None,item_id,'Sale',sqty * -1,price,current_user.id,current_user.company.id)
+                    sale_transaction_obj.save()
+                    
+                    sale_obj = StockSaleOp(sale_transaction_obj.id,item_id,sqty,price,"Cash",current_user.id,current_user.company.id)
+                    sale_obj.save()
+
+                else:
+                    stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",eqty,weighted_bprice,current_user.id,current_user.company.id)
+                    stock_transaction_obj.save()
+                
             return "success"
 
         stocktake_type = request.form.get('category')
@@ -12691,9 +12693,11 @@ class BalanceStockReport(Resource):
             opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
             purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
             total_stock_qty = opening_stock_qty + purchases_qty
+
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
             total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
-            stock_balance = sum(t.quantity for t in transactions)
+            # stock_balance = sum(t.quantity for t in transactions)
+            stock_balance = round(StockItemOp.get_quantity(item),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -12774,7 +12778,8 @@ class StockValueReport(Resource):
             total_stock_qty = opening_stock_qty + purchases_qty
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
             total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
-            stock_balance = sum(t.quantity for t in transactions)
+            # stock_balance = sum(t.quantity for t in transactions)
+            stock_balance = round(StockItemOp.get_quantity(item),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]

@@ -6404,8 +6404,8 @@ class StockItemOp(StockItem, Base):
         self.state = state
         db.session.commit()
 
-    def get_quantitya(self):
-        return db.session.query(db.func.sum(StockTransaction.quantity)).filter_by(item_id=self.id).scalar() or 0
+    # def get_quantitya(self):
+    #     return db.session.query(db.func.sum(StockTransaction.quantity)).filter_by(item_id=self.id).scalar() or 0
 
     def get_quantity(self):
         return db.session.query(db.func.sum(StockTransaction.quantity)).filter(

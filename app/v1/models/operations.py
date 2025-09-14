@@ -6410,7 +6410,7 @@ class StockItemOp(StockItem, Base):
     def get_quantity(self):
         return db.session.query(db.func.sum(StockTransaction.quantity)).filter(
             StockTransaction.item_id == self.id,
-            StockTransaction.transaction_type.in_(['Opening Stock', 'Purchase', 'Sale', 'Damage'])
+            StockTransaction.transaction_type.in_(['Opening Stock','Stocktake Adjustments','Purchase', 'Sale', 'Damage'])
         ).scalar() or 0
 
     def get_weighted_average_buying_price(self):
@@ -6420,7 +6420,7 @@ class StockItemOp(StockItem, Base):
         # Query for purchase and opening stock transactions
         transactions = db.session.query(StockTransaction)\
             .filter_by(item_id=self.id, state=True)\
-            .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock']))\
+            .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock','Stocktake Adjustments']))\
             .all()
 
         # for t in transactions:

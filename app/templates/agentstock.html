@@ -2129,6 +2129,7 @@
 function runDataTableEditablelol(tableId) {
     let table = $('#' + tableId).DataTable({
         destroy: true,
+		"pageLength": 100,
         columns: [
             { data: 'stockid' },
             { data: 'date' },

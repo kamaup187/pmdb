@@ -4,7 +4,7 @@
 
 from  .datamodel import *
 from flask_bcrypt import Bcrypt
-from sqlalchemy import extract,or_,not_, and_
+from sqlalchemy import extract,or_,not_, and_, func
 from sqlalchemy.exc import SQLAlchemyError
 from dateutil.relativedelta import relativedelta
 from flask_login import current_user
@@ -6514,6 +6514,10 @@ class PurchaseOp(Purchase, Base):
     def fetch_a_purchase_by_id(id):
         return Purchase.query.filter_by(id=id).first()
 
+    # def fetch_purchases_by_company_id(company_id,date_filter):
+    #     print("date filteer ",date_filter)
+    #     return Purchase.query.filter_by(company_id=company_id).filter(func.date(Purchase.date) == date_filter).order_by(Purchase.date.desc()).all()
+    
     def fetch_purchases_by_company_id(company_id):
         return Purchase.query.filter_by(company_id=company_id).order_by(Purchase.date.desc()).all()
 

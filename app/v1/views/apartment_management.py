@@ -12345,8 +12345,17 @@ class StockPurchases(Resource):
                     return [{}]
             return [{}]
 
+
+        # sdate = request.args.get("date")
+        # if sdate:
+        #     from datetime import date as dt
+        #     s_date = dt.fromisoformat(sdate)
+        # else:
+        #     s_date = datetime.datetime.now()
+
         purchases = PurchaseOp.fetch_purchases_by_company_id(current_user.company.id)
         items = []
+        
 
         for i in purchases:
             try:

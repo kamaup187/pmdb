@@ -372,6 +372,10 @@
 
 	
 		        </div><!--//app-branding-->  
+
+				    <div class="col-auto d-nonee" id="hidden-date">
+						<!-- <input type="date" id="purchaseDated" class="form-control"> -->
+					</div>
 		        
 			    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
 				    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
@@ -3041,10 +3045,24 @@ function calculateDifference(expected, actual) {
 
 			$("#purchases-spinner").removeClass("d-none")
 			$("#purchases-all-table").empty()
+
+
+			const $dateInput = $('#purchaseDate');
+			// Bind change event to capture selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#hidden-date").empty()
+					$('#hidden-date').append('<input type="hidden" id="purchaseDate-1" value="' + selectedDate + '">');
+				}
+			});
+
+
 			$.ajax({
 				url: "/v2/stock/purchases",
 				type: "get",
 				data: {
+				date:$("#purchaseDate-1").val(),
 				target: "all"
 				},
 				success: function (response) {

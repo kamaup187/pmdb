@@ -1610,6 +1610,9 @@ var purchaseTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="purchaseDate" class="form-control" value="2025-09-14">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white purchase-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -1692,6 +1695,9 @@ var stocktakeTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="stocktakeDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white stocktake-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -1861,6 +1867,9 @@ var damagesTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="damageDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white damages-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -1941,6 +1950,9 @@ var expensesTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="expenseDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white expenses-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -2081,6 +2093,9 @@ var balanceStockTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="balanceStockDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white balance-stock" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -2156,6 +2171,9 @@ var stockValueTemplate = `
         <div class="col-auto">
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="stockValueDate" class="form-control">
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white stock-value" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>

@@ -346,7 +346,7 @@ class StockModule(Resource):
             stock_balance = round(StockItemOp.get_quantity(item),2)
             total_stock_remaining += stock_balance if stock_balance > 0 else 0  # Avoid negative totals
 
-        stock = f"{total_stock_remaining:,.0f} items"
+        stock = f"{len(items):,.0f}"
 
 
         # Aggregate sales data

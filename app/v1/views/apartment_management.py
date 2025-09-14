@@ -316,7 +316,7 @@ class StockModule(Resource):
 
 
             # Calculate stock balance
-            stock_balance = sum(t.quantity for t in transactions)
+            stock_balance = round(StockItemOp.get_quantity(item),2)
 
             # Calculate weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -343,7 +343,7 @@ class StockModule(Resource):
                 .all()
 
             # Calculate stock balance for this item
-            stock_balance = sum(t.quantity for t in transactions)
+            stock_balance = round(StockItemOp.get_quantity(item),2)
             total_stock_remaining += stock_balance if stock_balance > 0 else 0  # Avoid negative totals
 
         stock = f"{total_stock_remaining:,.0f} items"
@@ -12607,12 +12607,12 @@ class StockSalesReport(Resource):
                 .filter_by(item_id=item.id, state=True)\
                 .all()
 
-            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
-            purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
-            total_stock_qty = opening_stock_qty + purchases_qty
+            # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            # purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
+            # total_stock_qty = opening_stock_qty + purchases_qty
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
-            total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
-            stock_balance = sum(t.quantity for t in transactions)
+            # total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
+            stock_balance = round(StockItemOp.get_quantity(item),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -12782,11 +12782,11 @@ class StockValueReport(Resource):
                 .filter_by(item_id=item.id, state=True)\
                 .all()
 
-            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
-            purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
-            total_stock_qty = opening_stock_qty + purchases_qty
-            total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
-            total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
+            # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            # purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
+            # total_stock_qty = opening_stock_qty + purchases_qty
+            # total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
+            # total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
             # stock_balance = sum(t.quantity for t in transactions)
             stock_balance = round(StockItemOp.get_quantity(item),2)
 

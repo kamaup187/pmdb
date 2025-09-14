@@ -95,9 +95,9 @@ function addStocktakeToTable(data,table) {
             item.item,
             item.eqty,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.status,        // Region
             item.aqty,           // Name
             item.diff,
-            item.status,        // Region
             item.notes
             // Branch
         ]);
@@ -431,10 +431,10 @@ var stocktakeTableTemplate = `
             <th class="fw-bold">Date</th>
             <th class="fw-bold">Type</th>
             <th class="fw-bold">Item</th>
-            <th class="fw-bold">System</th>
-            <th class="fw-bold">Shelf</th>
-            <th class="fw-bold">Diff</th>
-            <th class="fw-bold">Status</th>
+            <th class="fw-bold">TotalStock</th>
+            <th class="fw-bold">RecordBalance</th>
+            <th class="fw-bold">ShelfBalance</th>
+            <th class="fw-bold">TotalSold</th>
             <th class="fw-bold">Comments</th>
         </tr>
     </thead>

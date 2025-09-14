@@ -12420,10 +12420,13 @@ class StockTakes(Resource):
                 "eqty":StockItemOp.get_quantity(i),
                 "aqty":0,
                 "diff":f"{StockItemOp.get_quantity(i) - 0:.2f}",
-                "status":f"{'Surplus' if (StockItemOp.get_quantity(i) - 0)>0 else 'Deficit' if (StockItemOp.get_quantity(i) - 0)<0 else 'Match'}",
+                # "status":f"{'Surplus' if (StockItemOp.get_quantity(i) - 0)>0 else 'Deficit' if (StockItemOp.get_quantity(i) - 0)<0 else 'Match'}",
+                "status":"false",
                 "notes":current_stocktake_obj.notes
             }
             items.append(item_dict)
+
+        # print(items)
 
         # for i in range(1,6):
         #     item_dict = {
@@ -12453,11 +12456,17 @@ class StockTakes(Resource):
             import json
             data = json.loads(items)
 
+            print(data)
+
+            # import pdb; pdb.set_trace()
+            return "success"
+
             for i in data:
                 item_id = int(i["item_id"])
                 item_obj = StockItemOp.fetch_an_item_by_id(item_id)
                 eqty = StockItemOp.get_quantity(item_obj)
                 aqty = int(i["actual_count"])
+                # status = 
                 diff = eqty - aqty
                 if diff < 0:
                     bprice = 0.0

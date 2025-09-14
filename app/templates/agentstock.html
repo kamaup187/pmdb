@@ -36,8 +36,27 @@
 
 	<style>
 
-.editable { padding: 5px; }
-.editable:focus { outline: 1px solid #007bff; background-color: #f8f9fa; }
+		.editable { padding: 5px; }
+		.editable:focus { outline: 1px solid #007bff; background-color: #f8f9fa; }
+
+
+		span.editable[contenteditable="true"] {
+			min-width: 100px; /* Set minimum width for editable aqty cells */
+			display: inline-block; /* Ensure min-width is respected */
+			padding: 2px 4px; /* Optional: Add padding for better appearance */
+			box-sizing: border-box; /* Ensure padding doesn't affect width */
+		}
+
+		span.editable[contenteditable="true"]:focus {
+			min-width: 100px; /* Ensure consistent width on focus */
+			outline: 1px solid #007bff; /* Optional: Add visible focus indicator */
+			background-color: #fff; /* Optional: White background for clarity */
+		}
+
+		span.editable[contenteditable="false"] {
+			background-color: #f0f0f0; /* Keep non-editable styling */
+			cursor: not-allowed;
+		}
 
 		.feather {
 			stroke-width: 1; /* Decrease the value to make the icons thinner */
@@ -2100,7 +2119,7 @@
 <script>
 
 // Updated runDataTable function with debounced update
-function runDataTableEditable(tableId) {
+function runDataTableEditablelol(tableId) {
     let table = $('#' + tableId).DataTable({
         destroy: true,
         columns: [
@@ -2155,6 +2174,220 @@ function runDataTableEditable(tableId) {
     return table;
 }
 
+function runDataTableEditablelola(tableId) {
+    let table = $('#' + tableId).DataTable({
+        destroy: true,
+        // data: function(data) {
+        //     // Force status to false for all rows, ignoring backend data
+        //     return data.map(row => ({ ...row, status: false }));
+        // },
+        columns: [
+            { data: 'stockid' },
+            { data: 'date' },
+            { data: 'stocktype' },
+            { data: 'item' },
+            { data: 'eqty' },
+            {
+                data: 'aqty',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        // Make aqty editable only if status is true
+                        let isEditable = row.status ? 'contenteditable="true"' : 'contenteditable="false"';
+                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(data || 0)}</span>`;
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'diff',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        return calculateDifference(row.eqty, row.aqty || 0);
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'status',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        // Render checkbox, initially unchecked (status is forced to false)
+                        let checked = row.status ? 'checked' : '';
+                        return `<input type="checkbox" class="status-checkbox" data-item-id="${row.stockid}" ${checked}>`;
+                    }
+                    return data;
+                }
+            },
+            { data: 'notes' }
+        ],
+        drawCallback: function(settings) {
+            let api = this.api();
+
+            // Debounced update function for aqty
+            let updateDiff = debounce(function($cell) {
+                let $row = $cell.closest('tr');
+                let rowIdx = api.row($row).index();
+                if (rowIdx === undefined) {
+                    console.error('Row index not found for:', $row);
+                    return;
+                }
+                let rowData = api.row(rowIdx).data();
+                let newValue = parseInt($cell.text()) || 0;
+                rowData.aqty = newValue;
+                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw();
+            }, 1500); // 1500ms delay
+
+            // Handle input on editable aqty cells
+            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
+                let $cell = $(this);
+                let $row = $cell.closest('tr');
+                let rowIdx = api.row($row).index();
+                let rowData = api.row(rowIdx).data();
+                // Only allow updates if status is true
+                if (rowData.status) {
+                    updateDiff($cell); // Trigger debounced update
+                } else {
+                    // Revert to original value if status is false
+                    $cell.text(rowData.aqty || 0);
+                    console.warn('Cannot edit aqty: status is not approved.');
+                }
+            });
+
+            // Handle checkbox changes for status
+            $('#' + tableId + ' tbody').off('change', '.status-checkbox').on('change', '.status-checkbox', function(e) {
+                let $checkbox = $(this);
+                let $row = $checkbox.closest('tr');
+                let rowIdx = api.row($row).index();
+                if (rowIdx === undefined) {
+                    console.error('Row index not found for:', $row);
+                    return;
+                }
+                let rowData = api.row(rowIdx).data();
+                // Update status in row data
+                rowData.status = $checkbox.is(':checked');
+                api.row(rowIdx).data(rowData); // Update DataTable data
+                // Update aqty cell editability
+                let $aqtyCell = $row.find('.editable');
+                $aqtyCell.attr('contenteditable', rowData.status);
+                api.draw(false); // Redraw to reflect changes
+            });
+        }
+    });
+    return table;
+}
+
+function runDataTableEditable(tableId) {
+    let table = $('#' + tableId).DataTable({
+        destroy: true,
+        rowId: 'stockid', // Use stockid as row identifier
+        columns: [
+            { data: 'stockid' },
+            { data: 'date' },
+            { data: 'stocktype' },
+            { data: 'item' },
+            { data: 'eqty' },
+            {
+                data: 'status',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        // Render checkbox based on internal status
+                        let checked = row.status === true ? 'checked' : '';
+                        return `<input type="checkbox" class="status-checkbox" data-item-id="${row.stockid}" ${checked}>`;
+                    }
+                    return row.status === true; // Return boolean status
+                }
+            },
+
+            {
+                data: 'aqty',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        // Use boolean status for editability
+                        let isEditable = row.status === true ? 'contenteditable="true"' : 'contenteditable="false"';
+                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(data || 0)}</span>`;
+                    }
+                    return data;
+                }
+            },
+            {
+                data: 'diff',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        return calculateDifference(row.eqty, row.aqty || 0);
+                    }
+                    return data;
+                }
+            },
+
+            { data: 'notes' }
+        ],
+        initComplete: function(settings, json) {
+            let api = this.api();
+            // Force status to boolean false for all rows
+            api.rows().every(function(rowIdx) {
+                let rowData = this.data();
+                if (!rowData || !rowData.stockid) {
+                    console.warn('Invalid row data or missing stockid:', rowData);
+                    return;
+                }
+                rowData.status = false; // Override backend status
+                this.data(rowData);
+            });
+            console.log('Initialized rows with status:', api.rows().data().toArray());
+        },
+        drawCallback: function(settings) {
+            let api = this.api();
+
+            // Debounced update function for aqty
+            let updateDiff = debounce(function($cell) {
+                let $row = $cell.closest('tr');
+                let rowIdx = api.row($row).index();
+                if (rowIdx === undefined) {
+                    console.error('Row index not found for:', $row);
+                    return;
+                }
+                let rowData = api.row(rowIdx).data();
+                let newValue = parseInt($cell.text()) || 0;
+                rowData.aqty = newValue;
+                api.cell($row, 7).data(calculateDifference(rowData.eqty, newValue)).draw();
+            }, 3000);
+
+            // Handle input on editable aqty cells
+            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
+                let $cell = $(this);
+                let $row = $cell.closest('tr');
+                let rowIdx = api.row($row).index();
+                let rowData = api.row(rowIdx).data();
+                if (rowData.status === true) {
+                    updateDiff($cell);
+                } else {
+                    $cell.text(rowData.aqty || 0);
+                    console.warn('Cannot edit aqty: status is not approved.');
+                }
+            });
+
+            // Handle checkbox changes for status
+            $('#' + tableId + ' tbody').off('change', '.status-checkbox').on('change', '.status-checkbox', function(e) {
+                let $checkbox = $(this);
+                let $row = $checkbox.closest('tr');
+                let rowIdx = api.row($row).index();
+                if (rowIdx === undefined) {
+                    console.error('Row index not found for:', $row);
+                    return;
+                }
+                let rowData = api.row(rowIdx).data();
+                rowData.status = $checkbox.is(':checked'); // Update as boolean
+                api.row(rowIdx).data(rowData);
+                let $aqtyCell = $row.find('.editable');
+                $aqtyCell.attr('contenteditable', rowData.status);
+                console.log('Updated row status:', rowData);
+                api.draw(false); // Redraw to update UI
+            });
+        }
+    });
+    return table;
+}
+
 // Debounce utility function
 function debounce(func, wait) {
     let timeout;
@@ -2186,7 +2419,7 @@ function addStocktakeToTableEditable(data, table) {
 
 function calculateDifference(expected, actual) {
 	console.log("Calculating difference: expected=" + expected + ", actual=" + actual);
-    return actual - expected;
+    return expected - actual;
 }
 
 </script>
@@ -5730,7 +5963,8 @@ function initSubmitHandler(table) {
         let initialData = table.rows().data().toArray();
         let items = table.rows().data().toArray().map(row => ({
             item_id: row.stockid,
-            actual_count: row.aqty || 0
+            actual_count: row.aqty || 0,
+			stock_adjust: row.status
         }));
 
 

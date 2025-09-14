@@ -41,21 +41,24 @@
 
 
 		span.editable[contenteditable="true"] {
-			min-width: 100px; /* Set minimum width for editable aqty cells */
-			display: inline-block; /* Ensure min-width is respected */
-			padding: 2px 4px; /* Optional: Add padding for better appearance */
-			box-sizing: border-box; /* Ensure padding doesn't affect width */
+			min-width: 100px;
+			display: inline-block;
+			padding: 2px 4px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
 		}
-
 		span.editable[contenteditable="true"]:focus {
-			min-width: 100px; /* Ensure consistent width on focus */
-			outline: 1px solid #007bff; /* Optional: Add visible focus indicator */
-			background-color: #fff; /* Optional: White background for clarity */
+			min-width: 100px;
+			outline: 2px solid #007bff;
+			background-color: #e6f3ff;
 		}
-
 		span.editable[contenteditable="false"] {
-			background-color: #f0f0f0; /* Keep non-editable styling */
+			background-color: #f0f0f0;
 			cursor: not-allowed;
+		}
+		span.editable[contenteditable="true"].invalid {
+			border: 2px solid red;
+			background-color: #ffe6e6;
 		}
 
 		.feather {
@@ -2285,7 +2288,15 @@ function runDataTableEditable(tableId) {
             { data: 'date' },
             { data: 'stocktype' },
             { data: 'item' },
-            { data: 'eqty' },
+            {
+                data: 'eqty',
+                render: function(data, type) {
+                    if (type === 'display') {
+                        return parseFloat(data).toFixed(1); // Show 1 decimal
+                    }
+                    return data;
+                }
+            },
             {
                 data: 'status',
                 render: function(data, type, row) {
@@ -2304,7 +2315,7 @@ function runDataTableEditable(tableId) {
                     if (type === 'display') {
                         // Use boolean status for editability
                         let isEditable = row.status === true ? 'contenteditable="true"' : 'contenteditable="false"';
-                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(data || 0)}</span>`;
+                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(parseFloat(data) || 0).toFixed(1)}</span>`;
                     }
                     return data;
                 }
@@ -2313,33 +2324,38 @@ function runDataTableEditable(tableId) {
                 data: 'diff',
                 render: function(data, type, row) {
                     if (type === 'display') {
-                        return calculateDifference(row.eqty, row.aqty || 0);
+                        if (row.status === true && row._aqtyEdited === true) {
+                            return calculateDifference(row.eqty, row.aqty || 0).toFixed(1);
+                        }
+                        return '-';
                     }
-                    return data;
+                    return parseFloat(row.eqty) - (parseFloat(row.aqty) || 0);
                 }
             },
 
             { data: 'notes' }
         ],
-        initComplete: function(settings, json) {
-            let api = this.api();
-            // Force status to boolean false for all rows
-            api.rows().every(function(rowIdx) {
-                let rowData = this.data();
-                if (!rowData || !rowData.stockid) {
-                    console.warn('Invalid row data or missing stockid:', rowData);
-                    return;
-                }
-                rowData.status = false; // Override backend status
-                this.data(rowData);
-            });
-            console.log('Initialized rows with status:', api.rows().data().toArray());
-        },
+		initComplete: function(settings, json) {
+			let api = this.api();
+			api.rows().every(function(rowIdx) {
+				let rowData = this.data();
+				if (!rowData || !rowData.stockid) {
+					console.warn('Invalid row data or missing stockid:', rowData);
+					return;
+				}
+				rowData.status = false; // Override backend status
+				rowData._aqtyEdited = false; // Track if aqty has been edited
+                rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(1);
+                rowData.eqty = parseFloat(rowData.eqty || 0).toFixed(1);
+				this.data(rowData);
+			});
+			console.log('Initialized rows with status and _aqtyEdited:', api.rows().data().toArray());
+		},
         drawCallback: function(settings) {
             let api = this.api();
 
             // Debounced update function for aqty
-            let updateDiff = debounce(function($cell) {
+			let updateDiff = debounce(function($cell) {
                 let $row = $cell.closest('tr');
                 let rowIdx = api.row($row).index();
                 if (rowIdx === undefined) {
@@ -2347,24 +2363,95 @@ function runDataTableEditable(tableId) {
                     return;
                 }
                 let rowData = api.row(rowIdx).data();
-                let newValue = parseInt($cell.text()) || 0;
+                let inputText = $cell.text().trim();
+                // Validate input: number with up to 1 decimal place (e.g., 0.5, .5)
+                if (!/^(?:\d*\.?\d{0,1}|\.\d{1})$/.test(inputText)) {
+                    $cell.addClass('invalid');
+                    setTimeout(() => $cell.removeClass('invalid'), 1000);
+                    // Use parseFloat to revert to previous aqty with one decimal
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    console.log('Invalid input format, reverting:', inputText);
+                    api.draw(false);
+                    return;
+                }
+                // Use parseFloat to normalize input (e.g., .5 to 0.5)
+                let newValue = parseFloat(inputText) || 0;
+                // Limit to one decimal place
+                newValue = parseFloat(newValue.toFixed(1));
+
+                // Use parseFloat for decimal comparison in validation
+                if (newValue > parseFloat(rowData.eqty)) {
+                    $cell.addClass('invalid');
+                    setTimeout(() => $cell.removeClass('invalid'), 1000);
+                    // Use parseFloat to revert to previous aqty
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    rowData._aqtyEdited = false;
+                    api.row(rowIdx).data(rowData);
+                    console.log('Invalid aqty input, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
+                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(1) + ').');
+                    api.draw(false);
+                    return;
+                }
                 rowData.aqty = newValue;
-                api.cell($row, 7).data(calculateDifference(rowData.eqty, newValue)).draw();
-            }, 3000);
+                rowData._aqtyEdited = true;
+                api.row(rowIdx).data(rowData);
+                console.log('updateDiff, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, diff: calculateDifference(rowData.eqty, rowData.aqty), _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
+                // Update diff with decimal calculation
+                api.cell($row, 7).data(calculateDifference(rowData.eqty, rowData.aqty)).draw();
+			}, 3000);
 
             // Handle input on editable aqty cells
-            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
-                let $cell = $(this);
-                let $row = $cell.closest('tr');
-                let rowIdx = api.row($row).index();
-                let rowData = api.row(rowIdx).data();
-                if (rowData.status === true) {
-                    updateDiff($cell);
-                } else {
-                    $cell.text(rowData.aqty || 0);
-                    console.warn('Cannot edit aqty: status is not approved.');
+			$('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', debounce(function(e) {
+				let $cell = $(this);
+				let $row = $cell.closest('tr');
+				let rowIdx = api.row($row).index();
+				if (rowIdx === undefined) {
+					console.error('Row index not found for:', $row);
+					return;
+				}
+				let rowData = api.row(rowIdx).data();
+				if (rowData.status !== true) {
+					$cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+					console.warn('Cannot edit aqty: status is not approved.');
+					rowData._aqtyEdited = false; // Ensure reset
+					api.row(rowIdx).data(rowData);
+					api.draw(false); // Redraw to show '-' in diff
+					return;
+				}
+
+				let inputText = $cell.text().trim();
+                // Validate input: number with up to 1 decimal place (e.g., 0.5, .5)
+                if (!/^(?:\d*\.?\d{0,1}|\.\d{1})$/.test(inputText)) {
+                    $cell.addClass('invalid');
+                    setTimeout(() => $cell.removeClass('invalid'), 1000);
+                    // Use parseFloat to revert to previous aqty
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    console.log('Invalid input format, reverting:', inputText);
+                    api.draw(false);
+                    return;
                 }
-            });
+				// Use parseFloat to normalize input (e.g., .5 to 0.5)
+                let newValue = parseFloat(inputText) || 0;
+                // Limit to one decimal place
+                newValue = parseFloat(newValue.toFixed(1));
+                if (newValue > parseFloat(rowData.eqty)) {
+                    $cell.addClass('invalid');
+                    setTimeout(() => $cell.removeClass('invalid'), 1000);
+                    // Use parseFloat to revert to previous aqty
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    rowData._aqtyEdited = false;
+                    api.row(rowIdx).data(rowData);
+                    console.log('Invalid aqty input, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
+                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(1) + ').');
+                    api.draw(false);
+                    return;
+                }
+                rowData.aqty = newValue;
+                rowData._aqtyEdited = true;
+                api.row(rowIdx).data(rowData);
+                console.log('aqty input, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
+                updateDiff($cell);
+			}, 3000));
 
             // Handle checkbox changes for status
             $('#' + tableId + ' tbody').off('change', '.status-checkbox').on('change', '.status-checkbox', function(e) {
@@ -2377,6 +2464,12 @@ function runDataTableEditable(tableId) {
                 }
                 let rowData = api.row(rowIdx).data();
                 rowData.status = $checkbox.is(':checked'); // Update as boolean
+                if (!rowData.status) {
+                    rowData._aqtyEdited = false;
+                    // Use parseFloat to reset aqty on status uncheck
+                    rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(1);
+                }
+
                 api.row(rowIdx).data(rowData);
                 let $aqtyCell = $row.find('.editable');
                 $aqtyCell.attr('contenteditable', rowData.status);
@@ -2395,6 +2488,12 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), wait);
     };
+}
+
+function calculateDifference(expected, actual) {
+	console.log("Calculating difference: expected=" + expected + ", actual=" + actual);
+	const diff = (parseFloat(expected) - parseFloat(actual)).toFixed(1);
+    return parseFloat(diff); // Return number for display
 }
 
 // Updated addStocktakeToTable function

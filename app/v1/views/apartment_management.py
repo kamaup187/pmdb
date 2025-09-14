@@ -12459,19 +12459,25 @@ class StockTakes(Resource):
             print(data)
 
             # import pdb; pdb.set_trace()
-            return "success"
+            # return "success"
 
             for i in data:
                 item_id = int(i["item_id"])
                 item_obj = StockItemOp.fetch_an_item_by_id(item_id)
                 eqty = StockItemOp.get_quantity(item_obj)
                 aqty = int(i["actual_count"])
-                # status = 
+                status = i["stock_adjust"]
+
+                print("status ",status,"type ",type(status))
+                import pdb; pdb.set_trace()
+
                 diff = eqty - aqty
+
                 if diff < 0:
                     bprice = 0.0
                 else:
                     bprice = StockItemOp.get_weighted_average_buying_price(item_obj)
+
                 if diff != 0:
                     if eqty > aqty: #VERY UNUSUAL REDO
                         diff = diff * -1

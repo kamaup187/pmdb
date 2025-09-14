@@ -6404,8 +6404,14 @@ class StockItemOp(StockItem, Base):
         self.state = state
         db.session.commit()
 
-    def get_quantity(self):
+    def get_quantitya(self):
         return db.session.query(db.func.sum(StockTransaction.quantity)).filter_by(item_id=self.id).scalar() or 0
+
+    def get_quantity(self):
+        return db.session.query(db.func.sum(StockTransaction.quantity)).filter(
+            StockTransaction.item_id == self.id,
+            StockTransaction.transaction_type.in_(['Opening Stock', 'Purchase', 'Sale', 'Damage'])
+        ).scalar() or 0
 
     def get_weighted_average_buying_price(self):
         """

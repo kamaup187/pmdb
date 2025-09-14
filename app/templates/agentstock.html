@@ -2585,8 +2585,9 @@ function calculateDifference(expected, actual) {
 				{
 					extend: 'print',
 					text: 'Print', // Custom button text
-					title: pageTitle, // Title for print page
+					title: "BASE: " + pageTitle, // Title for print page
 					customize: function(win) {
+						$(win.document.body).find('h1').css('text-align', 'center');
 						// Optional: Customize print view
 						// $(win.document.body).prepend('<h1>Base</h1>');
 						// $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');

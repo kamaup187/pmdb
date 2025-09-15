@@ -2370,7 +2370,7 @@ function runDataTableEditable(tableId) {
                 let rowData = api.row(rowIdx).data();
                 let inputText = $cell.text().trim();
                 // Validate input: number with up to 1 decimal place (e.g., 0.5, .5)
-                if (!/^(?:\d*\.?\d{0,1}|\.\d{1})$/.test(inputText)) {
+                if (!/^-?\d*\.?\d+$/.test(inputText)) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty with one decimal
@@ -2426,7 +2426,7 @@ function runDataTableEditable(tableId) {
 
 				let inputText = $cell.text().trim();
                 // Validate input: number with up to 1 decimal place (e.g., 0.5, .5)
-                if (!/^(?:\d*\.?\d{0,1}|\.\d{1})$/.test(inputText)) {
+                if (!/^-?\d*\.?\d+$/.test(inputText)) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty

@@ -163,7 +163,19 @@
                                 <td>{{readings.reading}}</td>
                                 <td>{{readings.units}}<span class="text-danger font-weight-bold text-xx {{w_edited}}">*</span></td>
                                 <td>{{house.housecode.waterrate}}</td>
-                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *readings.units|float)}}</span></td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *breadings.units|float)}}</span></td>
+                            </tr>
+                            {%endif%}
+
+                            {%if breadings%}
+                            <tr class="underline-thin-fade">
+                                <td class="pl-0">Water</td>
+                                <td class="pl-0">{{prevmonth}} Water readings</td>
+                                <td>{{breadings.last_reading}}</td>
+                                <td>{{breadings.reading}}</td>
+                                <td>{{breadings.units}}<span class="text-danger font-weight-bold text-xx {{b_edited}}">*</span></td>
+                                <td>{{house.housecode.waterrate}}</td>
+                                <td><span class="font-weight-bold mr-4 text-black">Kes {{'%0.2f'| format(house.housecode.waterrate *breadings.units|float)}}</span></td>
                             </tr>
                             {%endif%}
 

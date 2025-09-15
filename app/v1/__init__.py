@@ -509,6 +509,8 @@ api.add_resource(StockValueReport,"/v2/stock/value/report")
 
 api.add_resource(AI,"/api/tenants")
 
+api.add_resource(Paywall,"/account/suspended")
+
 
 
 

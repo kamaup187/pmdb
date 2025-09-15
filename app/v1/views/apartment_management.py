@@ -398,6 +398,12 @@ class StockModule(Resource):
             user_logged_in=current_user
             ))
 
+class Paywall(Resource):
+    """class"""
+    def get(self):
+        sms_sender("Rentlib",f"Kevma is trying to login",sms_phone_number_formatter("0716674695"))
+        return Response(render_template("editar.html"))
+    
 class Index(Resource):
     """class"""
     @login_required

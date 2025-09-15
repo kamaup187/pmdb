@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rentlib Paywall</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: #f8f9fa;
+    }
+    .paywall-card {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 2rem;
+      border-radius: 1rem;
+      background-color: #fff;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .locked-content {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="paywall-card text-center">
+      <h2 class="mb-4" style="color: rgb(255, 131, 131);">Account Access Suspended</h2>
+      <p class="mb-4">Kindly clear your balance to regain full access.</p>
+
+      <div class="mb-4">
+        <button onclick="window.open('https://wa.me/25471667469', '_blank')" class="btn btn-primary btn-block">Pay a balance of Kes 3000</button>
+      </div>
+
+      <hr>
+
+      <div class="locked-content mt-4">
+        <h5>Preview:</h5>
+        <p>This is the beginning of your awesome article. But the rest is behind a paywall.</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+

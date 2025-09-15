@@ -1676,10 +1676,12 @@ class UserLogin(Resource):
             if UserOp.password_is_valid(user,password):
                 if user.company.name == "KEVMA REAL ESTATE":
                     if user.username.startswith('qc'):
+                        # return redirect(url_for('api.paywall'))
                         pass
                     else:
-                        # return redirect(url_for('api.userlogin'))
-                        pass
+                        return redirect(url_for('api.paywall'))
+                        # pass
+                # return redirect(url_for('api.paywall'))
                 login_user(user, remember=remember)
                 return redirect(url_for('api.index'))
             flash('Incorrect password!','fail')

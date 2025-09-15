@@ -2297,7 +2297,7 @@ function runDataTableEditable(tableId) {
                 data: 'eqty',
                 render: function(data, type) {
                     if (type === 'display') {
-                        return parseFloat(data).toFixed(1); // Show 1 decimal
+                        return parseFloat(data).toFixed(2); // Show 1 decimal
                     }
                     return data;
                 }
@@ -2320,7 +2320,7 @@ function runDataTableEditable(tableId) {
                     if (type === 'display') {
                         // Use boolean status for editability
                         let isEditable = row.status === true ? 'contenteditable="true"' : 'contenteditable="false"';
-                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(parseFloat(data) || 0).toFixed(1)}</span>`;
+                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(parseFloat(data) || 0).toFixed(2)}</span>`;
                     }
                     return data;
                 }
@@ -2330,7 +2330,7 @@ function runDataTableEditable(tableId) {
                 render: function(data, type, row) {
                     if (type === 'display') {
                         if (row.status === true && row._aqtyEdited === true) {
-                            return calculateDifference(row.eqty, row.aqty || 0).toFixed(1);
+                            return calculateDifference(row.eqty, row.aqty || 0).toFixed(2);
                         }
                         return '-';
                     }
@@ -2350,8 +2350,8 @@ function runDataTableEditable(tableId) {
 				}
 				rowData.status = false; // Override backend status
 				rowData._aqtyEdited = false; // Track if aqty has been edited
-                rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(1);
-                rowData.eqty = parseFloat(rowData.eqty || 0).toFixed(1);
+                rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(2);
+                rowData.eqty = parseFloat(rowData.eqty || 0).toFixed(2);
 				this.data(rowData);
 			});
 			console.log('Initialized rows with status and _aqtyEdited:', api.rows().data().toArray());
@@ -2374,7 +2374,7 @@ function runDataTableEditable(tableId) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty with one decimal
-                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(2));
                     console.log('Invalid input format, reverting:', inputText);
                     api.draw(false);
                     return;
@@ -2382,18 +2382,18 @@ function runDataTableEditable(tableId) {
                 // Use parseFloat to normalize input (e.g., .5 to 0.5)
                 let newValue = parseFloat(inputText) || 0;
                 // Limit to one decimal place
-                newValue = parseFloat(newValue.toFixed(1));
+                newValue = parseFloat(newValue.toFixed(2));
 
                 // Use parseFloat for decimal comparison in validation
                 if (newValue > parseFloat(rowData.eqty)) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty
-                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(2));
                     rowData._aqtyEdited = false;
                     api.row(rowIdx).data(rowData);
                     console.log('Invalid aqty input, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
-                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(1) + ').');
+                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(2) + ').');
                     api.draw(false);
                     return;
                 }
@@ -2416,7 +2416,7 @@ function runDataTableEditable(tableId) {
 				}
 				let rowData = api.row(rowIdx).data();
 				if (rowData.status !== true) {
-					$cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+					$cell.text((parseFloat(rowData.aqty) || 0).toFixed(2));
 					console.warn('Cannot edit aqty: status is not approved.');
 					rowData._aqtyEdited = false; // Ensure reset
 					api.row(rowIdx).data(rowData);
@@ -2430,7 +2430,7 @@ function runDataTableEditable(tableId) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty
-                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(2));
                     console.log('Invalid input format, reverting:', inputText);
                     api.draw(false);
                     return;
@@ -2438,16 +2438,16 @@ function runDataTableEditable(tableId) {
 				// Use parseFloat to normalize input (e.g., .5 to 0.5)
                 let newValue = parseFloat(inputText) || 0;
                 // Limit to one decimal place
-                newValue = parseFloat(newValue.toFixed(1));
+                newValue = parseFloat(newValue.toFixed(2));
                 if (newValue > parseFloat(rowData.eqty)) {
                     $cell.addClass('invalid');
                     setTimeout(() => $cell.removeClass('invalid'), 1000);
                     // Use parseFloat to revert to previous aqty
-                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(1));
+                    $cell.text((parseFloat(rowData.aqty) || 0).toFixed(2));
                     rowData._aqtyEdited = false;
                     api.row(rowIdx).data(rowData);
                     console.log('Invalid aqty input, rowData:', { stockid: rowData.stockid, eqty: rowData.eqty, aqty: rowData.aqty, _aqtyEdited: rowData._aqtyEdited, status: rowData.status });
-                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(1) + ').');
+                    alert('Actual quantity cannot exceed expected quantity (' + parseFloat(rowData.eqty).toFixed(2) + ').');
                     api.draw(false);
                     return;
                 }
@@ -2472,7 +2472,7 @@ function runDataTableEditable(tableId) {
                 if (!rowData.status) {
                     rowData._aqtyEdited = false;
                     // Use parseFloat to reset aqty on status uncheck
-                    rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(1);
+                    rowData.aqty = parseFloat(rowData.aqty || 0).toFixed(2);
                 }
 
                 api.row(rowIdx).data(rowData);
@@ -2497,7 +2497,7 @@ function debounce(func, wait) {
 
 function calculateDifference(expected, actual) {
 	console.log("Calculating difference: expected=" + expected + ", actual=" + actual);
-	const diff = (parseFloat(expected) - parseFloat(actual)).toFixed(1);
+	const diff = (parseFloat(expected) - parseFloat(actual)).toFixed(2);
     return parseFloat(diff); // Return number for display
 }
 
@@ -4308,7 +4308,7 @@ function calculateDifference(expected, actual) {
 
 			// If current reading is greater than previous reading, calculate consumed units
 			let diff = currentReading > previousReading ? currentReading - previousReading : 0;
-			$("#units-consumed").val(diff.toFixed(1));
+			$("#units-consumed").val(diff.toFixed(2));
 		});
 
 

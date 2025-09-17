@@ -6387,6 +6387,28 @@ class StockItemOp(StockItem, Base):
     
     def fetch_items_by_company_id(company_id):
         return StockItem.query.filter_by(company_id=company_id).order_by(StockItem.name.asc()).all()
+    
+    def get_stocktake_eligibility(self,date_filter_obj):
+        from datetime import datetime, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end   = start + timedelta(days=1)   
+
+        stocktake = StockTransaction.query.filter_by(
+            item_id=self.id,
+            transaction_type="Closing Stock")\
+                .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+                .order_by(StockTransaction.transaction_date.desc()).first()
+        
+        if stocktake:
+            return "Stocktake done"
+        else:
+            return "Ready for stocktake"
 
     def update_name(self, name):
         self.name = name
@@ -6412,6 +6434,31 @@ class StockItemOp(StockItem, Base):
             StockTransaction.item_id == self.id,
             StockTransaction.transaction_type.in_(['Opening Stock','Stocktake Adjustments','Purchase', 'Sale', 'Damage'])
         ).scalar() or 0
+
+    def get_quantity_per_date(self, date_filter_obj):
+        from datetime import datetime, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start_of_day = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end_of_day   = start_of_day + timedelta(days=1)                 # next day's 00:00:00
+
+        return (
+            db.session.query(db.func.sum(StockTransaction.quantity))
+            .filter(
+                StockTransaction.item_id == self.id,
+                StockTransaction.transaction_type.in_([
+                    'Opening Stock','Stocktake Adjustments','Purchase','Sale','Damage'
+                ]),
+                StockTransaction.transaction_date >= start_of_day,
+                StockTransaction.transaction_date <  end_of_day
+            )
+            .scalar() or 0
+        )
+
 
     def get_weighted_average_buying_price(self):
         """
@@ -6445,7 +6492,7 @@ class StockItemOp(StockItem, Base):
         return {
             "id":self.id,
             "name":self.name,
-            "quantity":f"{StockItemOp.get_quantity(self):,.1f}",
+            "quantity":f"{StockItemOp.get_quantity_per_date(self,datetime.datetime.now()):,.1f}",
             "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
             "updatedon":"N/A",
@@ -6514,12 +6561,22 @@ class PurchaseOp(Purchase, Base):
     def fetch_a_purchase_by_id(id):
         return Purchase.query.filter_by(id=id).first()
 
-    # def fetch_purchases_by_company_id(company_id,date_filter):
-    #     print("date filteer ",date_filter)
-    #     return Purchase.query.filter_by(company_id=company_id).filter(func.date(Purchase.date) == date_filter).order_by(Purchase.date.desc()).all()
-    
-    def fetch_purchases_by_company_id(company_id):
-        return Purchase.query.filter_by(company_id=company_id).order_by(Purchase.date.desc()).all()
+    def fetch_purchases_by_company_id(company_id,date_filter_obj):
+        # print("date filteer ",date_filter)
+        # return Purchase.query.filter_by(company_id=company_id).filter(func.date(Purchase.date) == date_filter).order_by(Purchase.date.desc()).all()
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end = start + timedelta(days=1) 
+
+        return Purchase.query.filter_by(company_id=company_id)\
+            .filter(Purchase.date >= start, Purchase.date < end)\
+            .order_by(Purchase.date.desc()).all()
 
     def update_purchase_order_number(self, purchase_order_number):
         self.purchase_order_number = purchase_order_number
@@ -6543,6 +6600,11 @@ class PurchaseOp(Purchase, Base):
         month = str(self.date.month)
         day = str(self.date.day)
         return day + "/" + month
+
+    def update_date(self,new_date):
+        print("Updating date")
+        self.date = new_date
+        db.session.commit()
 
     def view(self):
         return {
@@ -6573,6 +6635,92 @@ class StockTransactionOp(StockTransaction, Base):
     def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):
         return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).first()
 
+    def fetch_transactions_by_item_id(item_id,date_filter_obj):
+        # return StockTransaction.query.filter_by(item_id=item_id).filter(func.date(StockTransaction.transaction_date) == date_filter).order_by(StockTransaction.transaction_date.desc()).all()
+
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end = start + timedelta(days=1) 
+
+        return StockTransaction.query.filter_by(item_id=item_id)\
+            .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+            .order_by(StockTransaction.transaction_date.desc()).all()
+
+    def fetch_sale_transactions_by_item_id(item_id,date_filter_obj):
+        # return StockTransaction.query.filter_by(item_id=item_id).filter(func.date(StockTransaction.transaction_date) == date_filter).order_by(StockTransaction.transaction_date.desc()).all()
+
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end = start + timedelta(days=1) 
+
+        return StockTransaction.query.filter_by(item_id=item_id)\
+            .filter(StockTransaction.transaction_type == "Sale")\
+            .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+            .order_by(StockTransaction.transaction_date.desc()).all()
+
+    def fetch_opening_transaction_by_item_id(item_id, date_filter_obj):
+
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end = start + timedelta(days=1)  
+
+        opening_stock = StockTransaction.query.filter_by(
+            item_id=item_id,
+            transaction_type="Opening Stock")\
+                .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+                .order_by(StockTransaction.transaction_date.desc()).first()
+
+        if opening_stock:
+            return opening_stock
+        
+        latest_stocktake = StockTake.query.filter_by(
+            stocktake_type="closing"
+        ).order_by(StockTake.stocktake_date.desc()).first()
+
+        if not latest_stocktake:
+            return None
+
+        closing_stock = StockTransaction.query.filter_by(
+            item_id=item_id,
+            transaction_type="Closing Stock",
+            stock_take_id=latest_stocktake.id
+        ).order_by(StockTransaction.transaction_date.desc()).first()
+
+        if not closing_stock:
+            return None
+        
+        opening_stock = StockTransactionOp(
+            closing_stock.stock_take_id,
+            closing_stock.item_id,
+            "Opening Stock",
+            closing_stock.quantity,
+            closing_stock.price_per_unit,
+            closing_stock.user_id,
+            closing_stock.company_id
+        )
+        opening_stock.save()
+        StockTransactionOp.update_date(opening_stock,date_filter_obj)
+
+        return opening_stock
+
     def update_quantity(self, quantity):
         if quantity:
             self.quantity = quantity
@@ -6598,6 +6746,12 @@ class StockTransactionOp(StockTransaction, Base):
         day = str(self.transaction_date.day)
         return day + "/" + month
 
+    def update_date(self,new_date):
+        print("Updating date")
+
+        self.transaction_date = new_date
+        db.session.commit()
+
     def view(self):
         return {
             'id': self.id,
@@ -6622,6 +6776,21 @@ class StockTakeOp(StockTake, Base):
 
     def fetch_current_stocktake_by_company_id(company_id):
         return StockTake.query.filter_by(company_id=company_id).order_by(StockTake.id.desc()).first()
+    
+    def fetch_stocktake_by_company_id_by_date(company_id,date_filter_obj):
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start_of_day = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end_of_day   = start_of_day + timedelta(days=1)  
+
+        return StockTake.query.filter_by(company_id=company_id)\
+            .filter(StockTake.stocktake_date >= start_of_day, StockTake.stocktake_date < end_of_day)\
+            .order_by(StockTake.id.desc()).first()
 
     def update_state(self, state):
         self.state = state
@@ -6641,8 +6810,20 @@ class StockSaleOp(StockSale, Base):
     def fetch_a_sale_by_id(id):
         return StockSale.query.filter_by(id=id).first()
 
-    def fetch_sales_by_company_id(company_id):
-        return StockSale.query.filter_by(company_id=company_id).order_by(StockSale.sale_date.desc()).all()
+    def fetch_sales_by_company_id(company_id,date_filter_obj):
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start_of_day = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end_of_day   = start_of_day + timedelta(days=1)  
+
+        return StockSale.query.filter_by(company_id=company_id)\
+            .filter(StockSale.sale_date >= start_of_day, StockSale.sale_date < end_of_day)\
+            .order_by(StockSale.sale_date.desc()).all()
 
     def update_quantity(self, quantity):
         self.quantity = quantity

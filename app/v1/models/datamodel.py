@@ -2048,6 +2048,9 @@ class StockTransaction(db.Model):
     sale = db.relationship('StockSale', backref='stock_transaction', uselist=False, lazy=True,cascade="all, delete-orphan")
     damage = db.relationship('StockDamage', backref='stock_transaction', uselist=False, lazy=True,cascade="all, delete-orphan")
 
+    def __repr__(self):
+        return f'<Transaction: {self.transaction_type} Qty: {self.quantity}>'
+
 class StockSale(db.Model):
     """db model class"""
 
@@ -2119,6 +2122,9 @@ class StockTake(db.Model):
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
 
     adjustments = db.relationship('StockTransaction', backref='stock_take', uselist=False, lazy=True)
+
+    def __repr__(self):
+        return f'<Item {self.stocktake_type} Date: {self.stocktake_date}>'
 
 class Department(db.Model):
     """db model class"""

@@ -568,6 +568,17 @@
 
 						<span class="d-inline d-sm-none">Overview</span>
 					</h1>
+
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<div class="col-auto">
+							Select date -------------------- >
+						</div>
+						<div class="col-auto">
+							<input type="date" id="dashboardDate" class="form-control">
+						</div>
+					</div>
+
+
 					
 					<div class="d-none app-card alert alert-dismissible shadow-sm mb-4 border-left-decoration" role="alert">
 						<div class="inner">
@@ -3050,64 +3061,74 @@ function calculateDifference(expected, actual) {
 			});
 		})
 
-		$(document).on("click", ".purchase-btn",function(){
+		$(document).on("click", ".purchase-btn", function() {
 			let checkSmDevice = toggleSide();
 			if (checkSmDevice) {
-				$("#app-sidepanel").removeClass("sidepanel-visible");
-				$("#app-sidepanel").addClass("sidepanel-hidden");
-			} else {
-				//desktop only
-				}
+				$("#app-sidepanel").removeClass("sidepanel-visible").addClass("sidepanel-hidden");
+			}
 
-			$("#home-block").addClass("d-none")
-			$("#working-block").removeClass("d-none")
-		    $("#working-block").html(purchaseTemplate)
+			$("#home-block").addClass("d-none");
+			$("#working-block").removeClass("d-none").html(purchaseTemplate);
 
-
-			$("#purchases-spinner").removeClass("d-none")
-			$("#purchases-all-table").empty()
-
+			$("#purchases-spinner").removeClass("d-none");
+			$("#purchases-all-table").empty();
 
 			const $dateInput = $('#purchaseDate');
-			// Bind change event to capture selected date
+
+			// Function to handle AJAX call
+			const fetchPurchases = (date) => {
+				if (!date) {
+					console.log("No date provided, skipping AJAX");
+					$("#purchases-spinner").addClass("d-none");
+					return;
+				}
+				$.ajax({
+					url: "/v2/stock/purchases",
+					type: "get",
+					data: {
+					date:date,
+					target: "all"
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
+
+
+						renderPurchasesTemplate("allPurchasesTable",$("#purchases-all-table")); //create table and replace ID
+						var t1 = runDataTable("allPurchasesTable") // reBUILD datatable instance
+						addPurchasesToTable(response,t1) // pass data to the new table
+						$("#purchases-spinner").addClass("d-none") // complete the table update process
+
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#purchases-spinner").addClass("d-none")
+					}
+				});
+
+				feather.replace();
+			};
+
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchPurchases($dateInput.val());
+
+			// Bind change event to handle user-selected date
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
-					$("#hidden-date").empty()
-					$('#hidden-date').append('<input type="hidden" id="purchaseDate-1" value="' + selectedDate + '">');
+					$("#purchases-spinner").removeClass("d-none"); // Show spinner again
+					fetchPurchases(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
-
-
-			$.ajax({
-				url: "/v2/stock/purchases",
-				type: "get",
-				data: {
-				date:$("#purchaseDate-1").val(),
-				target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
-
-
-					renderPurchasesTemplate("allPurchasesTable",$("#purchases-all-table")); //create table and replace ID
-					var t1 = runDataTable("allPurchasesTable") // reBUILD datatable instance
-					addPurchasesToTable(response,t1) // pass data to the new table
-					$("#purchases-spinner").addClass("d-none") // complete the table update process
-
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#purchases-spinner").addClass("d-none")
-				}
-			});
-
-			feather.replace();
-			
-		})
+		});
 
 		$(document).on("click", ".stocktake-btn",function(){
 			let checkSmDevice = toggleSide();
@@ -3125,33 +3146,57 @@ function calculateDifference(expected, actual) {
 
 			$("#stocktake-spinner").removeClass("d-none")
 			$("#stocktake-all-table").empty()
-			$.ajax({
-				url: "/v2/stock/takes",
-				type: "get",
-				data: {
-				target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
+
+			const fetchStocktakes = (date) => {
+				$.ajax({
+					url: "/v2/stock/takes",
+					type: "get",
+					data: {
+					target: "all",
+					date:date
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
 
 
-					renderStocktakeTemplate("allStocktakeTable",$("#stocktake-all-table")); //create table and replace ID
-					var t1 = runDataTableEditable("allStocktakeTable") // reBUILD datatable instance
-					addStocktakeToTableEditable(response[0],t1) // pass data to the new table
-					$("#stocktakeId").val(response[1])
-					$("#stocktake-spinner").addClass("d-none") // complete the table update process
+						renderStocktakeTemplate("allStocktakeTable",$("#stocktake-all-table")); //create table and replace ID
+						var t1 = runDataTableEditable("allStocktakeTable") // reBUILD datatable instance
+						addStocktakeToTableEditable(response[0],t1) // pass data to the new table
+						$("#stocktakeId").val(response[1])
+						$("#stocktake-spinner").addClass("d-none") // complete the table update process
 
-					initSubmitHandler(t1); // Initialize submit handler with t1
+						initSubmitHandler(t1); // Initialize submit handler with t1
 
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#stocktake-spinner").addClass("d-none")
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#stocktake-spinner").addClass("d-none")
+					}
+				});
+			}
+
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#stocktakeDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchStocktakes($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#stocktake-spinner").removeClass("d-none"); // Show spinner again
+					fetchStocktakes(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
+
 
 			feather.replace();
 			
@@ -3173,31 +3218,53 @@ function calculateDifference(expected, actual) {
 
 			$("#sales-spinner").removeClass("d-none")
 			$("#sales-all-table").empty()
-			$.ajax({
-				url: "/v2/stock/sales",
-				type: "get",
-				data: {
-					date:$("#saleDate").val(),
-					target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
+
+			const fetchStockSales = (date) => {
+				$.ajax({
+					url: "/v2/stock/sales",
+					type: "get",
+					data: {
+						date:date,
+						target: "all"
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
 
 
-					renderSalesTemplate("allSalesTable",$("#sales-all-table")); //create table and replace ID
-					var t1 = runDataTable("allSalesTable") // reBUILD datatable instance
-					addSalesToTable(response,t1) // pass data to the new table
-					$("#sales-spinner").addClass("d-none") // complete the table update process
+						renderSalesTemplate("allSalesTable",$("#sales-all-table")); //create table and replace ID
+						var t1 = runDataTable("allSalesTable") // reBUILD datatable instance
+						addSalesToTable(response,t1) // pass data to the new table
+						$("#sales-spinner").addClass("d-none") // complete the table update process
 
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#sales-spinner").addClass("d-none")
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#sales-spinner").addClass("d-none")
+					}
+				});
+			}
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#saleDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchStockSales($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#sales-spinner").removeClass("d-none"); // Show spinner again
+					fetchStockSales(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
+
 
 			feather.replace();
 			
@@ -3218,64 +3285,152 @@ function calculateDifference(expected, actual) {
 			
 			$("#sales-report-spinner").removeClass("d-none")
 			$("#sales-report-table").empty()
-			$.ajax({
-				url: "/v2/stock/sales/report",
-				type: "get",
-				data: {
-					date:$("#saleReportDate").val(),
-					target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
 
-					renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
-					var t1 = runDataTableReport("allSalesReportTable",response[1],"Sales Report") // reBUILD datatable instance
-					addSalesReportToTable(response[0],t1) // pass data to the new table
+			const fetchSalesReport = (date) => {
+				$.ajax({
+					url: "/v2/stock/sales/report",
+					type: "get",
+					data: {
+						date:date,
+						target: "all"
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
 
-					summary = response[1];
+						renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
+						var t1 = runDataTableReport("allSalesReportTable",response[1],"Sales Report") // reBUILD datatable instance
+						addSalesReportToTable(response[0],t1) // pass data to the new table
 
-                    const summaryHtml = `
-                        <h4>Summary</h4>
-                        <ul>
-                            <li>
-								<div class="row col-md-4">
-									<div class="col-6 text-black h5">Total Amount Sold: </div>
-									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_amount_sold}</span></div>
-								</div>
-							</li>
+						summary = response[1];
 
-							<li>
-								<div class="row col-md-4">
-									<div class="col-6 text-black h5">Gross Profit: </div>
-									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.gross_profit}</span></div>
-								</div>
-							</li>
-                            <li>
-								<div class="row col-md-4">
-									<div class="col-6 text-black h5">Total Expenses: </div>
-									<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_expenses}</span></div>
-								</div>
-							</li>
-                            <li>
-								<div class="row col-md-4">
-									<div class="col-6 text-black h4">Net Profit: </div>
-									<div class="col-6"><span class="text-black font-weight-bold h4">KES ${summary.net_profit}</span></div>
-								</div>
-							</li>
-                        </ul>
-                    `;
-                    $('#summarySection').html(summaryHtml);
+						const summaryHtml = `
+							<h4>Summary</h4>
+							<ul>
+								<li>
+									<div class="row col-md-4">
+										<div class="col-6 text-black h5">Total Amount Sold: </div>
+										<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_amount_sold}</span></div>
+									</div>
+								</li>
+
+								<li>
+									<div class="row col-md-4">
+										<div class="col-6 text-black h5">Gross Profit: </div>
+										<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.gross_profit}</span></div>
+									</div>
+								</li>
+								<li>
+									<div class="row col-md-4">
+										<div class="col-6 text-black h5">Total Expenses: </div>
+										<div class="col-6"><span class="text-black font-weight-bold h5">KES ${summary.total_expenses}</span></div>
+									</div>
+								</li>
+								<li>
+									<div class="row col-md-4">
+										<div class="col-6 text-black h4">Net Profit: </div>
+										<div class="col-6"><span class="text-black font-weight-bold h4">KES ${summary.net_profit}</span></div>
+									</div>
+								</li>
+							</ul>
+						`;
+						$('#summarySection').html(summaryHtml);
 
 
-					$("#sales-report-spinner").addClass("d-none") // complete the table update process
+						$("#sales-report-spinner").addClass("d-none") // complete the table update process
 
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#sales-report-spinner").addClass("d-none")
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#sales-report-spinner").addClass("d-none")
+					}
+				});
+			}
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#saleReportDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchSalesReport($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#sales-report-spinner").removeClass("d-none"); // Show spinner again
+					fetchSalesReport(selectedDate);
+				} else {
+					console.log("No date selected");
+				}
+			});
+
+			feather.replace();
+		})
+
+		$(document).on("click", ".balance-stock2",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(balanceStockTemplate2)
+			
+			$("#balance-stock-spinner2").removeClass("d-none")
+			$("#balance-stock-table2").empty()
+
+			const fetchStockBalances2 = (date) => {
+				$.ajax({
+					url: "/v2/stock/balance/report",
+					type: "get",
+					data: {
+					target: "stocktake balances",
+					date:date
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
+
+						renderBalanceStockTemplate2("allBalanceStockTable",$("#balance-stock-table2")); //create table and replace ID
+						var t1 = runDataTable("allBalanceStockTable") // reBUILD datatable instance
+						addBalanceStockReportToTable(response[0],t1) // pass data to the new table
+
+
+						$("#balance-stock-spinner2").addClass("d-none") // complete the table update process
+
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#balance-stock-spinner2").addClass("d-none")
+					}
+				});
+			}
+
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#stocktakeDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchStockBalances2($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#balance-stock-spinner2").removeClass("d-none"); // Show spinner again
+					fetchStockBalances2(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
 
@@ -3297,29 +3452,52 @@ function calculateDifference(expected, actual) {
 			
 			$("#balance-stock-spinner").removeClass("d-none")
 			$("#balance-stock-table").empty()
-			$.ajax({
-				url: "/v2/stock/balance/report",
-				type: "get",
-				data: {
-				target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
 
-					renderBalanceStockTemplate("allBalanceStockTable",$("#balance-stock-table")); //create table and replace ID
-					var t1 = runDataTableReport("allBalanceStockTable",response[1],"Balance Stock Report") // reBUILD datatable instance
-					addBalanceStockReportToTable(response[0],t1) // pass data to the new table
+			const fetchStockBalances = (date) => {
+				$.ajax({
+					url: "/v2/stock/balance/report",
+					type: "get",
+					data: {
+					target: "balance report",
+					date:date
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
+
+						renderBalanceStockTemplate("allBalanceStockTable",$("#balance-stock-table")); //create table and replace ID
+						var t1 = runDataTableReport("allBalanceStockTable",response[1],"Balance Stock Report") // reBUILD datatable instance
+						addBalanceStockReportToTable(response[0],t1) // pass data to the new table
 
 
-					$("#balance-stock-spinner").addClass("d-none") // complete the table update process
+						$("#balance-stock-spinner").addClass("d-none") // complete the table update process
 
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#balance-stock-spinner").addClass("d-none")
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#balance-stock-spinner").addClass("d-none")
+					}
+				});
+			}
+
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#balanceStockDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchStockBalances($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#balance-stock-spinner").removeClass("d-none"); // Show spinner again
+					fetchStockBalances(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
 
@@ -3341,30 +3519,54 @@ function calculateDifference(expected, actual) {
 			
 			$("#stock-value-spinner").removeClass("d-none")
 			$("#stock-value-table").empty()
-			$.ajax({
-				url: "/v2/stock/value/report",
-				type: "get",
-				data: {
-				target: "all"
-				},
-				success: function (response) {
-					// $select = $("#select-balance-property")
-					// $.each(response[1], function (index, item) {
-					// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
-					// });
 
-					renderStockValueTemplate("allValueStockTable",$("#stock-value-table")); //create table and replace ID
-					var t1 = runDataTableReport("allValueStockTable",response[1],"Stock Value Report") // reBUILD datatable instance
-					addStockValueReportToTable(response[0],t1) // pass data to the new table
+			const fetchStockValue = (date) => {
+				$.ajax({
+					url: "/v2/stock/value/report",
+					type: "get",
+					data: {
+					target: "all",
+					date:date
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
 
-					$("#stock-value-spinner").addClass("d-none") // complete the table update process
+						renderStockValueTemplate("allValueStockTable",$("#stock-value-table")); //create table and replace ID
+						var t1 = runDataTableReport("allValueStockTable",response[1],"Stock Value Report") // reBUILD datatable instance
+						addStockValueReportToTable(response[0],t1) // pass data to the new table
 
-				},
-				error: function (xhr) {
-				alert("Error")
-				$("#stock-value-spinner").addClass("d-none")
+						$("#stock-value-spinner").addClass("d-none") // complete the table update process
+
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#stock-value-spinner").addClass("d-none")
+					}
+				});
+			}
+
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#stockValueDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchStockValue($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#stock-value-spinner").removeClass("d-none"); // Show spinner again
+					fetchStockValue(selectedDate);
+				} else {
+					console.log("No date selected");
 				}
 			});
+
 
 			feather.replace();
 		})
@@ -3780,6 +3982,18 @@ function calculateDifference(expected, actual) {
 			return new Promise((resolve) => {
 				// Insert into the DOM
 				elem.html(salesReportTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				// Resolve the promise after rendering
+				resolve();
+			});
+		}
+
+		function renderBalanceStockTemplate2(newId,elem) {
+			return new Promise((resolve) => {
+				// Insert into the DOM
+				elem.html(balanceStockTableTemplate2);
 				
 				$('#primaryData').attr('id', newId);
 
@@ -5263,6 +5477,7 @@ function calculateDifference(expected, actual) {
 				data:{
 					id:$("#purchase-update-id").val(),
 					qty:$("#purchase-update-qty").val(),
+					date: $("#purchase-update-date").val(),
 					price:$("#purchase-update-bprice").val(),
 					target:"single"
 				},
@@ -5782,6 +5997,7 @@ function calculateDifference(expected, actual) {
 					item: $("#buyItemName").val(),
 					qty:$("#buyItemQty").val(),
 					price:$("#buyItemPrice").val(),
+					date:$("#buyItemDate").val(),
 					supplier:$("#buyItemSupplier").val(),
 				},
 				success: function (response) {

@@ -303,9 +303,10 @@ class StockModule(Resource):
         # Calculate remaining stock value for each item
         for item in items:
             # Get all transactions for the item
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .all()
+            transactions = StockTransactionOp.fetch_transactions_by_item_id(item.id,datetime.now())
+            # transactions = db.session.query(StockTransaction)\
+            #     .filter_by(item_id=item.id, state=True)\
+            #     .all()
 
             # for t in transactions:
             #     if not t.quantity:
@@ -316,7 +317,7 @@ class StockModule(Resource):
 
 
             # Calculate stock balance
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
 
             # Calculate weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -337,13 +338,13 @@ class StockModule(Resource):
 
         # Calculate stock remaining for each item
         for item in items:
-            # Get all transactions for the item
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .all()
+            # # Get all transactions for the item
+            # transactions = db.session.query(StockTransaction)\
+            #     .filter_by(item_id=item.id, state=True)\
+            #     .all()
 
             # Calculate stock balance for this item
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
             total_stock_remaining += stock_balance if stock_balance > 0 else 0  # Avoid negative totals
 
         stock = f"{len(items):,.0f} items"
@@ -352,10 +353,11 @@ class StockModule(Resource):
         # Aggregate sales data
         sales_data = {}
         for item in items:
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .filter(StockTransaction.transaction_type == 'Sale')\
-                .all()
+            transactions = StockTransactionOp.fetch_sale_transactions_by_item_id(item.id,datetime.now())
+            # transactions = db.session.query(StockTransaction)\
+            #     .filter_by(item_id=item.id, state=True)\
+            #     .filter(StockTransaction.transaction_type == 'Sale')\
+            #     .all()
 
             if transactions:
                 total_quantity_sold = sum(t.quantity * -1 for t in transactions)  # Invert negative quantity
@@ -12236,7 +12238,7 @@ class StockItems(Resource):
             user_dict = {
                 "id":item_obj.id,
                 "name":item_obj.name,
-                "qty":StockItemOp.get_quantity(item_obj),
+                "qty":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now),
                 "bprice":f"{StockItemOp.get_weighted_average_buying_price(item_obj):,.1f}",
                 "sprice":f"{item_obj.selling_price:.1f}",
             }
@@ -12245,7 +12247,7 @@ class StockItems(Resource):
         if target == "price-stock":
             item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(request.args.get("id")))
             item_dict = {
-                "quantity":StockItemOp.get_quantity(item_obj),
+                "quantity":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now),
                 "price":f"{item_obj.selling_price:.1f}"
             }
             return [item_dict]
@@ -12344,6 +12346,7 @@ class StockPurchases(Resource):
                     return [{
                         "id":purchase_obj.id,
                         "qty":purchase_obj.stock_transaction.quantity,
+                        "pdate":purchase_obj.date.strftime("%d/%m/%Y"),
                         "bprice":purchase_obj.stock_transaction.price_per_unit
                     }]
                 except AttributeError:
@@ -12352,14 +12355,14 @@ class StockPurchases(Resource):
             return [{}]
 
 
-        # sdate = request.args.get("date")
-        # if sdate:
-        #     from datetime import date as dt
-        #     s_date = dt.fromisoformat(sdate)
-        # else:
-        #     s_date = datetime.datetime.now()
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
 
-        purchases = PurchaseOp.fetch_purchases_by_company_id(current_user.company.id)
+        purchases = PurchaseOp.fetch_purchases_by_company_id(current_user.company.id,s_date)
         items = []
         
 
@@ -12379,6 +12382,7 @@ class StockPurchases(Resource):
         supplier_id = request.form.get("supplier")
         qty = request.form.get("qty")
         price = request.form.get("price")
+        sdate = request.form.get("date")
         target = request.form.get("target")
         try:
             quantity = validate_stock_input(qty)
@@ -12387,6 +12391,12 @@ class StockPurchases(Resource):
             quantity = 0.0
             price = 0
 
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            s_date = None
+
         if target == "single":
             purchase_id = request.form.get("id")
             purchase_obj = PurchaseOp.fetch_a_purchase_by_id(get_identifier(purchase_id))
@@ -12394,6 +12404,9 @@ class StockPurchases(Resource):
                 trans_obj = purchase_obj.stock_transaction
                 StockTransactionOp.update_price_per_unit(trans_obj,price)
                 StockTransactionOp.update_quantity(trans_obj,quantity)
+                if s_date:
+                    PurchaseOp.update_date(purchase_obj,s_date)
+                    StockTransactionOp.update_date(trans_obj,s_date)
 
                 return "success"
             return "error"
@@ -12411,51 +12424,112 @@ class StockPurchases(Resource):
 
         purchase_obj = PurchaseOp(stock_transaction_obj.id,supplier_id,current_user.id,current_user.company.id)
         purchase_obj.save()
+
+        if s_date:
+            PurchaseOp.update_date(purchase_obj,s_date)
+            StockTransactionOp.update_date(stock_transaction_obj,s_date)
+
         return "purchase recorded successfully"
 
 
 class StockTakes(Resource):
     @login_required
     def get(self):
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
+        print("Date  :",s_date)
+
+
         items = []
+
+        latest_stocktake_obj = None
 
         raw_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
 
         current_stocktake_obj = StockTakeOp.fetch_current_stocktake_by_company_id(current_user.company.id)
+        print("current one  :",current_stocktake_obj)
+
         if not current_stocktake_obj:
+            print("kipsunya")
             return items
-        
-        for i in raw_items:
-            item_dict = {
-                # "stockid":f"ST{current_stocktake_obj.id:03}",
-                "stockid":f"{i.id}",
-                "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
-                "stocktype":current_stocktake_obj.stocktake_type,
-                "item":i.name,
-                "eqty":StockItemOp.get_quantity(i),
-                "aqty":0,
-                "diff":f"{StockItemOp.get_quantity(i) - 0:.2f}",
-                # "status":f"{'Surplus' if (StockItemOp.get_quantity(i) - 0)>0 else 'Deficit' if (StockItemOp.get_quantity(i) - 0)<0 else 'Match'}",
-                "status":"false",
-                "notes":current_stocktake_obj.notes
-            }
-            items.append(item_dict)
 
-        # print(items)
+        date_stocktake_obj = StockTakeOp.fetch_stocktake_by_company_id_by_date(current_user.company.id,s_date)
+        print("Date one  :",date_stocktake_obj)
 
-        # for i in range(1,6):
-        #     item_dict = {
-        #         "stockid":"ST001",
-        #         "date":"10/May/2024",
-        #         "stocktype":"Closing",
-        #         "item":"Tusker Cider",
-        #         "eqty":i*100,
-        #         "aqty":0,
-        #         "diff":f"{i*100 - 0:.2f}",
-        #         "status":f"{'Surplus' if (i*100 - 0)>0 else 'Deficit' if (i*100 - 0)<0 else 'Match'}",
-        #         "notes":"Some notes here"
-        #     }
-        #     items.append(item_dict)
+        if not date_stocktake_obj:
+            print("kipsunya2")
+            for i in raw_items:
+                item_dict = {
+                    # "stockid":f"ST{current_stocktake_obj.id:03}",
+                    "stockid":f"{i.id}",
+                    "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
+                    "stocktype":current_stocktake_obj.stocktake_type,
+                    "item":i.name,
+                    "eqty":StockItemOp.get_quantity_per_date(i,s_date), #will require set date from frontend
+                    "aqty":0,
+                    "diff":f"{StockItemOp.get_quantity_per_date(i,s_date) - 0:.2f}", #will require set date from frontend
+                    "status":"false",
+                    "notes":"not eligible for stocktaking"
+                }
+                items.append(item_dict)
+
+
+        else:
+            if current_stocktake_obj.id == date_stocktake_obj.id:
+                latest_stocktake_obj = current_stocktake_obj
+                if datetime.datetime.now().date() == s_date:
+                    #Eligible for stock taking
+                    for i in raw_items:
+                        item_dict = {
+                            # "stockid":f"ST{current_stocktake_obj.id:03}",
+                            "stockid":f"{i.id}",
+                            "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
+                            "stocktype":current_stocktake_obj.stocktake_type,
+                            "item":i.name,
+                            "eqty":StockItemOp.get_quantity_per_date(i,s_date), #will require set date from frontend
+                            "aqty":0,
+                            "diff":f"{StockItemOp.get_quantity_per_date(i,s_date) - 0:.2f}", #will require set date from frontend
+                            "status":"false",
+                            "notes":StockItemOp.get_stocktake_eligibility(i,s_date)
+                        }
+                        items.append(item_dict)
+                else:
+                    # not eligible for stock taking
+                    for i in raw_items:
+                        item_dict = {
+                            # "stockid":f"ST{current_stocktake_obj.id:03}",
+                            "stockid":f"{i.id}",
+                            "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
+                            "stocktype":current_stocktake_obj.stocktake_type,
+                            "item":i.name,
+                            "eqty":StockItemOp.get_quantity_per_date(i,s_date), #will require set date from frontend
+                            "aqty":0,
+                            "diff":f"{StockItemOp.get_quantity_per_date(i,s_date) - 0:.2f}", #will require set date from frontend
+                            "status":"false",
+                            "notes":"not eligible for stocktaking"
+                        }
+                        items.append(item_dict)
+
+            else:
+                for i in raw_items:
+                    item_dict = {
+                        # "stockid":f"ST{current_stocktake_obj.id:03}",
+                        "stockid":f"{i.id}",
+                        "date":current_stocktake_obj.stocktake_date.strftime("%d/%b/%Y"),
+                        "stocktype":current_stocktake_obj.stocktake_type,
+                        "item":i.name,
+                        "eqty":StockItemOp.get_quantity_per_date(i,s_date), #will require set date from frontend
+                        "aqty":0,
+                        "diff":f"{StockItemOp.get_quantity_per_date(i,s_date) - 0:.2f}", #will require set date from frontend
+                        "status":"false",
+                        "notes":"Stocktake already done"
+                    }
+                    items.append(item_dict)
 
         return [items,current_stocktake_obj.id]
 
@@ -12477,7 +12551,7 @@ class StockTakes(Resource):
                 status = i["stock_adjust"]
                 item_id = int(i["item_id"])
                 item_obj = StockItemOp.fetch_an_item_by_id(item_id)
-                eqty = StockItemOp.get_quantity(item_obj)
+                eqty = StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now())
 
                 print("status ",status,"type ",type(status))
 
@@ -12489,20 +12563,28 @@ class StockTakes(Resource):
                     sold_qty = eqty - aqty
                     sqty = round(sold_qty,2)
 
-                    stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",aqty,weighted_bprice,current_user.id,current_user.company.id)
-                    stock_transaction_obj.save()
+                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,datetime.datetime.now())
+                    if stocktake == "Stocktake done":
+                        print("Stocktake already done for this item")
+                    else:
+                        stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",aqty,weighted_bprice,current_user.id,current_user.company.id)
+                        stock_transaction_obj.save()
 
-                    price = item_obj.selling_price
+                        price = item_obj.selling_price
 
-                    sale_transaction_obj = StockTransactionOp(None,item_id,'Sale',sqty * -1,price,current_user.id,current_user.company.id)
-                    sale_transaction_obj.save()
-                    
-                    sale_obj = StockSaleOp(sale_transaction_obj.id,item_id,sqty,price,"Cash",current_user.id,current_user.company.id)
-                    sale_obj.save()
+                        sale_transaction_obj = StockTransactionOp(None,item_id,'Sale',sqty * -1,price,current_user.id,current_user.company.id)
+                        sale_transaction_obj.save()
+                        
+                        sale_obj = StockSaleOp(sale_transaction_obj.id,item_id,sqty,price,"Cash",current_user.id,current_user.company.id)
+                        sale_obj.save()
 
                 else:
-                    stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",eqty,weighted_bprice,current_user.id,current_user.company.id)
-                    stock_transaction_obj.save()
+                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,datetime.datetime.now())
+                    if stocktake == "Stocktake done":
+                        print("Stocktake already done for this item")
+                    else:
+                        stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",eqty,weighted_bprice,current_user.id,current_user.company.id)
+                        stock_transaction_obj.save()
                 
             return "success"
 
@@ -12518,7 +12600,15 @@ class StockTakes(Resource):
 class StockSales(Resource):
     @login_required
     def get(self):
-        sales = StockSaleOp.fetch_sales_by_company_id(current_user.company.id)
+
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
+        sales = StockSaleOp.fetch_sales_by_company_id(current_user.company.id,s_date)
         items = []
 
         for i in sales:
@@ -12601,6 +12691,13 @@ class StockSalesReport(Resource):
         stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
         items = []
 
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
         total_stock_remaining = 0
         total_stock_value = 0.0
         total_amount_sold = 0.0
@@ -12609,16 +12706,13 @@ class StockSalesReport(Resource):
         num = 1
 
         for item in stock_items:
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .all()
-
+            transactions = StockTransactionOp.fetch_transactions_by_item_id(item.id,s_date)
             # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
             # purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
             # total_stock_qty = opening_stock_qty + purchases_qty
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
             # total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,s_date),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -12688,6 +12782,14 @@ class StockSalesReport(Resource):
 class BalanceStockReport(Resource):
     @login_required
     def get(self):
+
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
         stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
         items = []
 
@@ -12701,18 +12803,20 @@ class BalanceStockReport(Resource):
         num = 1
 
         for item in stock_items:
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .all()
+            transactions = StockTransactionOp.fetch_transactions_by_item_id(item.id,s_date)
+            try:
+                opening_stock_qty = round(sum(t.quantity for t in [StockTransactionOp.fetch_opening_transaction_by_item_id(item.id,s_date)]),2)
+            except:
+                opening_stock_qty = 0.0
 
-            opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
+            # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
             purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
             total_stock_qty = opening_stock_qty + purchases_qty
 
             total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
             total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
             # stock_balance = sum(t.quantity for t in transactions)
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,s_date),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -12775,6 +12879,14 @@ class BalanceStockReport(Resource):
 class StockValueReport(Resource):
     @login_required
     def get(self):
+
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
         stock_items = StockItemOp.fetch_items_by_company_id(current_user.company.id)
         items = []
 
@@ -12784,9 +12896,7 @@ class StockValueReport(Resource):
         num = 1
 
         for item in stock_items:
-            transactions = db.session.query(StockTransaction)\
-                .filter_by(item_id=item.id, state=True)\
-                .all()
+            transactions = StockTransactionOp.fetch_transactions_by_item_id(item.id,s_date)
 
             # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')
             # purchases_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Purchase')
@@ -12794,7 +12904,7 @@ class StockValueReport(Resource):
             # total_sold_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Sale') * -1  # Invert negative
             # total_damage_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Damage') * -1 # Invert negative
             # stock_balance = sum(t.quantity for t in transactions)
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,s_date),2)
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]

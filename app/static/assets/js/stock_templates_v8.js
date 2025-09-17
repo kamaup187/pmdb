@@ -506,6 +506,30 @@ var balanceStockTableTemplate = `
 
 
 `
+
+var balanceStockTableTemplate2 = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Item</th>
+            <th class="fw-bold">Opening</th>
+            <th class="fw-bold">Added</th>
+            <th class="fw-bold">Total</th>
+            <th class="fw-bold">Sold</th>
+            <th class="fw-bold">Damage</th>
+            <th class="fw-bold">Closing</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+
+</table>
+
+
+`
+
 var salesReportTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
@@ -781,10 +805,13 @@ var accountDataTableTemplate = `
             <form class="settings-form">
                 
                 <div class="mb-3">
+                    <label for="purchase-update-date" class="form-label">Update date (${obj.pdate})</label>
+                    <input type="date" class="form-control" id="purchase-update-date" value="">
+                </div>
+                <div class="mb-3">
                     <label for="purchase-update-qty" class="form-label">Update quantity</label>
                     <input type="text" class="form-control" id="purchase-update-qty" value="${obj.qty}">
                 </div>
-
                 <div class="mb-3">
                     <label for="purchase-update-bprice" class="form-label">Update buying price</label>
                     <input type="text" class="form-control" id="purchase-update-bprice" value="${obj.bprice}">
@@ -1611,7 +1638,7 @@ var purchaseTemplate = `
             <div class="page-utilities">
                 <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
                     <div class="col-auto">
-						<input type="date" id="purchaseDate" class="form-control" value="2025-09-14">
+						<input type="date" id="purchaseDate" class="form-control">
 					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white purchase-btn" href="#">
@@ -1684,7 +1711,8 @@ var stocktakeTemplate = `
 
 
 <nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Stocktake table</a>
+<a class="flex-sm-fill text-sm-center nav-link stocktake-btn" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Record Stocktakes table</a>
+<a class="flex-sm-fill text-sm-center nav-link balance-stock2" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock table</a>
 </nav>
 
 
@@ -1700,8 +1728,20 @@ var stocktakeTemplate = `
 					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white stocktake-btn" href="#">
+                            <i class="pb-1" data-feather="edit" style="width: 16px; height: 16px;"></i>
+                            Record stocktakes
+                        </a>
+                    </div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white balance-stock2" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
-                            Show stock takes
+                            Show balances
+                        </a>
+                    </div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white balance-stock" href="#">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print report
                         </a>
                     </div>
                 </div><!--//row-->
@@ -2064,6 +2104,92 @@ var salesReportTemplate = `
 
 
 `
+
+
+var balanceStockTemplate2 = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Stocktake Balances</h1>
+    </div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link stocktake-btn" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Record Stocktakes table</a>
+<a class="flex-sm-fill text-sm-center nav-link balance-stock2" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Balance Stock table</a>
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="stocktakeDate" class="form-control">
+					</div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white stocktake-btn" href="#">
+                            <i class="pb-1" data-feather="edit" style="width: 16px; height: 16px;"></i>
+                            Record stocktakes
+                        </a>
+                    </div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white balance-stock2" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show balances
+                        </a>
+                    </div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white balance-stock" href="#">
+                            <i class="pb-1" data-feather="printer" style="width: 16px; height: 16px;"></i>
+                            Print report
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
+
+    <div id="balance-stock-spinner2" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="balance-stock-table2" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+
+
+`
+
+
+
 var balanceStockTemplate = `
 		
 <div class="row g-3 mb-4 align-items-center justify-content-between">

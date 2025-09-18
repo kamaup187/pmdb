@@ -1549,6 +1549,7 @@ var readingTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="requests-pending-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1563,6 +1564,7 @@ var readingTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="requests-accepted-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1577,6 +1579,7 @@ var readingTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="requests-delivered-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1591,6 +1594,7 @@ var readingTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="requests-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1669,6 +1673,7 @@ var itemsTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="items-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1753,6 +1758,7 @@ var purchaseTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="purchases-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -1849,6 +1855,7 @@ var stocktakeTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="stocktake-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2034,6 +2041,7 @@ var salesTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="sales-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2117,6 +2125,7 @@ var damagesTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="damages-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2200,6 +2209,7 @@ var expensesTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="expenses-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2274,6 +2284,7 @@ var salesReportTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="sales-report-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2357,6 +2368,7 @@ var balanceStockTemplate2 = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="balance-stock-table2" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2435,6 +2447,7 @@ var balanceStockTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="balance-stock-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2513,6 +2526,7 @@ var stockValueTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="stock-value-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>
@@ -2579,6 +2593,7 @@ var floatTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="floats-pending-table" class="table-responsive">
                         </div>
                     </div>
@@ -2594,6 +2609,7 @@ var floatTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="floats-confirmed-table" class="table-responsive">
                             </div>
                         </div>
@@ -2608,6 +2624,7 @@ var floatTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="floats-all-table" class="table-responsive">
                             </div>
                         </div>
@@ -2661,6 +2678,7 @@ var roleTemplate = `
                     <div class="app-card-body">
                         <div class="row">
                             <div class="col-lg-12 no-padding">
+                                <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                                 <div id="roles-all-table" class="ps-4 pe-4 table-responsive">
                                 </div>
                             </div>
@@ -2721,6 +2739,7 @@ var branchTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="branches-all-table" class="table-responsive ms-4 me-4">
                         </div>
                     </div>
@@ -2783,6 +2802,7 @@ var userTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="users-all-table" class="table-responsive ms-4 me-4">
                         </div>
                     </div>
@@ -2798,6 +2818,7 @@ var userTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="users-pending-table" class="ps-4 pe-4 table-responsive">
                             </div>
                         </div>
@@ -2812,6 +2833,7 @@ var userTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="users-confirmed-table" class="ps-4 pe-4 table-responsive">
                             </div>
                         </div>
@@ -2874,6 +2896,7 @@ var accountTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                        <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="accounts-all-table" class="table-responsive ms-4 me-4">
                         </div>
                     </div>
@@ -2889,6 +2912,7 @@ var accountTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="accounts-pending-table" class="ps-4 pe-4 table-responsive">
                             </div>
                         </div>
@@ -2903,6 +2927,7 @@ var accountTemplate = `
                 <div class="app-card-body">
                     <div class="row">
                         <div class="col-lg-12 no-padding">
+                            <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                             <div id="accounts-confirmed-table" class="ps-4 pe-4 table-responsive">
                             </div>
                         </div>

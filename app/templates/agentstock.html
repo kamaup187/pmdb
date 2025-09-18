@@ -453,7 +453,7 @@
 							        <li id="view-sms" class="submenu-item items-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="list"></i> Item list</a></li>
 									<li id="view-sms" class="submenu-item purchase-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases</a></li>
 									<li id="view-sms" class="submenu-item stocktake-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take</a></li>
-									<li id="view-sms" class="submenu-item trans-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> All transactions</a></li>
+									<li id="view-sms" class="submenu-item trans-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="hard-drive"></i> All transactions</a></li>
 
 						        </ul>
 					        </div>
@@ -3159,7 +3159,7 @@ function calculateDifference(expected, actual) {
 			const fetchPurchases = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
-
+				$(".reporting-date").text(finalDate)
 				if (!date) {
 					console.log("No date provided, skipping AJAX");
 					$("#purchases-spinner").addClass("d-none");
@@ -3234,7 +3234,7 @@ function calculateDifference(expected, actual) {
 			const fetchStocktakes = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
-
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/takes",
 					type: "get",
@@ -3400,6 +3400,7 @@ function calculateDifference(expected, actual) {
 			const fetchStockSales = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/sales",
 					type: "get",
@@ -3470,7 +3471,7 @@ function calculateDifference(expected, actual) {
 			const fetchSalesReport = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
-
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/sales/report",
 					type: "get",
@@ -3574,6 +3575,7 @@ function calculateDifference(expected, actual) {
 			const fetchStockBalances2 = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/balance/report",
 					type: "get",
@@ -3644,7 +3646,7 @@ function calculateDifference(expected, actual) {
 			const fetchStockBalances = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
-			
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/balance/report",
 					type: "get",
@@ -3715,7 +3717,7 @@ function calculateDifference(expected, actual) {
 			const fetchStockValue = (date) => {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
-
+				$(".reporting-date").text(finalDate)
 				$.ajax({
 					url: "/v2/stock/value/report",
 					type: "get",

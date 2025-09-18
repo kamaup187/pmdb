@@ -6701,7 +6701,16 @@ class StockTransactionOp(StockTransaction, Base):
             date_only = date_filter_obj
 
         start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
-        end = start + timedelta(days=1)  
+        end = start + timedelta(days=1)
+
+        # Get today and tomorrow
+        today = date.today()
+        tomorrow = today + timedelta(days=1)
+
+        # Check if date is tomorrow or later
+        is_future = date_only >= tomorrow
+        if is_future:
+            return None
 
         opening_stock = StockTransaction.query.filter_by(
             item_id=item_id,

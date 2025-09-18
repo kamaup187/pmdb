@@ -6752,13 +6752,11 @@ class StockTransactionOp(StockTransaction, Base):
         return opening_stock
 
     def update_quantity(self, quantity):
-        if quantity:
-            self.quantity = quantity
+        self.quantity = quantity
         db.session.commit()
 
     def update_price_per_unit(self, price_per_unit):
-        if price_per_unit:
-            self.price_per_unit = price_per_unit
+        self.price_per_unit = price_per_unit
         db.session.commit()
 
     def update_notes(self, notes):

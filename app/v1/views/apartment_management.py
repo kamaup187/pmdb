@@ -12483,6 +12483,7 @@ class StockTransactions(Resource):
                 return [{
                     "id":trans_obj.id,
                     "qty":f"{trans_obj.quantity:,.2f}",
+                    "name":trans_obj.item.name,
                     "sdate":trans_obj.transaction_date.strftime("%d/%m/%Y"),
                     "bprice":f"{trans_obj.price_per_unit:,.2f}"
                 }]

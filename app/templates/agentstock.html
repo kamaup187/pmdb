@@ -453,6 +453,8 @@
 							        <li id="view-sms" class="submenu-item items-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="list"></i> Item list</a></li>
 									<li id="view-sms" class="submenu-item purchase-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="shopping-cart"></i> Purchases</a></li>
 									<li id="view-sms" class="submenu-item stocktake-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> Stock take</a></li>
+									<li id="view-sms" class="submenu-item trans-btn"><a class="submenu-link button" type="button"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i> All transactions</a></li>
+
 						        </ul>
 					        </div>
 					    </li>
@@ -1854,6 +1856,83 @@
 		</div>
 	  </div>
 	  
+	<div class="modal fade" id="updateTransModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">UPDATE TRANSACTION</h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Transaction update</h3>
+		                <div class="section-intro">Transaction details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div id="update-transaction-bed" class="app-card-body">
+								<div class="d-flex justify-content-center">
+									<div class="spinner-border text-success m-2" role="status">
+										<span class="visually-hidden">Loading...</span>
+									</div>
+								</div>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+	<div class="modal fade" id="deleteTransModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="staticBackdropLabel">CONFIRMATION TRANSACTION DELETION </h5>
+			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+
+                <div class="row g-4 settings-section">
+	                <div class="col-12 col-md-4">
+		                <h3 class="section-title">Transaction deletion</h3>
+		                <div class="section-intro">Transaction details</div>
+	                </div>
+	                <div class="col-12 col-md-8">
+		                <div class="app-card app-card-modal app-card-settings shadow-sm p-4">
+						    
+						    <div id="delete-transaction-bed" class="app-card-body">
+								<div class="d-flex justify-content-center">
+									<div class="spinner-border text-success m-2" role="status">
+										<span class="visually-hidden">Loading...</span>
+									</div>
+								</div>
+						    </div><!--//app-card-body-->
+						    
+						</div><!--//app-card-->
+	                </div>
+                </div><!--//row-->
+                <hr class="my-4">
+
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
 
 	  <div class="modal fade" id="updateUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -3077,6 +3156,9 @@ function calculateDifference(expected, actual) {
 
 			// Function to handle AJAX call
 			const fetchPurchases = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+
 				if (!date) {
 					console.log("No date provided, skipping AJAX");
 					$("#purchases-spinner").addClass("d-none");
@@ -3086,7 +3168,7 @@ function calculateDifference(expected, actual) {
 					url: "/v2/stock/purchases",
 					type: "get",
 					data: {
-					date:date,
+					date:finalDate,
 					target: "all"
 					},
 					success: function (response) {
@@ -3122,6 +3204,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#purchases-spinner").removeClass("d-none"); // Show spinner again
 					fetchPurchases(selectedDate);
 				} else {
@@ -3148,12 +3231,15 @@ function calculateDifference(expected, actual) {
 			$("#stocktake-all-table").empty()
 
 			const fetchStocktakes = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+
 				$.ajax({
 					url: "/v2/stock/takes",
 					type: "get",
 					data: {
 					target: "all",
-					date:date
+					date:finalDate
 					},
 					success: function (response) {
 						// $select = $("#select-balance-property")
@@ -3190,6 +3276,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#stocktake-spinner").removeClass("d-none"); // Show spinner again
 					fetchStocktakes(selectedDate);
 				} else {
@@ -3201,6 +3288,82 @@ function calculateDifference(expected, actual) {
 			feather.replace();
 			
 		})
+
+
+
+		$(document).on("click", ".trans-btn",function(){
+			let checkSmDevice = toggleSide();
+			if (checkSmDevice) {
+				$("#app-sidepanel").removeClass("sidepanel-visible");
+				$("#app-sidepanel").addClass("sidepanel-hidden");
+			} else {
+				//desktop only
+				}
+
+			$("#home-block").addClass("d-none")
+			$("#working-block").removeClass("d-none")
+		    $("#working-block").html(transTemplate)
+
+
+			$("#trans-spinner").removeClass("d-none")
+			$("#trans-all-table").empty()
+
+			const fetchTransactions = (date) => {
+
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+
+				$.ajax({
+					url: "/v2/stock/transactions",
+					type: "get",
+					data: {
+						date:finalDate,
+						target: "all"
+					},
+					success: function (response) {
+						// $select = $("#select-balance-property")
+						// $.each(response[1], function (index, item) {
+						// 	$select.append(`<option value="${item.id}">${item.name}</option>`); // Append new options
+						// });
+
+
+						renderTransTemplate("allTransTable",$("#trans-all-table")); //create table and replace ID
+						var t1 = runDataTable("allTransTable") // reBUILD datatable instance
+						addTransToTable(response,t1) // pass data to the new table
+						$("#trans-spinner").addClass("d-none") // complete the table update process
+
+					},
+					error: function (xhr) {
+					alert("Error")
+					$("#trans-spinner").addClass("d-none")
+					}
+				});
+			}
+			// Set default date (e.g., today’s date)
+			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+			const $dateInput = $('#transDate');
+			$dateInput.val(today);
+
+			// Fire AJAX immediately with default date
+			fetchTransactions($dateInput.val());
+
+			// Bind change event to handle user-selected date
+			$dateInput.on('change', function() {
+				const selectedDate = $(this).val();
+				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
+					$("#trans-spinner").removeClass("d-none"); // Show spinner again
+					fetchTransactions(selectedDate);
+				} else {
+					console.log("No date selected");
+				}
+			});
+
+
+			feather.replace();
+			
+		})
+
 
 		$(document).on("click", ".sales-btn",function(){
 			let checkSmDevice = toggleSide();
@@ -3220,11 +3383,13 @@ function calculateDifference(expected, actual) {
 			$("#sales-all-table").empty()
 
 			const fetchStockSales = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
 				$.ajax({
 					url: "/v2/stock/sales",
 					type: "get",
 					data: {
-						date:date,
+						date:finalDate,
 						target: "all"
 					},
 					success: function (response) {
@@ -3258,6 +3423,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#sales-spinner").removeClass("d-none"); // Show spinner again
 					fetchStockSales(selectedDate);
 				} else {
@@ -3287,11 +3453,14 @@ function calculateDifference(expected, actual) {
 			$("#sales-report-table").empty()
 
 			const fetchSalesReport = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+
 				$.ajax({
 					url: "/v2/stock/sales/report",
 					type: "get",
 					data: {
-						date:date,
+						date:finalDate,
 						target: "all"
 					},
 					success: function (response) {
@@ -3360,6 +3529,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#sales-report-spinner").removeClass("d-none"); // Show spinner again
 					fetchSalesReport(selectedDate);
 				} else {
@@ -3387,12 +3557,14 @@ function calculateDifference(expected, actual) {
 			$("#balance-stock-table2").empty()
 
 			const fetchStockBalances2 = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
 				$.ajax({
 					url: "/v2/stock/balance/report",
 					type: "get",
 					data: {
 					target: "stocktake balances",
-					date:date
+					date:finalDate
 					},
 					success: function (response) {
 						// $select = $("#select-balance-property")
@@ -3427,6 +3599,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#balance-stock-spinner2").removeClass("d-none"); // Show spinner again
 					fetchStockBalances2(selectedDate);
 				} else {
@@ -3454,12 +3627,15 @@ function calculateDifference(expected, actual) {
 			$("#balance-stock-table").empty()
 
 			const fetchStockBalances = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+			
 				$.ajax({
 					url: "/v2/stock/balance/report",
 					type: "get",
 					data: {
 					target: "balance report",
-					date:date
+					date:finalDate
 					},
 					success: function (response) {
 						// $select = $("#select-balance-property")
@@ -3494,6 +3670,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#balance-stock-spinner").removeClass("d-none"); // Show spinner again
 					fetchStockBalances(selectedDate);
 				} else {
@@ -3521,12 +3698,15 @@ function calculateDifference(expected, actual) {
 			$("#stock-value-table").empty()
 
 			const fetchStockValue = (date) => {
+				const dashboardDate = $("#dashboardDate").val();
+				const finalDate = dashboardDate ? dashboardDate : date;
+
 				$.ajax({
 					url: "/v2/stock/value/report",
 					type: "get",
 					data: {
 					target: "all",
-					date:date
+					date:finalDate
 					},
 					success: function (response) {
 						// $select = $("#select-balance-property")
@@ -3560,6 +3740,7 @@ function calculateDifference(expected, actual) {
 			$dateInput.on('change', function() {
 				const selectedDate = $(this).val();
 				if (selectedDate) {
+					$("#dashboardDate").val(selectedDate);
 					$("#stock-value-spinner").removeClass("d-none"); // Show spinner again
 					fetchStockValue(selectedDate);
 				} else {
@@ -3946,6 +4127,18 @@ function calculateDifference(expected, actual) {
 			return new Promise((resolve) => {
 				// Insert into the DOM
 				elem.html(purchasesTableTemplate);
+				
+				$('#primaryData').attr('id', newId);
+
+				// Resolve the promise after rendering
+				resolve();
+			});
+		}
+
+		function renderTransTemplate(newId,elem) {
+			return new Promise((resolve) => {
+				// Insert into the DOM
+				elem.html(transTableTemplate);
 				
 				$('#primaryData').attr('id', newId);
 
@@ -5195,6 +5388,55 @@ function calculateDifference(expected, actual) {
 			});
 		});
 
+		$(document).on('click', '.editTransaction', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+
+			$.ajax({
+				url: '/v2/stock/transactions',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var updateTransForm = transUpdateForm(response[0]);
+
+					$("#update-transaction-bed").html(updateTransForm)
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
+
+		$(document).on('click', '.deleteTransaction', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+
+			$.ajax({
+				url: '/v2/stock/transactions',
+				method: 'GET',
+				data:{
+					id:id,
+					target:"single"
+				},
+				success: function (response) {
+
+					var deleteTransactionForm = transDeleteForm(response[0]);
+
+					$("#delete-transaction-bed").html(deleteTransactionForm)
+
+
+				},
+				error: function (xhr, status, error) {
+					console.error('Error fetching data: ' + error);
+				}
+			});
+		});
+
 				// Attach a click event to the button
 		$(document).on('click', '.update-user-button', function () {
 			var button = $(this); // Reference to the clicked button
@@ -5583,6 +5825,156 @@ function calculateDifference(expected, actual) {
 
 		})
 
+
+		$(document).on("click", "#update-trans-btn", function () {
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Updating...');
+
+			$.ajax({
+				url: '/v2/stock/transactions',
+				method: 'post',
+				data:{
+					id:$("#trans-update-id").val(),
+					qty:$("#trans-update-qty").val(),
+					price:$("#trans-update-bprice").val(),
+					target:"single"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Updated successfully", 'success');
+						$('#updateTransModal').modal('hide');
+
+
+						const fetchTransactions = (date) => {
+							const dashboardDate = $("#dashboardDate").val();
+							const finalDate = dashboardDate ? dashboardDate : date;
+
+							$.ajax({
+								url: "/v2/stock/transactions",
+								type: "get",
+								data: {
+									date:finalDate,
+									target: "all"
+								},
+								success: function (response) {
+									renderTransTemplate("allTransTable",$("#trans-all-table")); //create table and replace ID
+									var t1 = runDataTable("allTransTable") // reBUILD datatable instance
+									addTransToTable(response,t1) // pass data to the new table
+									$("#trans-spinner").addClass("d-none") // complete the table update process
+								},
+								error: function (xhr) {
+								alert("Error")
+								$("#trans-spinner").addClass("d-none")
+								}
+							});
+						}
+						// Set default date (e.g., today’s date)
+						const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+						const $dateInput = $('#transDate');
+						$dateInput.val(today);
+
+						// Fire AJAX immediately with default date
+						fetchTransactions($dateInput.val());
+
+						// Bind change event to handle user-selected date
+						$dateInput.on('change', function() {
+							const selectedDate = $(this).val();
+							if (selectedDate) {
+								$("#dashboardDate").val(selectedDate);
+								$("#trans-spinner").removeClass("d-none"); // Show spinner again
+								fetchTransactions(selectedDate);
+							} else {
+								console.log("No date selected");
+							}
+						});
+
+					}else{
+						toastIt(response, 'danger');
+					}
+				},error: function (xhr, status, error) {
+					console.error('Error updating item: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Update item');
+				}
+			});
+
+		})
+
+
+		$(document).on("click", "#delete-trans-btn", function () {
+			const $btn = $(this); // Cache the button reference
+			$btn.prop('disabled', true).text('Removing...');
+
+			$.ajax({
+				url: '/v2/stock/transactions',
+				method: 'post',
+				data:{
+					id:$("#trans-delete-id").val(),
+					target:"delete single"
+				},
+				success: function (response) {
+
+					if (response.includes("success")){
+						toastIt("Deleted successfully", 'success');
+						$('#deleteTransModal').modal('hide');
+
+
+						const fetchTransactions = (date) => {
+							const dashboardDate = $("#dashboardDate").val();
+							const finalDate = dashboardDate ? dashboardDate : date;
+
+							$.ajax({
+								url: "/v2/stock/transactions",
+								type: "get",
+								data: {
+									date:finalDate,
+									target: "all"
+								},
+								success: function (response) {
+									renderTransTemplate("allTransTable",$("#trans-all-table")); //create table and replace ID
+									var t1 = runDataTable("allTransTable") // reBUILD datatable instance
+									addTransToTable(response,t1) // pass data to the new table
+									$("#trans-spinner").addClass("d-none") // complete the table update process
+								},
+								error: function (xhr) {
+								alert("Error")
+								$("#trans-spinner").addClass("d-none")
+								}
+							});
+						}
+						// Set default date (e.g., today’s date)
+						const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+						const $dateInput = $('#transDate');
+						$dateInput.val(today);
+
+						// Fire AJAX immediately with default date
+						fetchTransactions($dateInput.val());
+
+						// Bind change event to handle user-selected date
+						$dateInput.on('change', function() {
+							const selectedDate = $(this).val();
+							if (selectedDate) {
+								$("#dashboardDate").val(selectedDate);
+								$("#trans-spinner").removeClass("d-none"); // Show spinner again
+								fetchTransactions(selectedDate);
+							} else {
+								console.log("No date selected");
+							}
+						});
+
+
+					}else{
+						toastIt(response, 'danger');
+					}
+				},error: function (xhr, status, error) {
+					console.error('Error deleting item: ' + error);
+				},complete: function () {
+					$btn.prop('disabled', false).text('Delete?');
+				}
+			});
+
+		})
 
 		$(document).on("click", "#update-user-btn", function () {
 			const $btn = $(this); // Cache the button reference

@@ -12432,6 +12432,71 @@ class StockPurchases(Resource):
         return "purchase recorded successfully"
 
 
+class StockTransactions(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get("target")
+        if target == "single":
+            trans_id = request.args.get("id")
+            trans_obj = StockTransactionOp.fetch_a_transaction_by_id(get_identifier(trans_id))
+            if trans_obj:
+                return [{
+                    "id":trans_obj.id,
+                    "qty":f"{trans_obj.quantity:,.2f}",
+                    "bprice":f"{trans_obj.price_per_unit:,.2f}"
+                }]
+
+            return [{}]
+
+        sdate = request.args.get("date")
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
+        transactions = StockTransactionOp.fetch_transactions_by_company_id(current_user.company.id,s_date)
+        items = []
+        
+
+        for i in transactions:
+            item_dict = StockTransactionOp.view(i)
+            items.append(item_dict)
+
+        return items
+
+    @login_required
+    def post(self):
+        qty = request.form.get("qty")
+        price = request.form.get("price")
+        target = request.form.get("target")
+        try:
+            quantity = validate_stock_input(qty)
+            price = validate_input(price)
+        except:
+            quantity = 0.0
+            price = 0.0
+
+        if target == "single":
+            trans_id = request.form.get("id")
+            trans_obj = StockTransactionOp.fetch_a_transaction_by_id(get_identifier(trans_id))
+            if trans_obj:
+                StockTransactionOp.update_price_per_unit(trans_obj,price)
+                StockTransactionOp.update_quantity(trans_obj,quantity)
+                return "success"
+            return "error"
+
+        if target == "delete single":
+            trans_id = request.form.get("id")
+            trans_obj = StockTransactionOp.fetch_a_transaction_by_id(get_identifier(trans_id))
+            if trans_obj:
+                StockTransactionOp.delete(trans_obj)
+                return "success"
+            return "error"
+
+        return "unknown error"
+
+
 class StockTakes(Resource):
     @login_required
     def get(self):
@@ -12716,6 +12781,7 @@ class StockSalesReport(Resource):
 
             # Weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
+
             if purchase_transactions and sum(t.quantity for t in purchase_transactions) > 0:
                 total_buying_cost = sum(t.quantity * t.price_per_unit for t in purchase_transactions)
                 total_buying_qty = sum(t.quantity for t in purchase_transactions)

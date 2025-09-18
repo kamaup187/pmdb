@@ -142,6 +142,37 @@ function addSalesToTable(data,table) {
     feather.replace();
 }
 
+function addTransToTable(data,table) {
+    // Assuming data is an array of objects
+    // var table = $('#primaryData').DataTable();
+
+    // Clear the existing data
+    table.clear();
+
+    // Add new data
+    data.forEach(function(item) {
+
+        table.row.add([
+            item.id,             // PNo
+            item.item,
+            item.transaction_type,             // PNo
+            // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
+            item.quantity,           // Name
+            item.price_per_unit,
+            item.date, 
+            item.stid,
+            item.state,
+            '<button class="btn btn-success editTransaction" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateTransModal"><i class="feather-18 feather-bold pb-1" data-feather="edit"></i></a>',  // Remove button
+            '<button class="btn btn-danger deleteTransaction" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#deleteTransModal"><i class="feather-18 feather-bold pb-1" data-feather="trash"></i></button>',  // Remove button
+            // Branch
+        ]);
+    });
+
+    // Draw the updated table
+    table.draw();
+    feather.replace();
+}
+
 function addBalanceStockReportToTable(data,table) {
 
     // Clear the existing data
@@ -444,6 +475,29 @@ var stocktakeTableTemplate = `
 </table>
 
 <button id="submitStocktakeEdit" class="btn btn-primary mt-2">Submit Adjustments</button>
+
+`
+
+var transTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Item</th>
+            <th class="fw-bold">Type</th>
+            <th class="fw-bold">Qty</th>
+            <th class="fw-bold">Price</th>
+            <th class="fw-bold">Date</th>
+            <th class="fw-bold">StID</th>
+            <th class="fw-bold">State</th>
+            <th class="fw-bold">Edit</th>
+            <th class="fw-bold">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
 
 `
 
@@ -824,6 +878,26 @@ var accountDataTableTemplate = `
         `;
     };
 
+        var transUpdateForm = (obj) => {
+        return `
+            <form class="settings-form">
+                
+                <div class="mb-3">
+                    <label for="trans-update-qty" class="form-label">Update quantity</label>
+                    <input type="text" class="form-control" id="trans-update-qty" value="${obj.qty}">
+                </div>
+                <div class="mb-3">
+                    <label for="trans-update-bprice" class="form-label">Update buying price</label>
+                    <input type="text" class="form-control" id="trans-update-bprice" value="${obj.bprice}">
+                </div>
+
+                <input type="hidden" class="form-control" id="trans-update-id" value="${obj.id}">
+
+                <button type="button" id="update-trans-btn" class="btn app-btn-primary" >Submit</button>
+            </form>
+        `;
+    };
+
     var purchaseDeleteForm = (obj) => {
         return `
             <form class="settings-form">
@@ -836,6 +910,22 @@ var accountDataTableTemplate = `
                 <input type="hidden" class="form-control" id="purchase-delete-id" value="${obj.id}">
 
                 <button type="button" id="delete-purchase-btn" class="btn btn-danger" >Delete?</button>
+            </form>
+        `;
+    };
+
+    var transDeleteForm = (obj) => {
+        return `
+            <form class="settings-form">
+                
+                <div class="mb-3">
+                    <label for="" class="form-label">Transaction quantity</label>
+                    <input type="text" class="form-control" id="" value="${obj.qty}" disabled>
+                </div>
+
+                <input type="hidden" class="form-control" id="trans-delete-id" value="${obj.id}">
+
+                <button type="button" id="delete-trans-btn" class="btn btn-danger" >Delete?</button>
             </form>
         `;
     };
@@ -1674,8 +1764,6 @@ var purchaseTemplate = `
 </div><!--//tab-content-->
 
 
-
-
 `
 
 var stocktakeTemplate = `
@@ -1773,6 +1861,90 @@ var stocktakeTemplate = `
 
 
 `
+
+var transTemplate = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">All transactions</h1>
+    </div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+
+<div class="col-12 row mb-2">
+    <div class="col-auto">
+        <div class="page-utilities">
+            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                <div class="col-auto">						    
+                    <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#">
+                        <i class="pb-1" data-feather="plus" style="width: 16px; height: 16px;"></i>
+                        Add new transaction
+                    </a>
+                </div>
+            </div><!--//row-->
+        </div><!--//table-utilities-->
+    </div><!--//col-auto-->
+</div><!--//row-->
+
+
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Transactions table</a>
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">
+						<input type="date" id="transDate" class="form-control">
+					</div>
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white trans-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show transactions
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
+
+    <div id="trans-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="trans-all-table" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+`
+
 
 var salesTemplate = `
 		

@@ -6631,6 +6631,21 @@ class StockTransactionOp(StockTransaction, Base):
 
     def fetch_a_transaction_by_id(id):
         return StockTransaction.query.filter_by(id=id).first()
+    
+    def fetch_transactions_by_company_id(company_id,date_filter_obj):
+        from datetime import datetime, date, time, timedelta
+        # normalize to a date
+        if isinstance(date_filter_obj, datetime):
+            date_only = date_filter_obj.date()
+        else:
+            date_only = date_filter_obj
+
+        start = datetime.combine(date_only, time.min)            # 00:00:00 of that day
+        end = start + timedelta(days=1) 
+
+        return StockTransaction.query.filter_by(company_id=company_id)\
+            .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+            .order_by(StockTransaction.transaction_date.desc()).all()
 
     def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):
         return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).first()
@@ -6756,10 +6771,13 @@ class StockTransactionOp(StockTransaction, Base):
         return {
             'id': self.id,
             'item_id': self.item_id,
+            'item':self.item.name,
             'transaction_type': self.transaction_type,
-            'quantity': self.quantity,
-            'price_per_unit': self.price_per_unit,
-            'date': StockTransactionOp.date_format(self),
+            'quantity': f"{self.quantity:,.2f}",
+            'price_per_unit': f"{self.price_per_unit:,.2f}",
+            # 'date': StockTransactionOp.date_format(self),
+            'date':self.transaction_date.strftime("%d/%m/%Y"),
+            'stid': self.stock_take_id if self.stock_take_id else "-",
             'notes': self.notes,
             'state': self.state
         }

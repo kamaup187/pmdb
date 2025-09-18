@@ -12654,6 +12654,13 @@ class StockTakes(Resource):
     def post(self):
 
         target = request.form.get('target')
+        sdate = request.form.get('date')
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            return []
+
         if target == "adjustments":
             stocktake_id = request.form.get('stocktakeid')
             stocktakeid = int(stocktake_id)
@@ -12668,7 +12675,7 @@ class StockTakes(Resource):
                 status = i["stock_adjust"]
                 item_id = int(i["item_id"])
                 item_obj = StockItemOp.fetch_an_item_by_id(item_id)
-                eqty = StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now())
+                eqty = StockItemOp.get_quantity_per_date(item_obj,s_date)
 
                 print("status ",status,"type ",type(status))
 
@@ -12680,28 +12687,37 @@ class StockTakes(Resource):
                     sold_qty = eqty - aqty
                     sqty = round(sold_qty,2)
 
-                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,datetime.datetime.now())
+                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,s_date)
                     if stocktake == "Stocktake done":
                         print("Stocktake already done for this item")
                     else:
                         stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",aqty,weighted_bprice,current_user.id,current_user.company.id)
                         stock_transaction_obj.save()
 
+                        StockTransactionOp.update_date(stock_transaction_obj,s_date)
+
                         price = item_obj.selling_price
 
                         sale_transaction_obj = StockTransactionOp(None,item_id,'Sale',sqty * -1,price,current_user.id,current_user.company.id)
                         sale_transaction_obj.save()
+
+                        StockTransactionOp.update_date(sale_transaction_obj,s_date)
+
                         
                         sale_obj = StockSaleOp(sale_transaction_obj.id,item_id,sqty,price,"Cash",current_user.id,current_user.company.id)
                         sale_obj.save()
 
+                        StockSaleOp.update_date(sale_obj,s_date)
+
                 else:
-                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,datetime.datetime.now())
+                    stocktake = StockItemOp.get_stocktake_eligibility(item_obj,s_date)
                     if stocktake == "Stocktake done":
                         print("Stocktake already done for this item")
                     else:
                         stock_transaction_obj = StockTransactionOp(stocktakeid,item_id,"Closing Stock",eqty,weighted_bprice,current_user.id,current_user.company.id)
                         stock_transaction_obj.save()
+                        StockTransactionOp.update_date(stock_transaction_obj,s_date)
+
                 
             return "success"
 
@@ -12710,6 +12726,8 @@ class StockTakes(Resource):
 
         stocktake_obj = StockTakeOp(stocktake_type,notes,current_user.id,current_user.company.id)
         stocktake_obj.save()
+
+        StockTakeOp.update_date(stocktake_obj,s_date)
 
         return ["Stocktake started successfully"]
 

@@ -6603,10 +6603,12 @@ function calculateDifference(expected, actual) {
 <script>
 	$("#submitStocktakeBtn").on("click", function() {
 		if(validate("stocktakeType")){
+			let date = $("#dashboardDate").val();
 			$.ajax({
 				url: "/v2/stock/takes",
 				type: "post",
 				data: {
+					date:date,
 					category: $("#stocktakeType").val(),
 					notes:$("#stocktakeNotes").val(),
 				},
@@ -6670,6 +6672,7 @@ function initSubmitHandler(table) {
         }
 
         let stocktakeId = $("#stocktakeId").val();
+		let date = $("#dashboardDate").val();
         let initialData = table.rows().data().toArray();
         let items = table.rows().data().toArray().map(row => ({
             item_id: row.stockid,
@@ -6698,6 +6701,7 @@ function initSubmitHandler(table) {
 			type: "post",
 			data: {
 				stocktakeid:stocktakeId,
+				date:date,
 				items:JSON.stringify(items),
 				target: "adjustments"
 			},

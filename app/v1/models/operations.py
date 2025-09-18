@@ -6775,8 +6775,6 @@ class StockTransactionOp(StockTransaction, Base):
         return day + "/" + month
 
     def update_date(self,new_date):
-        print("Updating date")
-
         self.transaction_date = new_date
         db.session.commit()
 
@@ -6825,6 +6823,10 @@ class StockTakeOp(StockTake, Base):
 
     def update_state(self, state):
         self.state = state
+        db.session.commit()
+
+    def update_date(self,new_date):
+        self.stocktake_date = new_date
         db.session.commit()
 
 
@@ -6882,6 +6884,10 @@ class StockSaleOp(StockSale, Base):
 
     def update_state(self, state):
         self.state = state
+        db.session.commit()
+
+    def update_date(self,new_date):
+        self.sale_date = new_date
         db.session.commit()
 
     def date_format(self):

@@ -3313,6 +3313,8 @@ function calculateDifference(expected, actual) {
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
 
+				$(".reporting-date").text(finalDate)
+
 				$.ajax({
 					url: "/v2/stock/transactions",
 					type: "get",

@@ -1932,6 +1932,7 @@ var transTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
+                    <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span></div>
                         <div id="trans-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>

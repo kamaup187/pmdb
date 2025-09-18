@@ -881,7 +881,10 @@ var accountDataTableTemplate = `
         var transUpdateForm = (obj) => {
         return `
             <form class="settings-form">
-                
+                <div class="mb-3">
+                    <label for="trans-update-date" class="form-label">Update date (${obj.sdate})</label>
+                    <input type="date" class="form-control" id="trans-update-date" value="">
+                </div>
                 <div class="mb-3">
                     <label for="trans-update-qty" class="form-label">Update quantity</label>
                     <input type="text" class="form-control" id="trans-update-qty" value="${obj.qty}">

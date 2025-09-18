@@ -12483,6 +12483,7 @@ class StockTransactions(Resource):
                 return [{
                     "id":trans_obj.id,
                     "qty":f"{trans_obj.quantity:,.2f}",
+                    "sdate":trans_obj.transaction_date.strftime("%d/%m/%Y"),
                     "bprice":f"{trans_obj.price_per_unit:,.2f}"
                 }]
 
@@ -12509,7 +12510,15 @@ class StockTransactions(Resource):
     def post(self):
         qty = request.form.get("qty")
         price = request.form.get("price")
+        sdate = request.form.get("date")
         target = request.form.get("target")
+
+        try:
+            from datetime import date as dt
+            s_date = dt.fromisoformat(sdate)
+        except:
+            s_date = None
+
         try:
             quantity = validate_stock_input(qty)
             price = validate_input(price)
@@ -12520,6 +12529,8 @@ class StockTransactions(Resource):
         if target == "single":
             trans_id = request.form.get("id")
             trans_obj = StockTransactionOp.fetch_a_transaction_by_id(get_identifier(trans_id))
+            if s_date:
+                StockTransactionOp.update_date(trans_obj,s_date)
             if trans_obj:
                 StockTransactionOp.update_price_per_unit(trans_obj,price)
                 StockTransactionOp.update_quantity(trans_obj,quantity)

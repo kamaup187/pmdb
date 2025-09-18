@@ -245,6 +245,47 @@ class IndexV2(Resource):
 class StockModule(Resource):
     def get(self):
 
+
+
+        sale_transactions = db.session.query(StockTransaction).filter(
+            StockTransaction.transaction_type == 'Sale'
+        ).all()
+        
+        print(f"DEBUG: Found {len(sale_transactions)} Sale transactions")
+
+        restored_count = 0
+        for tx in sale_transactions:
+            if tx.quantity is None:
+                StockTransactionOp.delete(tx)
+                continue
+            # Skip if StockSale already exists for this transaction
+            if StockSale.query.filter_by(stock_transaction_id=tx.id).first():
+                print(f"DEBUG: StockSale for transaction_id={tx.id} already exists, skipping")
+                continue
+            
+            # Create new StockSale
+            new_sale = StockSale(
+                item_id=tx.item_id,
+                quantity=abs(tx.quantity),  # Convert negative quantity to positive
+                sale_price=tx.price_per_unit or 0.0,  # Use price_per_unit or default
+                sale_date=tx.transaction_date,
+                payment_method='Cash',  # Default, adjust if data available
+                discount=None,  # Default, adjust if needed
+                status='completed',
+                notes=tx.notes,
+                state=tx.state,
+                user_id=tx.user_id,
+                company_id=tx.company_id,
+                stock_transaction_id=tx.id
+            )
+            db.session.add(new_sale)
+            restored_count += 1
+            print(f"DEBUG: Restored StockSale for transaction_id={tx.id}, item_id={tx.item_id}")
+
+        db.session.commit()
+        print(f"DEBUG: Restored {restored_count} StockSale records")
+        return restored_count
+
         # items = ItemOp.fetch_all_items()
 
         # for item in items:

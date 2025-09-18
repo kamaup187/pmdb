@@ -12436,6 +12436,7 @@ class StockTransactions(Resource):
     @login_required
     def get(self):
         target = request.args.get("target")
+        trn = request.args.get('type')
         if target == "single":
             trans_id = request.args.get("id")
             trans_obj = StockTransactionOp.fetch_a_transaction_by_id(get_identifier(trans_id))
@@ -12455,7 +12456,7 @@ class StockTransactions(Resource):
         except:
             return []
 
-        transactions = StockTransactionOp.fetch_transactions_by_company_id(current_user.company.id,s_date)
+        transactions = StockTransactionOp.fetch_transactions_by_company_id(current_user.company.id,s_date,trn)
         items = []
         
 

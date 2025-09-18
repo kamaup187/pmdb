@@ -578,6 +578,7 @@
 						<div class="col-auto">
 							<input type="date" id="dashboardDate" class="form-control">
 						</div>
+						<span class="d-none" id="dashboard-transaction-type"></span>
 					</div>
 
 
@@ -3308,18 +3309,23 @@ function calculateDifference(expected, actual) {
 			$("#trans-spinner").removeClass("d-none")
 			$("#trans-all-table").empty()
 
-			const fetchTransactions = (date) => {
+			const fetchTransactions = (date,transtype) => {
 
 				const dashboardDate = $("#dashboardDate").val();
 				const finalDate = dashboardDate ? dashboardDate : date;
 
+				const dashboardType = $("#dashboard-transaction-type").text();
+				const finalType = dashboardType ? dashboardType : transtype;
+
 				$(".reporting-date").text(finalDate)
+				$(".reporting-type").text(finalType)
 
 				$.ajax({
 					url: "/v2/stock/transactions",
 					type: "get",
 					data: {
 						date:finalDate,
+						type:finalType,
 						target: "all"
 					},
 					success: function (response) {
@@ -3344,10 +3350,11 @@ function calculateDifference(expected, actual) {
 			// Set default date (e.g., today’s date)
 			const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 			const $dateInput = $('#transDate');
+			const $transType = $("#select-transaction-type");
 			$dateInput.val(today);
 
 			// Fire AJAX immediately with default date
-			fetchTransactions($dateInput.val());
+			fetchTransactions($dateInput.val(),"All");
 
 			// Bind change event to handle user-selected date
 			$dateInput.on('change', function() {
@@ -3355,12 +3362,18 @@ function calculateDifference(expected, actual) {
 				if (selectedDate) {
 					$("#dashboardDate").val(selectedDate);
 					$("#trans-spinner").removeClass("d-none"); // Show spinner again
-					fetchTransactions(selectedDate);
+					fetchTransactions(selectedDate,"All");
 				} else {
 					console.log("No date selected");
 				}
 			});
 
+			$transType.on('change', function(){
+				const selectedType = $(this).val();
+				$("#dashboard-transaction-type").text(selectedType);
+				$("#trans-spinner").removeClass("d-none"); // Show spinner again
+				fetchTransactions(today,selectedType);
+			})
 
 			feather.replace();
 			
@@ -5848,15 +5861,23 @@ function calculateDifference(expected, actual) {
 						$('#updateTransModal').modal('hide');
 
 
-						const fetchTransactions = (date) => {
+						const fetchTransactions = (date,transtype) => {
+
 							const dashboardDate = $("#dashboardDate").val();
 							const finalDate = dashboardDate ? dashboardDate : date;
+
+							const dashboardType = $("#dashboard-transaction-type").text();
+							const finalType = dashboardType ? dashboardType : transtype;
+
+							$(".reporting-date").text(finalDate)
+							$(".reporting-type").text(finalType)
 
 							$.ajax({
 								url: "/v2/stock/transactions",
 								type: "get",
 								data: {
 									date:finalDate,
+									type:finalType,
 									target: "all"
 								},
 								success: function (response) {
@@ -5874,10 +5895,11 @@ function calculateDifference(expected, actual) {
 						// Set default date (e.g., today’s date)
 						const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 						const $dateInput = $('#transDate');
+						const $transType = $("#select-transaction-type");
 						$dateInput.val(today);
 
 						// Fire AJAX immediately with default date
-						fetchTransactions($dateInput.val());
+						fetchTransactions($dateInput.val(),"All");
 
 						// Bind change event to handle user-selected date
 						$dateInput.on('change', function() {
@@ -5885,11 +5907,18 @@ function calculateDifference(expected, actual) {
 							if (selectedDate) {
 								$("#dashboardDate").val(selectedDate);
 								$("#trans-spinner").removeClass("d-none"); // Show spinner again
-								fetchTransactions(selectedDate);
+								fetchTransactions(selectedDate,"All");
 							} else {
 								console.log("No date selected");
 							}
 						});
+
+						$transType.on('change', function(){
+							const selectedType = $(this).val();
+							$("#dashboard-transaction-type").text(selectedType);
+							$("#trans-spinner").removeClass("d-none"); // Show spinner again
+							fetchTransactions(today,selectedType);
+						})
 
 					}else{
 						toastIt(response, 'danger');
@@ -5922,15 +5951,23 @@ function calculateDifference(expected, actual) {
 						$('#deleteTransModal').modal('hide');
 
 
-						const fetchTransactions = (date) => {
+						const fetchTransactions = (date,transtype) => {
+
 							const dashboardDate = $("#dashboardDate").val();
 							const finalDate = dashboardDate ? dashboardDate : date;
+
+							const dashboardType = $("#dashboard-transaction-type").text();
+							const finalType = dashboardType ? dashboardType : transtype;
+
+							$(".reporting-date").text(finalDate)
+							$(".reporting-type").text(finalType)
 
 							$.ajax({
 								url: "/v2/stock/transactions",
 								type: "get",
 								data: {
 									date:finalDate,
+									type:finalType,
 									target: "all"
 								},
 								success: function (response) {
@@ -5948,10 +5985,11 @@ function calculateDifference(expected, actual) {
 						// Set default date (e.g., today’s date)
 						const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 						const $dateInput = $('#transDate');
+						const $transType = $("#select-transaction-type");
 						$dateInput.val(today);
 
 						// Fire AJAX immediately with default date
-						fetchTransactions($dateInput.val());
+						fetchTransactions($dateInput.val(),"All");
 
 						// Bind change event to handle user-selected date
 						$dateInput.on('change', function() {
@@ -5959,11 +5997,18 @@ function calculateDifference(expected, actual) {
 							if (selectedDate) {
 								$("#dashboardDate").val(selectedDate);
 								$("#trans-spinner").removeClass("d-none"); // Show spinner again
-								fetchTransactions(selectedDate);
+								fetchTransactions(selectedDate,"All");
 							} else {
 								console.log("No date selected");
 							}
 						});
+
+						$transType.on('change', function(){
+							const selectedType = $(this).val();
+							$("#dashboard-transaction-type").text(selectedType);
+							$("#trans-spinner").removeClass("d-none"); // Show spinner again
+							fetchTransactions(today,selectedType);
+						})
 
 
 					}else{

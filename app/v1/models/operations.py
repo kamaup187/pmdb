@@ -6632,7 +6632,12 @@ class StockTransactionOp(StockTransaction, Base):
     def fetch_a_transaction_by_id(id):
         return StockTransaction.query.filter_by(id=id).first()
     
-    def fetch_transactions_by_company_id(company_id,date_filter_obj):
+    def fetch_transactions_by_company_id(company_id,date_filter_obj,trn):
+        if trn == "All":
+            trans_types = ['Opening Stock','Stocktake Adjustments','Purchase', 'Sale', 'Damage']
+        else:
+            trans_types = [trn]
+
         from datetime import datetime, date, time, timedelta
         # normalize to a date
         if isinstance(date_filter_obj, datetime):
@@ -6645,6 +6650,7 @@ class StockTransactionOp(StockTransaction, Base):
 
         return StockTransaction.query.filter_by(company_id=company_id)\
             .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
+            .filter(StockTransaction.transaction_type.in_(trans_types))\
             .order_by(StockTransaction.transaction_date.desc()).all()
 
     def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):

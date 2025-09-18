@@ -1909,6 +1909,17 @@ var transTemplate = `
                     <div class="col-auto">
 						<input type="date" id="transDate" class="form-control">
 					</div>
+                    <div class="col-auto">
+                        <select class="form-select" id="select-transaction-type">
+                            <option value="All"selected>All</option>
+                            <option value="Opening Stock">Opening Stock</option>
+                            <option value="Closing Stock">Closing Stock</option>
+                            <option value="Sale">Sale</option>
+                            <option value="Purchase">Purchase</option>
+                            <option value="Damage">Damage</option>
+                            <option value="Stock Adjustments">Stock Adjustments</option>
+                        </select>
+					</div>
                     <div class="col-auto">						    
                         <a class="btn btn-success text-white trans-btn" href="#">
                             <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
@@ -1932,7 +1943,7 @@ var transTemplate = `
             <div class="app-card-body">
                 <div class="row">
                     <div class="col-lg-12 no-padding">
-                    <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span></div>
+                    <div class="mb-2">Displaying records for: <span class="text-black font-weight-bold reporting-date"></span> Transaction type: <span class="text-black font-weight-bold reporting-type"></span></div>
                         <div id="trans-all-table" class="ps-4 pe-4 table-responsive">
                         </div>
                     </div>

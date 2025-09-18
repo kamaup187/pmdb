@@ -2198,6 +2198,30 @@
 		});
 	</script> -->
 <script>
+	function formatReportDate(dateStr) {
+  const dt = new Date(dateStr); // "2025-09-14"
+
+  const options = { weekday: 'long', year: 'numeric', month: 'long' };
+  const base = dt.toLocaleDateString('en-US', options); 
+  // e.g. "Sunday, September 2025"
+
+  const day = dt.getDate();
+  const suffix = (d => {
+    if (d > 3 && d < 21) return "th";
+    switch (d % 10) {
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+      default: return "th";
+    }
+  })(day);
+
+  return `${dt.toLocaleDateString('en-US', { weekday: 'long' })}, ${day}${suffix} ${dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+}
+</script>
+
+	
+<script>
 	function runDataTable(table_id){
 		var t1 = $('#'+table_id).DataTable({
 			"dom": '<"top"f>rt<"bottom"lp><"clear">',
@@ -2217,163 +2241,6 @@
 <script>
 
 // Updated runDataTable function with debounced update
-function runDataTableEditablelol(tableId) {
-    let table = $('#' + tableId).DataTable({
-        destroy: true,
-		"pageLength": 100,
-        columns: [
-            { data: 'stockid' },
-            { data: 'date' },
-            { data: 'stocktype' },
-            { data: 'item' },
-            { data: 'eqty' },
-            {
-                data: 'aqty',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        return '<span contenteditable="true" class="editable" data-item-id="' + row.stockid + '">' + (data || 0) + '</span>';
-                    }
-                    return data;
-                }
-            },
-            {
-                data: 'diff',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        return calculateDifference(row.eqty, row.aqty || 0);
-                    }
-                    return data;
-                }
-            },
-            { data: 'status' },
-            { data: 'notes' }
-        ],
-        drawCallback: function(settings) {
-            let api = this.api();
-            // Debounced update function
-            let updateDiff = debounce(function($cell) {
-                let $row = $cell.closest('tr');
-                let rowIdx = api.row($row).index();
-                if (rowIdx === undefined) {
-                    console.error('Row index not found for:', $row);
-                    return;
-                }
-                let rowData = api.row(rowIdx).data();
-                let newValue = parseInt($cell.text()) || 0;
-                rowData.aqty = newValue;
-                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw();
-            }, 1500); // 300ms delay
-
-            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
-                let $cell = $(this);
-                updateDiff($cell); // Trigger debounced update
-            });
-        }
-    });
-    return table;
-}
-
-function runDataTableEditablelola(tableId) {
-    let table = $('#' + tableId).DataTable({
-        destroy: true,
-        // data: function(data) {
-        //     // Force status to false for all rows, ignoring backend data
-        //     return data.map(row => ({ ...row, status: false }));
-        // },
-        columns: [
-            { data: 'stockid' },
-            { data: 'date' },
-            { data: 'stocktype' },
-            { data: 'item' },
-            { data: 'eqty' },
-            {
-                data: 'aqty',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        // Make aqty editable only if status is true
-                        let isEditable = row.status ? 'contenteditable="true"' : 'contenteditable="false"';
-                        return `<span ${isEditable} class="editable" data-item-id="${row.stockid}">${(data || 0)}</span>`;
-                    }
-                    return data;
-                }
-            },
-            {
-                data: 'diff',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        return calculateDifference(row.eqty, row.aqty || 0);
-                    }
-                    return data;
-                }
-            },
-            {
-                data: 'status',
-                render: function(data, type, row) {
-                    if (type === 'display') {
-                        // Render checkbox, initially unchecked (status is forced to false)
-                        let checked = row.status ? 'checked' : '';
-                        return `<input type="checkbox" class="status-checkbox" data-item-id="${row.stockid}" ${checked}>`;
-                    }
-                    return data;
-                }
-            },
-            { data: 'notes' }
-        ],
-        drawCallback: function(settings) {
-            let api = this.api();
-
-            // Debounced update function for aqty
-            let updateDiff = debounce(function($cell) {
-                let $row = $cell.closest('tr');
-                let rowIdx = api.row($row).index();
-                if (rowIdx === undefined) {
-                    console.error('Row index not found for:', $row);
-                    return;
-                }
-                let rowData = api.row(rowIdx).data();
-                let newValue = parseInt($cell.text()) || 0;
-                rowData.aqty = newValue;
-                api.cell($row, 6).data(calculateDifference(rowData.eqty, newValue)).draw();
-            }, 1500); // 1500ms delay
-
-            // Handle input on editable aqty cells
-            $('#' + tableId + ' tbody').off('input', '.editable').on('input', '.editable', function(e) {
-                let $cell = $(this);
-                let $row = $cell.closest('tr');
-                let rowIdx = api.row($row).index();
-                let rowData = api.row(rowIdx).data();
-                // Only allow updates if status is true
-                if (rowData.status) {
-                    updateDiff($cell); // Trigger debounced update
-                } else {
-                    // Revert to original value if status is false
-                    $cell.text(rowData.aqty || 0);
-                    console.warn('Cannot edit aqty: status is not approved.');
-                }
-            });
-
-            // Handle checkbox changes for status
-            $('#' + tableId + ' tbody').off('change', '.status-checkbox').on('change', '.status-checkbox', function(e) {
-                let $checkbox = $(this);
-                let $row = $checkbox.closest('tr');
-                let rowIdx = api.row($row).index();
-                if (rowIdx === undefined) {
-                    console.error('Row index not found for:', $row);
-                    return;
-                }
-                let rowData = api.row(rowIdx).data();
-                // Update status in row data
-                rowData.status = $checkbox.is(':checked');
-                api.row(rowIdx).data(rowData); // Update DataTable data
-                // Update aqty cell editability
-                let $aqtyCell = $row.find('.editable');
-                $aqtyCell.attr('contenteditable', rowData.status);
-                api.draw(false); // Redraw to reflect changes
-            });
-        }
-    });
-    return table;
-}
 
 function runDataTableEditable(tableId) {
     let table = $('#' + tableId).DataTable({
@@ -2620,7 +2487,7 @@ function calculateDifference(expected, actual) {
 </script>
 
 <script>
-	function runDataTableReport(table_id,summary,pageTitle){
+	function runDataTableReport(table_id,summary,pageTitle,reportDate){
 		
 		var t1 = $('#'+table_id).DataTable({
 			footerCallback: function(row, data, start, end, display) {
@@ -2678,7 +2545,28 @@ function calculateDifference(expected, actual) {
 					text: 'Print', // Custom button text
 					title: "BASE: " + pageTitle, // Title for print page
 					customize: function(win) {
-						$(win.document.body).find('h1').css('text-align', 'center');
+
+						var $title = $(win.document.body).find('h1');
+						$title.replaceWith($('<h2>' + $title.text() + '</h2>'));
+
+						$(win.document.body).find('h2').css({
+							'text-align': 'center',
+							'font-size': '18px', // Adjust size for h3
+							'line-height': '1.2' // Match your tighter line height
+						});
+
+						 // Add report date below title
+						$(win.document.body).find('h2').after(
+							$('<p>Transactions Report Date: ' + formatReportDate(reportDate) + '</p>').css({
+								'text-align': 'center',
+								'font-size': '12px', // Smaller than h3
+								'line-height': '1.1',
+								'margin-top': '0',
+								'margin-bottom': '10px'
+							})
+						);
+
+
 						// Optional: Customize print view
 						// $(win.document.body).prepend('<h1>Base</h1>');
 						// $(win.document.body).find('table').addClass('compact').css('font-size', 'inherit');
@@ -2697,7 +2585,7 @@ function calculateDifference(expected, actual) {
 									$(win.document.body)
 										.find('table tr')
 										.css({
-											'line-height': '1.2', // Tighter line height
+											'line-height': '1.1', // Tighter line height
 											'height': 'auto' // Let browser optimize row height
 										});
 									$(win.document.body)
@@ -2714,12 +2602,38 @@ function calculateDifference(expected, actual) {
                         $('#printSummary', win.document.body).html(
                                         $('#summarySection').html());
 
+						$('#printSummary', win.document.body).css({
+							// 'text-align': 'center',
+							'margin-bottom': '15px'
+						});
+						// Style specific elements in printSummary
+						$('#printSummary h4', win.document.body).css({
+							'font-size': '14px', // Smaller than h3 (16px)
+							'line-height': '1.1',
+							'margin-bottom': '5px'
+						});
+						$('#printSummary .h5, #printSummary .h4', win.document.body).css({
+							'font-size': '12px', // Matches report date
+							'line-height': '1.1'
+						});
+						$('#printSummary span', win.document.body).css({
+							'font-size': '12px',
+							'line-height': '1.1'
+						});
+						// Remove Bootstrap classes to prevent conflicts
+						$('#printSummary .row, #printSummary .col-6, #printSummary .col-md-4', win.document.body).css({
+							// 'display': 'inline-block',
+							// 'width': 'auto',
+							'margin': '0',
+							'padding': '2px'
+						});
+
 
 						$(win.document.body)
                         .find('tfoot')
                         .css('display', 'table-footer-group') // Force footer to print
                         .css('font-weight', 'bold')
-						.css('font-size','18px');
+						.css('font-size','14px');
 					}
 				}
 			],
@@ -3486,7 +3400,7 @@ function calculateDifference(expected, actual) {
 						// });
 
 						renderSalesReportTemplate("allSalesReportTable",$("#sales-report-table")); //create table and replace ID
-						var t1 = runDataTableReport("allSalesReportTable",response[1],"Sales Report") // reBUILD datatable instance
+						var t1 = runDataTableReport("allSalesReportTable",response[1],"Sales Report",finalDate) // reBUILD datatable instance
 						addSalesReportToTable(response[0],t1) // pass data to the new table
 
 						summary = response[1];
@@ -3661,7 +3575,7 @@ function calculateDifference(expected, actual) {
 						// });
 
 						renderBalanceStockTemplate("allBalanceStockTable",$("#balance-stock-table")); //create table and replace ID
-						var t1 = runDataTableReport("allBalanceStockTable",response[1],"Balance Stock Report") // reBUILD datatable instance
+						var t1 = runDataTableReport("allBalanceStockTable",response[1],"Balance Stock Report",finalDate) // reBUILD datatable instance
 						addBalanceStockReportToTable(response[0],t1) // pass data to the new table
 
 
@@ -3732,7 +3646,7 @@ function calculateDifference(expected, actual) {
 						// });
 
 						renderStockValueTemplate("allValueStockTable",$("#stock-value-table")); //create table and replace ID
-						var t1 = runDataTableReport("allValueStockTable",response[1],"Stock Value Report") // reBUILD datatable instance
+						var t1 = runDataTableReport("allValueStockTable",response[1],"Stock Value Report",finalDate) // reBUILD datatable instance
 						addStockValueReportToTable(response[0],t1) // pass data to the new table
 
 						$("#stock-value-spinner").addClass("d-none") // complete the table update process

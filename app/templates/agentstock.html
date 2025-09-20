@@ -6605,6 +6605,11 @@ function calculateDifference(expected, actual) {
 	$("#submitStocktakeBtn").on("click", function() {
 		if(validate("stocktakeType")){
 			let date = $("#dashboardDate").val();
+			if (!date || isNaN(new Date(date))) {
+				console.error('Invalid or missing date:', date);
+				toastIt('Please provide a valid date', 'danger');
+				return; // Stop the AJAX call
+			}
 			$.ajax({
 				url: "/v2/stock/takes",
 				type: "post",

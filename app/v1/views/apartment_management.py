@@ -12676,6 +12676,7 @@ class StockTakes(Resource):
             from datetime import date as dt
             s_date = dt.fromisoformat(sdate)
         except:
+            print("choiyot")
             return []
 
         if target == "adjustments":

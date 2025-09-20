@@ -321,13 +321,13 @@ class StockModule(Resource):
             return redirect(url_for('api.index'))
 
 
-        tts = ItemOp.fetch_all_items()
-        for tt in tts:
-            tt_obj = StockItemOp.fetch_an_item_by_name(tt.name)
-            if tt_obj:
-                continue
-            new_item = StockItemOp(tt.name,"",0.0,current_user.id,current_user.company.id)
-            new_item.save()
+        # tts = ItemOp.fetch_all_items()
+        # for tt in tts:
+        #     tt_obj = StockItemOp.fetch_an_item_by_name(tt.name)
+        #     if tt_obj:
+        #         continue
+        #     new_item = StockItemOp(tt.name,"",0.0,current_user.id,current_user.company.id)
+        #     new_item.save()
 
         props = fetch_all_apartments_by_user(current_user)
         perm = get_permissions(current_user)

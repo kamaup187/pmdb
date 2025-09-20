@@ -309,10 +309,16 @@ class StockModule(Resource):
 
         try:
             current_user.company_id
+            if current_user.usercode == "5023":
+                coname = "Nana's"
+            else:
+                coname = "BASE"
         except:
-            user_obj = UserOp.fetch_user_by_usercode("8760")
-            from flask_login import login_user
-            login_user(user_obj)
+            # user_obj = UserOp.fetch_user_by_usercode("8760")
+            # from flask_login import login_user
+            # login_user(user_obj)
+
+            return redirect(url_for('api.index'))
 
         props = fetch_all_apartments_by_user(current_user)
         perm = get_permissions(current_user)
@@ -425,6 +431,7 @@ class StockModule(Resource):
         return Response(render_template(
             "agentstock.html",
             co="set",
+            coname = coname,
             properties=props,
             branches=[],
             sales=f"KES {total_amount_sold:,.2f}",

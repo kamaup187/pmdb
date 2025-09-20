@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"> 
 <head>
-    <title>BASE</title>
+    <title>{{coname}}</title>
     
     <!-- Meta -->
 	
@@ -368,7 +368,7 @@
 		        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
 		        <div class="app-branding">
 		            <!-- <a class="app-logo" href="/stock/module"><h1 class="logo-icon">BASE</h1><img class="logo-icon me-2" src="{{ url_for('static', filename='img/logos/rentlib/l-logo.png') }}" alt="logo"></a> -->
-					<a class="app-logo" href="/stock/module"><h1 class="logo-icon mt-2" style="color: #b16b0f;">BASE</h1></a>
+					<a class="app-logo" href="/stock/module"><h1 class="logo-icon mt-2" style="color: #b16b0f;">{{coname}}</h1></a>
 
 	
 		        </div><!--//app-branding-->  
@@ -566,7 +566,7 @@
 				<div id="home-block">
 					<h1 class="app-page-title d-flex justify-content-between align-items-center"> 
 						<!-- <span class="d-inline d-sm-none"><img class="logo-icon me-2" src="{{ url_for('static', filename='img/logos/rentlib/l-logo.png') }}" alt="logo" width="140"></span> -->
-						<span class="d-inline d-sm-none"><h1 class="logo-icon me-2 mt-2" style="color: #4e1a1a;">BASE</h1> </span>
+						<span class="d-inline d-sm-none"><h1 class="logo-icon me-2 mt-2" style="color: #4e1a1a;">{{coname}}</h1> </span>
 
 						<span class="d-inline d-sm-none">Overview</span>
 					</h1>
@@ -1979,7 +1979,7 @@
 		<div class="modal-dialog modal-lg">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h5 class="modal-title" id="staticBackdropLabel">BASE LOGIN</h5>
+			  <h5 class="modal-title" id="staticBackdropLabel">{{coname}} LOGIN</h5>
 			</div>
 			<div class="modal-body">
 
@@ -2543,7 +2543,7 @@ function calculateDifference(expected, actual) {
 				{
 					extend: 'print',
 					text: 'Print', // Custom button text
-					title: "BASE: " + pageTitle, // Title for print page
+					title: "SMA: " + pageTitle, // Title for print page
 					customize: function(win) {
 
 						var $title = $(win.document.body).find('h1');

@@ -12341,6 +12341,7 @@ class StockItems(Resource):
 
                 StockItemOp.update_name(item_obj,item_name)
                 StockItemOp.update_selling_price(item_obj,valid_sprice)
+                StockItemOp.update_date(item_obj,datetime.datetime.now())
 
 
                 return "item updated successfully"

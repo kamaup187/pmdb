@@ -1984,6 +1984,7 @@ class StockItem(db.Model):
     state = db.Column(db.Boolean, default=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
 
     # Relationships

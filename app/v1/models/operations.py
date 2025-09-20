@@ -6486,16 +6486,23 @@ class StockItemOp(StockItem, Base):
         # print("choooooooooy >>>>>>>>>",round(total_cost / total_quantity, 2))
 
         return round(total_cost / total_quantity, 2)  # Rounded to 2 decimal places
+    
+    def update_date(self,new_date):
+        self.updated_at = new_date
+        db.session.commit()
 
 
     def view(self):
+        from datetime import datetime, date
+        from pytz import timezone
+
         return {
             "id":self.id,
             "name":self.name,
             "quantity":f"{StockItemOp.get_quantity_per_date(self,datetime.datetime.now()):,.1f}",
             "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
-            "updatedon":"N/A",
+            "updatedon":datetime.combine(self.updated_on, datetime.now(timezone('Africa/Nairobi')).time()).strftime('%H:%M %p') if self.updated_on is not None else "N/A"
         }
 
 class SupplierOp(Supplier, Base):
@@ -6654,7 +6661,7 @@ class StockTransactionOp(StockTransaction, Base):
             .order_by(StockTransaction.transaction_date.desc()).all()
 
     def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):
-        return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).first()
+        return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).order_by(StockTransaction.transaction_date.asc()).first()
 
     def fetch_transactions_by_item_id(item_id,date_filter_obj):
         # return StockTransaction.query.filter_by(item_id=item_id).filter(func.date(StockTransaction.transaction_date) == date_filter).order_by(StockTransaction.transaction_date.desc()).all()

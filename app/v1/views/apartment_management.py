@@ -320,6 +320,15 @@ class StockModule(Resource):
 
             return redirect(url_for('api.index'))
 
+
+        tts = ItemOp.fetch_all_items()
+        for tt in tts:
+            tt_obj = StockItemOp.fetch_an_item_by_name(tt.name)
+            if tt_obj:
+                continue
+            new_item = StockItemOp(tt.name,"",0.0,current_user.id,current_user.company.id)
+            new_item.save()
+
         props = fetch_all_apartments_by_user(current_user)
         perm = get_permissions(current_user)
 
@@ -12284,7 +12293,7 @@ class StockItems(Resource):
             user_dict = {
                 "id":item_obj.id,
                 "name":item_obj.name,
-                "qty":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now),
+                "qty":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now()),
                 "bprice":f"{StockItemOp.get_weighted_average_buying_price(item_obj):,.1f}",
                 "sprice":f"{item_obj.selling_price:.1f}",
             }
@@ -12293,7 +12302,7 @@ class StockItems(Resource):
         if target == "price-stock":
             item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(request.args.get("id")))
             item_dict = {
-                "quantity":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now),
+                "quantity":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now()),
                 "price":f"{item_obj.selling_price:.1f}"
             }
             return [item_dict]

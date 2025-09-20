@@ -12574,7 +12574,7 @@ class StockTakes(Resource):
             from datetime import date as dt
             s_date = dt.fromisoformat(sdate)
         except:
-            return []
+            return [[],None]
 
         print("Date  :",s_date)
 
@@ -12590,7 +12590,7 @@ class StockTakes(Resource):
 
         if not current_stocktake_obj:
             print("kipsunya")
-            return items
+            return [[],None]
 
         date_stocktake_obj = StockTakeOp.fetch_stocktake_by_company_id_by_date(current_user.company.id,s_date)
         print("Date one  :",date_stocktake_obj)

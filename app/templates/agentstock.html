@@ -3165,6 +3165,7 @@ function calculateDifference(expected, actual) {
 
 						renderStocktakeTemplate("allStocktakeTable",$("#stocktake-all-table")); //create table and replace ID
 						var t1 = runDataTableEditable("allStocktakeTable") // reBUILD datatable instance
+						console.log(response)
 						addStocktakeToTableEditable(response[0],t1) // pass data to the new table
 						$("#stocktakeId").val(response[1])
 						$("#stocktake-spinner").addClass("d-none") // complete the table update process

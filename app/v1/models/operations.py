@@ -6493,7 +6493,7 @@ class StockItemOp(StockItem, Base):
 
 
     def view(self):
-        from datetime import datetime, date
+        from datetime import datetime as dt
         from pytz import timezone
 
         return {
@@ -6502,7 +6502,7 @@ class StockItemOp(StockItem, Base):
             "quantity":f"{StockItemOp.get_quantity_per_date(self,datetime.datetime.now()):,.1f}",
             "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
-            "updatedon":datetime.combine(self.updated_on, datetime.now(timezone('Africa/Nairobi')).time()).strftime('%H:%M %p') if self.updated_on is not None else "N/A"
+            "updatedon":dt.combine(self.updated_on, dt.now(timezone('Africa/Nairobi')).time()).strftime('%H:%M %p') if self.updated_on is not None else "N/A"
         }
 
 class SupplierOp(Supplier, Base):

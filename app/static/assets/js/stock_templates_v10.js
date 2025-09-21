@@ -28,7 +28,7 @@ function addItemsToTable(data,table) {
 
         table.row.add([
             item.name,             // PNo
-            item.quantity,             // PNo
+            item.qty,             // PNo
             // '<button class="btn btn-success text-white update-request-button" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateRequestModal">View</button>',  // Remove button
             item.bprice,           // Name
             item.sprice,

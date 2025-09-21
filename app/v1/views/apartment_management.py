@@ -12333,9 +12333,11 @@ class StockItems(Resource):
 
                 opening_stock_transaction = StockTransactionOp.fetch_transaction_by_item_id_and_transaction_type(item_obj.id,"Opening Stock")
                 if not opening_stock_transaction:
+                    print("OH NANA")
                     opening_stock_transaction = StockTransactionOp(None,item_obj.id,"Opening Stock",valid_qty,valid_bprice,current_user.id,current_user.company.id)
                     opening_stock_transaction.save()
                 else:
+                    print("OH YEAH: ",valid_qty)
                     StockTransactionOp.update_price_per_unit(opening_stock_transaction,valid_bprice)
                     StockTransactionOp.update_quantity(opening_stock_transaction,valid_qty)
 

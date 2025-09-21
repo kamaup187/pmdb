@@ -41,6 +41,20 @@ def get_prev_month(month):
     else:
         prev_month = month - 1
     return prev_month
+
+
+def timezone_date(date_obj):
+    from pytz import timezone, UTC
+
+    if date_obj:
+        utc_dt = date_obj.replace(tzinfo=UTC)  # assume DB time is UTC
+        nairobi_dt = utc_dt.astimezone(timezone("Africa/Nairobi"))
+        updatedon = nairobi_dt.strftime('%d/%m/%Y %I:%M %p')
+    else:
+        updatedon = "N/A"
+
+    return updatedon
+
 class Base():
     """base class"""
     def save(self):
@@ -6500,9 +6514,10 @@ class StockItemOp(StockItem, Base):
             "id":self.id,
             "name":self.name,
             "quantity":f"{StockItemOp.get_quantity_per_date(self,datetime.datetime.now()):,.1f}",
+            "qty":StockItemOp.get_quantity(self),
             "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
-            "updatedon":dt.combine(self.updated_at, dt.now(timezone('Africa/Nairobi')).time()).strftime('%d/%m/%Y %H:%M %p') if self.updated_at is not None else "N/A"
+            "updatedon":timezone_date(self.updated_at)
         }
 
 class SupplierOp(Supplier, Base):

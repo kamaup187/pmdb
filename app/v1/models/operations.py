@@ -6446,7 +6446,7 @@ class StockItemOp(StockItem, Base):
     def get_quantity(self):
         return db.session.query(db.func.sum(StockTransaction.quantity)).filter(
             StockTransaction.item_id == self.id,
-            StockTransaction.transaction_type.in_(['Opening Stock','Stocktake Adjustments','Purchase', 'Sale', 'Damage'])
+            StockTransaction.transaction_type.in_(['Opening Stock','Purchase', 'Sale', 'Damage'])
         ).scalar() or 0
 
     def get_quantity_per_date(self, date_filter_obj):
@@ -6465,7 +6465,7 @@ class StockItemOp(StockItem, Base):
             .filter(
                 StockTransaction.item_id == self.id,
                 StockTransaction.transaction_type.in_([
-                    'Opening Stock','Stocktake Adjustments','Purchase','Sale','Damage'
+                    'Opening Stock','Purchase','Sale','Damage'
                 ]),
                 StockTransaction.transaction_date >= start_of_day,
                 StockTransaction.transaction_date <  end_of_day
@@ -6481,7 +6481,7 @@ class StockItemOp(StockItem, Base):
         # Query for purchase and opening stock transactions
         transactions = db.session.query(StockTransaction)\
             .filter_by(item_id=self.id, state=True)\
-            .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock','Stocktake Adjustments']))\
+            .filter(StockTransaction.transaction_type.in_(['Purchase', 'Opening Stock']))\
             .all()
 
         # for t in transactions:
@@ -6656,7 +6656,7 @@ class StockTransactionOp(StockTransaction, Base):
     
     def fetch_transactions_by_company_id(company_id,date_filter_obj,trn):
         if trn == "All":
-            trans_types = ['Opening Stock','Stocktake Adjustments','Purchase', 'Sale', 'Damage']
+            trans_types = ['Opening Stock','Purchase', 'Sale', 'Damage']
         else:
             trans_types = [trn]
 
@@ -6676,7 +6676,7 @@ class StockTransactionOp(StockTransaction, Base):
             .order_by(StockTransaction.transaction_date.desc()).all()
 
     def fetch_transaction_by_item_id_and_transaction_type(item_id, transaction_type):
-        return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).order_by(StockTransaction.transaction_date.asc()).first()
+        return StockTransaction.query.filter_by(item_id=item_id, transaction_type=transaction_type).order_by(StockTransaction.transaction_date.desc()).first()
 
     def fetch_transactions_by_item_id(item_id,date_filter_obj):
         # return StockTransaction.query.filter_by(item_id=item_id).filter(func.date(StockTransaction.transaction_date) == date_filter).order_by(StockTransaction.transaction_date.desc()).all()

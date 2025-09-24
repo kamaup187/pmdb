@@ -6713,7 +6713,7 @@ class StockTransactionOp(StockTransaction, Base):
             .filter(StockTransaction.transaction_date >= start, StockTransaction.transaction_date < end)\
             .order_by(StockTransaction.transaction_date.desc()).all()
 
-    def fetch_opening_transaction_by_item_id(item_id, date_filter_obj):
+    def fetch_opening_transaction_by_item_id(item_id, date_filter_obj,company_id):
 
         from datetime import datetime, date, time, timedelta
         # normalize to a date
@@ -6746,8 +6746,9 @@ class StockTransactionOp(StockTransaction, Base):
             return opening_stock
         
         latest_stocktake = StockTake.query.filter_by(
-            stocktake_type="closing"
-        ).order_by(StockTake.stocktake_date.desc()).first()
+            stocktake_type="closing",
+            company_id=company_id,
+        ).order_by(StockTake.id.desc()).first()
 
         if not latest_stocktake:
             print("not finding latest stock take obj")

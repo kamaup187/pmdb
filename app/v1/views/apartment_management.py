@@ -12965,8 +12965,9 @@ class BalanceStockReport(Resource):
         for item in stock_items:
             transactions = StockTransactionOp.fetch_transactions_by_item_id(item.id,s_date)
             try:
-                opening_stock_qty = round(sum(t.quantity for t in [StockTransactionOp.fetch_opening_transaction_by_item_id(item.id,s_date)]),2)
+                opening_stock_qty = round(sum(t.quantity for t in [StockTransactionOp.fetch_opening_transaction_by_item_id(item.id,s_date,current_user.company.id)]),2)
             except:
+                print("EXCEPTION BLOCK")
                 opening_stock_qty = 0.0
 
             # opening_stock_qty = sum(t.quantity for t in transactions if t.transaction_type == 'Opening Stock')

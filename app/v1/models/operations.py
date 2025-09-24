@@ -6732,6 +6732,7 @@ class StockTransactionOp(StockTransaction, Base):
         # Check if date is tomorrow or later
         is_future = date_only >= tomorrow
         if is_future:
+            print("failing at date check")
             return None
 
         opening_stock = StockTransaction.query.filter_by(
@@ -6741,6 +6742,7 @@ class StockTransactionOp(StockTransaction, Base):
                 .order_by(StockTransaction.transaction_date.desc()).first()
 
         if opening_stock:
+            print("returning opening stock")
             return opening_stock
         
         latest_stocktake = StockTake.query.filter_by(
@@ -6748,6 +6750,7 @@ class StockTransactionOp(StockTransaction, Base):
         ).order_by(StockTake.stocktake_date.desc()).first()
 
         if not latest_stocktake:
+            print("not finding latest stock take obj")
             return None
 
         closing_stock = StockTransaction.query.filter_by(
@@ -6757,6 +6760,7 @@ class StockTransactionOp(StockTransaction, Base):
         ).order_by(StockTransaction.transaction_date.desc()).first()
 
         if not closing_stock:
+            print("not finding closing stock take obj of stocktake id ",latest_stocktake.id)
             return None
         
         opening_stock = StockTransactionOp(
@@ -6770,6 +6774,7 @@ class StockTransactionOp(StockTransaction, Base):
         )
         opening_stock.save()
         StockTransactionOp.update_date(opening_stock,date_filter_obj)
+        print("created opening stocks with stocktake id ",latest_stocktake.id)
 
         return opening_stock
 

@@ -417,10 +417,10 @@ class StockModule(Resource):
 
             if transactions:
                 total_quantity_sold = sum(t.quantity * -1 for t in transactions)  # Invert negative quantity
-                total_amount_sold = sum(t.quantity * t.price_per_unit * -1 for t in transactions)
+                total_amount_sold_alt = sum(t.quantity * t.price_per_unit * -1 for t in transactions)
                 sales_data[item.id] = {
                     "total_quantity_sold": total_quantity_sold,
-                    "total_amount_sold": total_amount_sold,
+                    "total_amount_sold": total_amount_sold_alt,
                     "item_name": item.name
                 }
 

@@ -6514,7 +6514,7 @@ class StockItemOp(StockItem, Base):
             "id":self.id,
             "name":self.name,
             "quantity":f"{StockItemOp.get_quantity_per_date(self,datetime.datetime.now()):,.1f}",
-            "qty":StockItemOp.get_quantity(self),
+            # "qty":StockItemOp.get_quantity(self),
             "bprice":f"{StockItemOp.get_weighted_average_buying_price(self):,.1f}",
             "sprice":f"{self.selling_price:.1f}",
             "updatedon":timezone_date(self.updated_at)

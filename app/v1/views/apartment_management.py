@@ -371,8 +371,8 @@ class StockModule(Resource):
 
 
             # Calculate stock balance
-            # stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
+            # stock_balance = round(StockItemOp.get_quantity(item),2)
 
             # Calculate weighted average buying price (only for purchases and opening stock)
             purchase_transactions = [t for t in transactions if t.transaction_type in ['Purchase', 'Opening Stock']]
@@ -399,8 +399,8 @@ class StockModule(Resource):
             #     .all()
 
             # Calculate stock balance for this item
-            # stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
-            stock_balance = round(StockItemOp.get_quantity(item),2)
+            stock_balance = round(StockItemOp.get_quantity_per_date(item,datetime.now()),2)
+            # stock_balance = round(StockItemOp.get_quantity(item),2)
             total_stock_remaining += stock_balance if stock_balance > 0 else 0  # Avoid negative totals
 
         stock = f"{len(items):,.0f} items"
@@ -12296,7 +12296,7 @@ class StockItems(Resource):
                 "id":item_obj.id,
                 "name":item_obj.name,
                 "quantity":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now()),
-                "qty":StockItemOp.get_quantity(item_obj),
+                # "qty":StockItemOp.get_quantity(item_obj),
                 "bprice":f"{StockItemOp.get_weighted_average_buying_price(item_obj):,.1f}",
                 "sprice":f"{item_obj.selling_price:.1f}",
             }
@@ -12306,7 +12306,7 @@ class StockItems(Resource):
             item_obj = StockItemOp.fetch_an_item_by_id(get_identifier(request.args.get("id")))
             item_dict = {
                 "quantity":StockItemOp.get_quantity_per_date(item_obj,datetime.datetime.now()),
-                "qty":StockItemOp.get_quantity(item_obj),
+                # "qty":StockItemOp.get_quantity(item_obj),
                 "price":f"{item_obj.selling_price:.1f}"
             }
             return [item_dict]

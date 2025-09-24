@@ -792,7 +792,7 @@ var accountDataTableTemplate = `
                                         
                                         <div class="mb-3">
                                             <label for="item-update-qty" class="form-label">Update quantity</label>
-                                            <input type="text" class="form-control" id="item-update-qty" value="${obj.qty}">
+                                            <input type="text" class="form-control" id="item-update-qty" value="${obj.quantity}">
                                         </div>
 
                                         <div class="mb-3">
@@ -832,7 +832,7 @@ var accountDataTableTemplate = `
                                         
                                         <div class="mb-3">
                                             <label for="" class="form-label">Update quantity</label>
-                                            <input type="text" class="form-control" id="" value="${obj.qty}" disabled>
+                                            <input type="text" class="form-control" id="" value="${obj.quantity}" disabled>
                                         </div>
 
                                         <div class="mb-3">

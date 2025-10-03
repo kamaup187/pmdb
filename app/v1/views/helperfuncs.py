@@ -1143,6 +1143,13 @@ def logo(co):
             fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
             letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
 
+        elif str_name_company == "TURNSTILE":
+            ##################################################
+            logopath = "../static/img/logos/turn/l-logo.png"
+            mobilelogopath = "../static/img/logos/turn/s-logo.png"
+            fulllogopath = "../static/img/logos/kiotapay/full-logo.jpg"
+            letterhead = "../static/img/logos/kiotapay/letterhead.jpg"
+
         elif str_name_company == "SIAN REALTORS":
             ##################################################
             logopath = "../static/img/logos/sian/l-logo.png"

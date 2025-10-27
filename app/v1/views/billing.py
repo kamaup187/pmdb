@@ -437,13 +437,13 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        cl = CompanyOp.fetch_company_by_name("Merit Properties Limited")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
             clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+            cl = CompanyOp.fetch_company_by_name("Merit Properties Limited")
             if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
@@ -453,7 +453,7 @@ class ClientBilling(Resource):
         for c in clients:
             print("printing clients",c)
             if not c.bills:
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                 new_month_bill.save()
             else: 
                 result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -464,14 +464,14 @@ class ClientBilling(Resource):
                 if current_month_bill:
                     # pass
                     ClientBillOp.delete(current_month_bill)
-                    new_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                     new_month_bill.save()
                 else:
                     try:
                         ClientBillOp.delete(current_month_bill)
                     except:
                         pass
-                    current_month_bill = ClientBillOp(timenow.year,timenow.month,2000.0,0.0,0.0,0.0,0.0,2000.0,c.id)
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,7500.0,0.0,0.0,0.0,0.0,7500.0,c.id)
                     current_month_bill.save()
 
         if not current_month_bill:
@@ -537,7 +537,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name("Vintage Residence Limited")
+        comm = CompanyOp.fetch_company_by_name("Merit Properties Limited")
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 

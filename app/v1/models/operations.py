@@ -4510,7 +4510,7 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                             payments += pp.amount
                     return f'{payments:,.1f}'
                 else:
-                    print("no segregated payments")
+                    # print("no segregated payments")
                     # return f'{self.tenant.deposits.total_paid:,.1f}' if self.tenant.deposits.total_paid else 0.0
                     return 0.0
             return 0.0

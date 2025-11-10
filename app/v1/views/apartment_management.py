@@ -555,10 +555,100 @@ class Index(Resource):
 
 
         # cdds = current_user.company.cbids
+        # print("nyaunya")
         # for cid in cdds:
-        #     if cid.post_date.year == 2023:
-        #         print(" deleting chhoooypt COMPANY: ",cid.company.name," ",cid.post_date.month,"/",cid.post_date.year)
-        #         CtoBop.delete(cid)
+        #     if cid.status == "claimed":
+        #         continue
+        #     elif cid.status == "archived":
+        #         continue
+        #     else:
+        #         print(" showing chhoooypt COMPANY: ",cid.company.name," ",cid.post_date.month,"/",cid.post_date.year)
+        #         # CtoBop.delete(cid)
+
+
+        #         com = CompanyOp.fetch_company_by_id(121)
+        #         props = com.props
+
+        #         prop = None
+        #         rbill_ref_num = cid.bill_ref_num
+
+
+        #         r1 = rbill_ref_num.replace(" ","") if rbill_ref_num else ""
+                
+        #         if r1:
+        #             r2 = r1.upper()
+        #         else:
+        #             r2 = rbill_ref_num
+
+        #         bill_ref_num = r2.replace("#","")
+
+        #         if bill_ref_num:
+
+        #             if bill_ref_num.startswith("TNT"):
+        #                 clean_ref = bill_ref_num.replace("TNT", "")
+        #                 tenant_obj = TenantOp.fetch_tenant_by_id(clean_ref)
+        #             else:
+        #                 tenant_obj = TenantOp.fetch_tenant_by_uid(bill_ref_num)
+        #         else:
+        #             tenant_obj = None
+
+        #         if tenant_obj:
+        #             target_house = check_house_occupied(tenant_obj)[1]
+        #             if target_house:
+        #                 prop = target_house.apartment
+        #         else:
+        #             target_house = None
+
+        #         if not target_house:
+
+        #             print(f"SIRENGA MPESA DATA JUST IN from {bill_ref_num}")
+
+        #             for prp in props:
+        #                 for house in prp.houses:
+        #                     n = name_standard(house.name)
+        #                     if n == bill_ref_num:
+        #                         prop = house.apartment
+        #                         target_house = house
+        #                         break
+
+        #         if not target_house:
+        #             print(f"SIRENGA DATA did not find house from {bill_ref_num}")
+
+        #         propid = prop.id if prop else None
+
+        #         dict_array = []
+
+        #         if prop:
+        #             payperiod = prop.billing_period
+
+        #             dict_obj = {
+        #             "housename":target_house.name,
+        #             "amount":cid.trans_amnt,
+        #             "date":"",
+        #             "ref":cid.trans_id,
+        #             "desc":"",
+        #             "comment":""
+        #             }
+
+        #             dict_array.append(dict_obj)
+
+        #             uploadsjob2 = q.enqueue_call(
+        #                 func=read_payments_excel, args=(dict_array,payperiod,propid,1,cid.id,), result_ttl=5000
+        #             )
+
+        #             CtoBop.update_status(cid,"claimed")
+
+        #             # sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} captured automatically",sms_phone_number_formatter("0716674695"))
+
+
+        #         else:
+        #             # sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",sms_phone_number_formatter("0716674695"))
+        #             # sms_sender("Sirenga Investments Ltd",f"Payment ({trans_id}) with indicated house number {bill_ref_num} not captured automatically",sms_phone_number_formatter("0711896925"))
+
+        #             print(f"Payment ({cid.trans_id}) with indicated house number {bill_ref_num} not captured automatically")
+
+        #         # auto_consume_ctob2(ctob_obj)
+                
         
         # # import pdb; pdb.set_trace()
 

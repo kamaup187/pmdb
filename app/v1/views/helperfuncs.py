@@ -14951,6 +14951,7 @@ def name_standard(name):
         n1 = name.replace(" ","")
         n2 = n1.replace(".","")
         n3 = n2.upper()
+        # n4 = n3.replace("#","")
     except:
         n3 = name
     return n3

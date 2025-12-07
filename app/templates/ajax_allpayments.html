@@ -1600,7 +1600,8 @@
       url: "{{ url_for('api.receipt') }}",
       type: "get",
       data: {
-            payid: $("#payment_identifier").text()
+            payid: $("#payment_identifier").text(),
+            date: $("#receiptmonthpicker").val(),
           },
       success: function(response) {
         $("#receipt-bed").html(response); 

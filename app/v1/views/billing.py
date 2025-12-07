@@ -6173,6 +6173,7 @@ class Receipt(Resource):
 
 
         pay_id = request.args.get("payid")
+        date_target = request.args.get("date")
 
         payment_obj = PaymentOp.fetch_payment_by_id(pay_id)
         db.session.expire(payment_obj)
@@ -6222,6 +6223,8 @@ class Receipt(Resource):
             receiptno = payment_obj.id
 
         prop = payment_obj.apartment
+
+        rlink3 = f"/printreceipt/{payment_obj.id}?target=all&date={date_target}" if date_target else f"/printreceipt/{payment_obj.id}?target=all"
 
         address = None
 
@@ -6318,7 +6321,7 @@ class Receipt(Resource):
             depbalance=depbal,
             rlink=f"/printreceipt/{payment_obj.id}",
             rlink2=f"/printreceipt/{payment_obj.id}?target=combined",
-            rlink3=f"/printreceipt/{payment_obj.id}?target=all",
+            rlink3=rlink3,
             chargetype=payment_obj.payment_name,
             receiptno=receiptno,
             refnum=payment_obj.ref_number,

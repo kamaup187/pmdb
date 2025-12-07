@@ -66,12 +66,15 @@ api.add_resource(ViewClients,"/clients")
 api.add_resource(AdminCreateAgent,"/add/admincreateagent")
 api.add_resource(Index,"/index")
 api.add_resource(IndexV2,"/v2/index")
+api.add_resource(AdminPanel,"/v2/admin")
 api.add_resource(SmsStats,"/smsstats")
 api.add_resource(Dashboard,"/dashboard")
 
 api.add_resource(MonitorActivity,"/monitor/activityy")
 api.add_resource(FetchClients,"/fetch/clientss")
 api.add_resource(Clients,"/fetch/clients")
+api.add_resource(V2Clients,"/v2/fetch/clients")
+
 api.add_resource(FetchAdminStats,"/fetch/admins/stats")
 
 api.add_resource(PropData,"/fetch/propdata")

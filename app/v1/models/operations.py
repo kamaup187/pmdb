@@ -336,6 +336,9 @@ class CompanyOp(Company,Base):
     def view(self):
         return {
             "id": self.id,
+            "code": self.id,
+            "client": self.name,
+            "status": '<span class="text-success">Active</span' if self.active else '<span class="text-danger">Inactive</span',
             "delid": "del" + str(self.id),
             "name": self.name,
             "users": len(CompanyOp.view_users(self)),

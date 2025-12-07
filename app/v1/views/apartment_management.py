@@ -242,6 +242,23 @@ class IndexV2(Resource):
             user_logged_in=current_user
             ))
 
+class AdminPanel(Resource):
+    @login_required
+    def get(self):
+        props = fetch_all_apartments_by_user(current_user)
+        perm = get_permissions(current_user)
+        return Response(render_template(
+            "adminindex2.html",
+            co="set",
+            properties=props,
+            branches=[],
+            pendingcollections= f'Kes 0.0',
+            cashintransit= f'Kes 0.0',
+            totalbankings= f'Kes 0.0',
+            totaltransfers=f'Kes 0.0',
+            permissions=perm,
+            user_logged_in=current_user
+            ))
 class StockModule(Resource):
     def get(self):
 

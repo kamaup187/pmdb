@@ -69,6 +69,41 @@ function updateFloatDataTable(data,table) {
     table.draw();
 }
 
+
+function addClientsToTable(data,table) {
+    // Assuming data is an array of objects
+    // var table = $('#primaryData').DataTable();
+
+    if (!table) {
+        console.error("Table is not initialized");
+        return;
+    }
+
+    // Clear the existing data
+    table.clear();
+
+    // Add new data
+    data.forEach(function(item) {
+
+        table.row.add([
+            item.num,
+            item.client,             // PNo
+            item.code,             // PNo
+            item.date,           // Name
+            item.status,
+            item.props,        // Region
+            // Branch
+            item.users,        // Region
+            '<button class="btn app-button-danger updateClient" data-id="' + item.id + '" data-bs-toggle="modal" data-bs-target="#updateClientModal"><i class="feather-18 feather-bold pb-1" data-feather="chevrons-right"></i></button>',  // Remove button
+
+        ]);
+    });
+
+    // Draw the updated table
+    table.draw();
+    feather.replace();
+}
+
 function updateUserDataTable(data,table) {
     table.clear();
     data.forEach(function(item) {
@@ -193,6 +228,28 @@ var roleDataTableTemplate = `
     </tbody>
 </table>
 `
+
+var clientsTableTemplate = `
+<table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
+    <thead class="custom-header">
+        <tr>
+            <th class="fw-bold">#</th>
+            <th class="fw-bold">Client</th>
+            <th class="fw-bold">Code</th>
+            <th class="fw-bold">Date</th>
+            <th class="fw-bold">Status</th>
+            <th class="fw-bold">Properties</th>
+            <th class="fw-bold">Users</th>
+            <th class="fw-bold">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate dynamically -->
+    </tbody>
+</table>
+
+`
+
 var userDataTableTemplate = `
 <table id="primaryData" class="table shadow table-bordered table-bordered-rows table-striped mb-1" width="100%" cellspacing="0">
     <thead class="custom-header">
@@ -796,6 +853,45 @@ var roleUpdateForm = (roleobj,roles) => {
                         }
 
                         };
+
+
+    var clientUpdateForm = (obj) => {
+
+        const statusOptions = `
+            <option value="Yes"  ${obj.isActive === "Yes"  ? 'selected' : ''}>Yes</option>
+            <option value="No"   ${obj.isActive === "No"   ? 'selected' : ''}>No</option>
+        `.trim();
+
+        
+        return `
+    
+        
+        <form class="settings-form">
+            
+            <div class="mb-3">
+                <label for="item-update-name" class="form-label">Client name<span class="ms-2" data-bs-container="body" data-bs-toggle="popover" data-bs-trigger="hover focus"  data-bs-placement="top" data-bs-content="Full name"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-info-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588z"/>
+                <circle cx="8" cy="4.5" r="1"/>
+                </svg></span></label>
+                <input type="text" class="form-control" id="item-update-name" value="${obj.name}" required>
+            </div>
+
+             <div class="mb-3">
+                <label for="client-update-status" class="form-label">Select status</label>
+                <select class="form-select" id="client-update-status">
+                    <option selected disabled value="">Select status</option>
+                    ${statusOptions}
+                </select>
+            </div>
+
+            <input type="hidden" class="form-control" id="client-update-id" value="${obj.id}">
+
+            <button type="button" id="update-client-btn" class="btn app-btn-primary" >Submit</button>
+        </form>
+    
+    `;
+        };
     
 
 var readingTemplate = `
@@ -1221,6 +1317,84 @@ var branchTemplate = `
     </div><!--//tab-pane-->
 
 </div>
+
+`
+
+var clientsTemplate = `
+		
+<div class="row g-3 mb-4 align-items-center justify-content-between">
+    <div class="col-auto">
+        <h1 class="app-page-title mb-0">Client List</h1>
+    </div>
+
+    <div class="col-auto">
+        <span type="button" class="nav-icon home-btn">
+            <i class="bold-icon" data-feather="x" style="width: 36px; height: 36px;"></i>
+        </span>
+    </div>
+</div>
+
+<div class="col-12 row mb-2">
+    <div class="col-auto">
+        <div class="page-utilities">
+            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                <div class="col-auto">						    
+                    <a class="btn app-btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                        <i class="pb-1" data-feather="plus" style="width: 16px; height: 16px;"></i>
+                        Add new client
+                    </a>
+                </div>
+            </div><!--//row-->
+        </div><!--//table-utilities-->
+    </div><!--//col-auto-->
+</div><!--//row-->
+
+
+<nav id="balances-table-tab" class="balances-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+<a class="flex-sm-fill text-sm-center nav-link active" id="balances-all-tab" data-bs-toggle="tab" href="#balances-all" role="tab" aria-controls="balances-all" aria-selected="true">Client list table</a>
+</nav>
+
+
+
+<div class="tab-content" id="balances-table-tab-content">
+    <div class="col-12 row mb-3">
+        <div class="col-auto">
+            <div class="page-utilities">
+                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                    <div class="col-auto">						    
+                        <a class="btn btn-success text-white clients-btn" href="#">
+                            <i class="pb-1" data-feather="eye" style="width: 16px; height: 16px;"></i>
+                            Show clients
+                        </a>
+                    </div>
+                </div><!--//row-->
+            </div><!--//table-utilities-->
+        </div><!--//col-auto-->
+    </div><!--//row-->
+
+    <div id="clients-spinner" class="d-flex justify-content-center d-none">
+        <div class="spinner-border text-success m-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="tab-pane fade show active" id="balances-all" role="tabpanel" aria-labelledby="balances-all-tab">
+        <div class="app-card app-card-requests-table mb-5">
+            <div class="app-card-body">
+                <div class="row">
+                    <div class="col-lg-12 no-padding">
+                        <div id="clients-all-table" class="ps-4 pe-4 table-responsive">
+                        </div>
+                    </div>
+                </div>
+
+            </div><!--//app-card-body-->		
+        </div><!--//app-card-->
+    </div><!--//tab-pane-->
+</div><!--//tab-content-->
+
+
+
 
 `
 

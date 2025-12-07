@@ -956,7 +956,39 @@ def run_company_data():
     set_sphone("THE OAKS",0.0,"0740570117",2000.0) #20
     set_sphone("SIAN REALTORS",0.0,"0716674695",0.0) #19
 
+COMPANY_FOLDER_MAP = {
+    #Ramata Greens Management Ltd
+    #S & P Realtors
+    #SIAN REALTORS
+    #7EDGE DEVELOPERS & MANAGERS
 
+
+    # "Sirenga Investments Ltd": "sirenga",
+    # "Malibu Pharmacy Ltd":     "malibu",
+    # "Chaise River Properties": "chaise",
+    "Vista Own Services":      "vista",
+    "MULTIDIME AGENCIES": "multidime",
+    "MojaMbili Homes": "moja",
+    "Rikena Property Solutions": "rikena",
+    "Merit Properties Limited": "merit",
+    "colmar estate management": "colmar",
+    "Premier Realty": "premier",
+    "KEVMA REAL ESTATE": "kevma",
+    "Lesama Ltd": "lesama",
+    "TURNSTILE": "turnstile",
+    "Vintage Residence Limited": "vintage",
+    "ASTROL": "astrol"
+
+    # ... one line per company
+}
+
+def get_logo_paths(company_name: str):
+    folder = COMPANY_FOLDER_MAP.get(company_name.strip())
+    if not folder:
+        raise ValueError(f"Company branding not configured: {company_name}")
+    b = f"../static/img/logos/{folder}"
+    return { "logopath": f"{b}/l-logo.png", "mobilelogopath": f"{b}/s-logo.png",
+             "fulllogopath": f"{b}/full-logo.jpg", "letterhead": f"{b}/letterhead.jpg" }
 
 def logo(co):
     """set appropriate logos to respective companies"""
@@ -993,20 +1025,6 @@ def logo(co):
             fulllogopath = "../static/img/logos/rikena/full-logo.png"
             letterhead = "../static/img/logos/rikena/letterhead.jpg"
 
-        elif str_name_company == "SIFALINK ENTERPRISES":
-            ##################################################
-            logopath = "../static/img/logos/sifalink/l-logo.png"
-            mobilelogopath = "../static/img/logos/sifalink/s-logo.png"
-            fulllogopath = "../static/img/logos/sifalink/full-logo.png"
-            letterhead = "../static/img/logos/sifalink/letterhead.jpg"
-
-        elif str_name_company == "Thara Enterprises":
-            ####################################################
-            logopath = "../static/img/logos/thara/l-logo.png"
-            mobilelogopath = "../static/img/logos/thara/s-logo.png"
-            fulllogopath = "../static/img/logos/thara/full-logo.png"
-            letterhead = "../static/img/logos/thara/letterhead.jpg"
-
         elif str_name_company == "Grashar Property Care":
             ##################################################
             logopath = "../static/img/logos/grashar/l-logoo.png"
@@ -1014,43 +1032,12 @@ def logo(co):
             fulllogopath = "../static/img/logos/grashar/full-logo.png"
             letterhead = "../static/img/logos/grashar/letterhead.jpg"
 
-        elif str_name_company == "Greystar Properties":
-            #######################################################
-            logopath = "../static/img/logos/greystar/l-logo.png"
-            mobilelogopath = "../static/img/logos/greystar/s-logo.png"
-            fulllogopath = "../static/img/logos/greystar/full-logo.png"
-            letterhead = "../static/img/logos/greystar/letterhead.jpg"
-
-        elif str_name_company == "Nairuti & Associates":
-            ##################################################
-            logopath = "../static/img/logos/nairuti/l-logo.png"
-            mobilelogopath = "../static/img/logos/nairuti/s-logo.png"
-            fulllogopath = "../static/img/logos/nairuti/full-logo.png"
-            letterhead = "../static/img/logos/nairuti/letterhead.jpg"
-
-        elif str_name_company == "Ramata Greens Management Ltd":
-            ##################################################
-            logopath = "../static/img/logos/ramata/l-logo.png"
-            mobilelogopath = "../static/img/logos/ramata/s-logo.png"
-            fulllogopath = "../static/img/logos/ramata/full-logo.png"
-            letterhead = "../static/img/logos/ramata/letterhead.jpg"
-
         elif str_name_company == "Supersite Ltd":
             ##################################################
             logopath = "../static/img/logos/supersite/l-logo.png"
             mobilelogopath = "../static/img/logos/supersite/s-logo.png"
             fulllogopath = "../static/img/logos/supersite/full-logo.png"
             letterhead = "../static/img/logos/supersite/letterhead.jpg"
-        
-        elif str_name_company == "Latitude Properties":
-            #####################################################
-            coc = CompanyOp.fetch_company_by_name("Latitude Properties")
-            CompanyOp.update_sms_provider(coc,"Advanta")
-            ##################################################
-            logopath = "../static/img/logos/latitude/l-logo.png"
-            mobilelogopath = "../static/img/logos/latitude/s-logo.png"
-            fulllogopath = "../static/img/logos/latitude/full-logo.png"
-            letterhead = "../static/img/logos/latitude/letterhead.jpg"
 
         elif str_name_company == "Merit Properties Limited":
             coc = CompanyOp.fetch_company_by_name("Merit Properties Limited")
@@ -1084,13 +1071,6 @@ def logo(co):
             mobilelogopath = "../static/img/logos/new/sentom/s-logo.png"
             fulllogopath = "../static/img/logos/sentom/full-logo.png"
             letterhead = "../static/img/logos/sentom/letterhead.jpg"
-
-        elif str_name_company == "Rowam Properties Limited":
-            ##################################################
-            logopath = "../static/img/logos/rowam/l-logo.png"
-            mobilelogopath = "../static/img/logos/rowam/s-logo.png"
-            fulllogopath = "../static/img/logos/rowam/full-logo.png"
-            letterhead = "../static/img/logos/rowam/letterhead.jpg"
 
         elif str_name_company == "colmar estate management":
             ##################################################
@@ -1253,8 +1233,6 @@ def logo(co):
             letterhead = "../static/img/logos/greathomes/letterhead.jpg"
 
         elif str_name_company == "Sirenga Investments Ltd":
-            coc = CompanyOp.fetch_company_by_name("Sirenga Investments Ltd")
-            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/sirenga/l-logo.png"
             mobilelogopath = "../static/img/logos/sirenga/s-logo.png"
@@ -1262,8 +1240,6 @@ def logo(co):
             letterhead = "../static/img/logos/sirenga/letterhead.jpg"
 
         elif str_name_company == "Malibu Pharmacy Ltd":
-            coc = CompanyOp.fetch_company_by_name("Malibu Pharmacy Ltd")
-            CompanyOp.update_sms_provider(coc,"Advanta")
             ##################################################
             logopath = "../static/img/logos/malibu/l-logo.png"
             mobilelogopath = "../static/img/logos/malibu/s-logo.png"

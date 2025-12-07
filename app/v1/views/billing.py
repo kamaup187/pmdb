@@ -4044,9 +4044,17 @@ class PrintActualReceipt(Resource):
             total_paid = 0.0
             receiptno = ""
 
+            date = request.args.get("date")
+
+            try:
+                billdate = date_formatter_alt(date)
+                pay_period = parse(billdate)
+            except:
+                pay_period = payment_obj.pay_period
+
+
             tenant_obj = payment_obj.tenant
             tenant_payments = tenant_obj.payments
-            pay_period = payment_obj.pay_period
 
             all_payments = fetch_current_billing_period_payments(pay_period,tenant_payments)
 
@@ -6225,7 +6233,7 @@ class Receipt(Resource):
         prop = payment_obj.apartment
 
         rlink3 = f"/printreceipt/{payment_obj.id}?target=all&date={date_target}" if date_target else f"/printreceipt/{payment_obj.id}?target=all"
-
+        rlink2 = f"/printreceipt/{payment_obj.id}?target=combined&date={date_target}" if date_target else f"/printreceipt/{payment_obj.id}?target=combined"
         address = None
 
         if payment_obj.apartment.company.name == "LaCasa":
@@ -6320,7 +6328,7 @@ class Receipt(Resource):
             balance=bal,
             depbalance=depbal,
             rlink=f"/printreceipt/{payment_obj.id}",
-            rlink2=f"/printreceipt/{payment_obj.id}?target=combined",
+            rlink2=rlink2,
             rlink3=rlink3,
             chargetype=payment_obj.payment_name,
             receiptno=receiptno,

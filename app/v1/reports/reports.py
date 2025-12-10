@@ -2411,21 +2411,23 @@ class CombinedReport(Resource):
         formatted_paidll = (f"{paidll:,.1f}")
 
         if apartment_obj.commission:
-            commission = paid_rent * apartment_obj.commission * 0.01
+            commission = renttotal * apartment_obj.commission * 0.01
             commission_percentage = f"({apartment_obj.commission} %)"
 
         else:
             commission = apartment_obj.int_commission
             commission_percentage = f"{commission} flat rate"
 
+        amount_payable = renttotal-commission
+
         formatted_commision = (f"{commission:,.1f}")
         formatted_loan = (f"{loan:,.1f}")
 
         ll=0.0
 
-        gross_amount = netrent + watertotal +garbagetotal + electricitytotal + securitytotal + servicetotal + depositptotal
+        gross_amount = amount_payable + watertotal + garbagetotal + electricitytotal + securitytotal + servicetotal + depositptotal
 
-        raw_netpay = gross_amount - commission - expenses_amount - paidll - depositrecovery
+        raw_netpay = gross_amount - expenses_amount - paidll - depositrecovery
         netpay = (f"{raw_netpay:,.1f}")
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
@@ -2471,6 +2473,7 @@ class CombinedReport(Resource):
             disp_water = disp_water,
 
             billtotal=tbill,
+            amount_payable = f"{amount_payable:,.1f}",
             amounttotal=tamount,
             rentpaid=f"{paid_rent:,.1f}",
             paidtotal=tpaid,

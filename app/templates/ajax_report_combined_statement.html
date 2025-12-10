@@ -224,10 +224,10 @@
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
-                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAYABLE</div>
+                  <div class="mb-1 text-gray-900">MGT FEES @ {{commission_percentage}} on rent paid</div>
 
-                <div class="text-gray-900 mb-1 pt-2">GROSS PAYABLE</div>
+                <div class="text-gray-900 mb-1 pt-2">AMOUNT PAYABLE</div>
                 <div class="hide mb-2">space</div>
 
                 <div class="mb-1">DEPOSIT PAID</div>
@@ -240,16 +240,16 @@
                 <div class="mb-1">PAID OWNER</div>
                 <div class="mb-1">DEPOSIT DECOVERY</div>
                 <div class="mb-1">OTHER RECOVERIES</div>
-                <div class="hide mb-1">space</div>
-                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <!-- <div class="hide mb-1">space</div>
+                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div> -->
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kes {{formatted_paidmgt}}</div>
-                  <div class="mb-1 text-gray-900">Kes {{formatted_paidll}}</div>
-                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{formatted_netrent}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{renttotal}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{commission}}</div>
+                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{amount_payable}}</div>
                 <div class="hide mb-1">space</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
@@ -259,8 +259,8 @@
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_paidll}}</div>
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_deprecovery}}</div>
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{expenses}}</div>
-                <div class="hide mb-1">space</div>
-                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div>
+                <!-- <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div> -->
 
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>
@@ -454,10 +454,10 @@
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
-                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAYABLE</div>
+                  <div class="mb-1 text-gray-900">MGT FEES @ {{commission_percentage}} on rent paid</div>
 
-                <div class="text-gray-900 mb-1 pt-2">GROSS PAYABLE</div>
+                <div class="text-gray-900 mb-1 pt-2">AMOUNT PAYABLE</div>
                 <div class="hide mb-2">space</div>
 
                 <div class="mb-1">DEPOSIT PAID</div>
@@ -470,16 +470,16 @@
                 <div class="mb-1">PAID OWNER</div>
                 <div class="mb-1">DEPOSIT DECOVERY</div>
                 <div class="mb-1">OTHER RECOVERIES</div>
-                <div class="hide mb-1">space</div>
-                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <!-- <div class="hide mb-1">space</div>
+                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div> -->
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kes {{formatted_paidmgt}}</div>
-                  <div class="mb-1 text-gray-900">Kes {{formatted_paidll}}</div>
-                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{formatted_netrent}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{renttotal}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{commission}}</div>
+                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{amount_payable}}</div>
                 <div class="hide mb-1">space</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
@@ -489,8 +489,8 @@
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_paidll}}</div>
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_deprecovery}}</div>
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{expenses}}</div>
-                <div class="hide mb-1">space</div>
-                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div>
+                <!-- <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div> -->
 
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>

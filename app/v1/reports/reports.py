@@ -2504,7 +2504,20 @@ class CombinedReport(Resource):
             reportdate = generate_exact_date(10,target_period.month,target_period.year).strftime("%d/%m/%Y"),
             printdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
-
+class UpdateCommissionPercentage(Resource):
+    @login_required
+    def post(self):
+        prop = request.form.get("prop")
+        commission_percentage = request.form.get("commission_percentage")
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(prop)
+        if not apartment_obj:
+            return {"status":"error","message":"Apartment not found."}, 404
+        try:
+            commission_value = validate_commission_input(commission_percentage)
+        except ValueError:
+            return {"status":"error","message":"Invalid commission percentage."}, 400
+        ApartmentOp.update_commission(apartment_obj, commission_value)
+        return {"status":"success","message":"Commission percentage updated successfully."}, 200
 class CustomCombinedReport(Resource):
     @login_required
     def get(self):

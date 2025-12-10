@@ -218,12 +218,22 @@
                                 <input class="form-control" id="seweragerate" type="text" placeholder="sewerage amount"
                                     value="{{group.seweragerate}}" />
                             </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="waterrate">Water standard charges</label>
 
-                                <input class="form-control" id="waterrate" type="text" placeholder="Standard charge amount"
-                                    value="{{group.watercharge}}" />
+                            <div class="col-md-6 row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="waterrate">Water standarding</label>
+
+                                    <input class="form-control" id="waterrate" type="text" placeholder="Standarding charge"
+                                        value="{{group.watercharge}}" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="elecrate">Elec standarding</label>
+
+                                    <input class="form-control" id="elecrate" type="text" placeholder="Standarding charge"
+                                        value="0.0" />
+                                </div>
                             </div>
+
                         </div>
 
                     </form>

@@ -225,7 +225,17 @@
             <div class="divjust-end mr-5">
               <div class="mr-4">
                   <div class="mb-1 text-gray-900">TOTAL RENT PAYABLE</div>
-                  <div class="mb-1 text-gray-900">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                  <div class="mb-1 text-gray-900" id="toggleAdjust">MGT FEES @ {{commission_percentage}} on rent paid</div>
+
+                  <script>
+                    $("#toggleAdjust").click(function(){
+                      $(".adjustCommission").removeClass("dispnone");
+                    });
+                  </script>
+
+                  <div class="adjustCommission dispnone">
+                    <input type="number" id="commission_percentage" value="{{commission_percentage}}">
+                  </div>
 
                 <div class="text-gray-900 mb-1 pt-2">AMOUNT PAYABLE</div>
                 <div class="hide mb-2">space</div>
@@ -243,14 +253,61 @@
                 <!-- <div class="hide mb-1">space</div>
                 <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div> -->
                 <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+                <div class="text-gray-900 mb-1 pt-2">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
                   <div class="mb-1 text-gray-900">Kes {{renttotal}}</div>
                   <div class="mb-1 text-gray-900">Kes {{commission}}</div>
+
+                  <div class="adjustCommission dispnone">
+                    <button class="btn btn-primary borderless text-white btn-sm has-margin-bottom" type="button" id="submitCommission" >submit</button>
+                  </div>
+
+                  <script>
+                    $("#submitCommission").click(function(){
+                      var commission_percentage = $("#commission_percentage").val();
+                      console.log("new commission percentage ",commission_percentage);
+
+                      $.ajax({
+                        url: '/update/commission',
+                        type: 'POST',
+                        data: {
+                          prop: $("#prop").val(),
+                          commission_percentage: commission_percentage,
+                        },
+                        success: function(response) {
+                          console.log("Commission percentage updated successfully.");
+                          $(".adjustCommission").addClass("dispnone");
+
+                          $("#preloader-btn").click();
+                            $.ajax({
+                                url: "/combined/report",
+                                type: "get",
+                                data: {
+                                  prop: $("#prop").val(),
+                                  month: $("#month").val(),
+                                  reporttype: $("#reporttype").val()
+                                },
+                                success: function (response) {
+                                    $("#reportbase").html(response)
+                                    $("#postloader-btn").click();
+
+                                }
+                            });
+
+                        },
+                        error: function(xhr, status, error) {
+                          console.error("Error updating commission percentage:", error);
+                          $(".adjustCommission").addClass("dispnone");
+
+                        }
+                      });
+                    });
+                  </script>
+
                   <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{amount_payable}}</div>
-                <div class="hide mb-1">space</div>
+                <div class="hide mb-2">space</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{watertotal}}</div>
@@ -263,7 +320,9 @@
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div> -->
 
                 <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>
+                <!-- <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{amount_payable}}</div> -->
+
+                <div class="mb-1 text-gray-900 overline underline pt-2">Kes {{netpay}}</div>
               </div>
             </div>
           </div>
@@ -473,14 +532,14 @@
                 <!-- <div class="hide mb-1">space</div>
                 <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div> -->
                 <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
+                <div class="text-gray-900 mb-1 pt-2">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
                   <div class="mb-1 text-gray-900">Kes {{renttotal}}</div>
                   <div class="mb-1 text-gray-900">Kes {{commission}}</div>
                   <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{amount_payable}}</div>
-                <div class="hide mb-1">space</div>
+                <div class="hide mb-2">space</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
                 <div class="mb-1">(<span class="text-success">+</span>) Kes {{watertotal}}</div>
@@ -493,7 +552,7 @@
                 <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div> -->
 
                 <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>
+                <div class="text-gray-900 mb-1 pt-2 overline underline">Kes {{netpay}}</div>
               </div>
             </div>
             </div>

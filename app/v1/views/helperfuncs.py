@@ -4602,7 +4602,8 @@ def validate_stock_input(arg):
     return int_amount
 
 def validate_commission_input(arg):
-    amount = arg.replace(',', '')
+    arg2 = arg.replace(',', '')
+    amount =arg2.strip('%')
     try:
         float_amount = float(amount)
     except:

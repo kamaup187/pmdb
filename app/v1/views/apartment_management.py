@@ -4818,6 +4818,7 @@ class Expenses(Resource):
         expense_type = request.form.get('exp_type')
         name = request.form.get('name')
         month = request.form.get('month')
+        trans_date = request.form.get('date')
         qty = request.form.get('qty')
         house = request.form.get('house')
         deposit = request.form.get('deposit')
@@ -4847,17 +4848,25 @@ class Expenses(Resource):
 
         amount = cost + labour
 
-        prop_obj = ApartmentOp.fetch_apartment_by_id(propid)
+        prop_obj = ApartmentOp.fetch_apartment_by_name(propid)
+        if not prop_obj:
+            prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
 
-        if not month:
-            expense_period = prop_obj.billing_period
-        else:
-            int_month = get_numeric_month(month)
-            # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
-            if current_user.company.name == "Adorable Properties":
-                expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+        if not trans_date:
+            if not month:
+                expense_period = prop_obj.billing_period
             else:
-                expense_period = generate_date_alt(int_month,2025) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+                int_month = get_numeric_month(month)
+                # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
+                if current_user.company.name == "Adorable Properties":
+                    expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+                else:
+                    expense_period = generate_date_alt(int_month,2025) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+        else:
+            # expense_period = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
+            datestring = date_formatter_alt(trans_date)
+            expense_period = parse(datestring)
+
        
         db.session.expire(prop_obj)
 

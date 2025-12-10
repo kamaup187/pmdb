@@ -4508,9 +4508,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 if self.tenant.deposits.payments:
                     # print("some payments exists for tenant: ",self.tenant.name)
                     payments = 0.0
+                    # nums = ["0117329382","0790156497","0714826089","0116017811","0724572260"]
                     for pp in self.tenant.deposits.payments:
                         # print(self.tenant.name, " ",pp.date.month, pp.date.year)
-                        # if self.tenant.name == "James  Mutheke":
+                        # if self.tenant.phone in nums:
                         #     DepositPaymentOp.update_date(pp,datetime.datetime.now())
                         if pp.date.month == self.month and  pp.date.year == self.year:
                             payments += pp.amount

@@ -38,9 +38,10 @@
           </div>
 
           <div class="ln-14 divjust-end">
-            <button id="ajaxbtnDownload" cla8ss="btn btn-success btn-sm">
+            <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
               <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
             </button>
+
             <script>
               feather.replace()
 
@@ -148,14 +149,14 @@
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
                       <td class="font-weight-bold text-right rent">{{renttotal}}</td>
                       <td class="font-weight-bold text-right rent">-</td>
-                      <td class="font-weight-bold text-right rent">-</td>
+                      <td class="font-weight-bold text-right rent">{{rentpaid}}</td>
                       <td class="font-weight-bold text-right water {{disp_water}}">{{watertotal}}</td>
                       <td class="font-weight-bold text-right garbage {{disp_garbage}}">{{garbagetotal}}</td>
                       <td class="font-weight-bold text-right electricity {{disp_electricity}}">{{electricitytotal}}</td>
                       <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                       <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
-                      <td class="font-weight-bold text-right deposit">-</td>
-                      <td class="font-weight-bold text-right deposit">-</td>
+                      <td class="font-weight-bold text-right deposit">{{depositptotal}}</td>
+                      <td class="font-weight-bold text-right deposit">{{depositdtotal}}</td>
 
                       <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                       <td class="font-weight-bold text-right">{{amounttotal}}</td>
@@ -165,6 +166,36 @@
                   </tfoot>
                 </table>
 
+          </div>
+
+            <div>
+            {%if expenselist%}
+            <div class="fs-65pc-none nobreak">
+              <div class="font-weight-bold mt-2">Deductions</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">Description</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="1" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses_amount_table}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
+            {%endif%}
           </div>
 
           <div class="divjust-end ln-16 mobile-malaysian nobreak">
@@ -193,38 +224,46 @@
 
             <div class="divjust-end mr-5">
               <div class="mr-4">
-                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
-                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
+                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
 
-                <div class="text-gray-900 mb-1">TOTALS</div>
+                <div class="text-gray-900 mb-1 pt-2">GROSS PAYABLE</div>
                 <div class="hide mb-2">space</div>
 
+                <div class="mb-1">DEPOSIT PAID</div>
+                <div class="mb-1">ELECTRICITY BILL</div>
+                <div class="mb-1">WATER BILL</div>
+                <div class="mb-1">GARBAGE AMOUNT</div>
 
+                <div class="hide mb-1">space</div>
 
-
-                <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}} on rent paid</div>
-
-                <div class="mb-1">OTHER DEDUCTIONS</div>
-                <div class="mb-1">TOTAL DEDUCTIONS</div>
+                <div class="mb-1">PAID OWNER</div>
+                <div class="mb-1">DEPOSIT DECOVERY</div>
+                <div class="mb-1">OTHER RECOVERIES</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div>
                 <div class="hide mb-2">space</div>
                 <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
 
               <div class="text-black">
-                <div class="mb-1 text-gray-900">Kshs {{formatted_paidmgt}}</div>
-                <div class="mb-1 text-gray-900">Kshs {{formatted_paidll}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{formatted_paidmgt}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{formatted_paidll}}</div>
+                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{formatted_netrent}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{watertotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{garbagetotal}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_paidll}}</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_deprecovery}}</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{expenses}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div>
 
-                <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
                 <div class="hide mb-2">space</div>
-
-                <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
-
-                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-
-                <div class="hide mb-2">space</div>
-
-                <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
+                <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>
               </div>
             </div>
           </div>
@@ -338,14 +377,14 @@
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
                   <td class="font-weight-bold text-right rent">{{renttotal}}</td>
                   <td class="font-weight-bold text-right rent">-</td>
-                  <td class="font-weight-bold text-right rent">-</td>
+                  <td class="font-weight-bold text-right rent">{{rentpaid}}</td>
                   <td class="font-weight-bold text-right water {{disp_water}}">{{watertotal}}</td>
                   <td class="font-weight-bold text-right garbage {{disp_garbage}}">{{garbagetotal}}</td>
                   <td class="font-weight-bold text-right electricity {{disp_electricity}}">{{electricitytotal}}</td>
                   <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
                   <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
-                  <td class="font-weight-bold text-right deposit">-</td>
-                  <td class="font-weight-bold text-right deposit">-</td>
+                  <td class="font-weight-bold text-right deposit">{{depositptotal}}</td>
+                  <td class="font-weight-bold text-right deposit">{{depositdtotal}}</td>
                   <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
                   <td class="font-weight-bold text-right">{{amounttotal}}</td>
                   <td class="text-right paidedit"> - </td>
@@ -356,6 +395,37 @@
                 </tr>
               </tfoot>
             </table>
+
+            <div>
+            {%if expenselist%}
+            <div class="fs-65pc-none nobreak">
+              <div class="font-weight-bold mt-2">Deductions</div>
+              <table class="table black table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="p-0">Description</th>
+                        <th class="p-0">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in expenselist%}
+                      <tr>
+                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0">{{ item['amount'] }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th colspan="1" class="squeeze">Total</th>
+                        <th class="squeeze">Kshs {{expenses_amount_table}}</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+            </div>
+            {%endif%}
+          </div>
+
             <!-- <div class="divjust-end ln-16 mobile-malaysian noprint"> -->
             <div class="divjust-end ln-16 mobile-malaysian nobreak">
               <div>
@@ -381,42 +451,51 @@
                 </div>
               </div>
   
-              <div class="divjust-end mr-5">
-                <div class="mr-4">
+
+            <div class="divjust-end mr-5">
+              <div class="mr-4">
                   <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
                   <div class="mb-1 text-gray-900">TOTAL RENT PAID TO OWNER</div>
 
-                  <div class="text-gray-900 mb-1">TOTALS</div>
-                  <div class="hide mb-2">space</div>
-  
-  
-  
-  
-                  <div class="mb-1 pt-2">MGT FEES @ {{commission_percentage}} on rent paid</div>
-  
-                  <div class="mb-1">OTHER DEDUCTIONS</div>
-                  <div class="mb-1">TOTAL DEDUCTIONS</div>
-                  <div class="hide mb-2">space</div>
-                  <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
-                </div>
-  
-                <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{formatted_paidmgt}}</div>
-                  <div class="mb-1 text-gray-900">Kshs {{formatted_paidll}}</div>
+                <div class="text-gray-900 mb-1 pt-2">GROSS PAYABLE</div>
+                <div class="hide mb-2">space</div>
 
-                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
-  
-                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-  
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="text-gray-900 mb-3 text-125 overline underline">Kshs {{netpay}}</div>
-                </div>
+                <div class="mb-1">DEPOSIT PAID</div>
+                <div class="mb-1">ELECTRICITY BILL</div>
+                <div class="mb-1">WATER BILL</div>
+                <div class="mb-1">GARBAGE AMOUNT</div>
+
+                <div class="hide mb-1">space</div>
+
+                <div class="mb-1">PAID OWNER</div>
+                <div class="mb-1">DEPOSIT DECOVERY</div>
+                <div class="mb-1">OTHER RECOVERIES</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">MGT FEES @ {{commission_percentage}} on rent paid</div>
+                <div class="hide mb-2">space</div>
+                <div class="text-gray-900 mb-3 text-125">NET PAYABLE</div>
               </div>
+
+              <div class="text-black">
+                  <div class="mb-1 text-gray-900">Kes {{formatted_paidmgt}}</div>
+                  <div class="mb-1 text-gray-900">Kes {{formatted_paidll}}</div>
+                  <div class="mb-1 text-gray-900 underline overline pt-2">Kes {{formatted_netrent}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{depositptotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{electricitytotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{watertotal}}</div>
+                <div class="mb-1">(<span class="text-success">+</span>) Kes {{garbagetotal}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_paidll}}</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{formatted_deprecovery}}</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{expenses}}</div>
+                <div class="hide mb-1">space</div>
+                <div class="mb-1">(<span class="text-danger">-</span>) Kes {{commission}}</div>
+
+                <div class="hide mb-2">space</div>
+                <div class="text-gray-900 mb-3 text-125 overline underline">Kes {{netpay}}</div>
+              </div>
+            </div>
             </div>
           {% endif %}
         </div>

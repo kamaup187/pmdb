@@ -4582,6 +4582,9 @@ def validate_input(arg):
         
     return float_amount
 
+def to_float(s):
+    return float(str(s).replace(',', ''))
+
 def validate_stock_input(arg):
     # print("VALIDATION STARTING....")
     # print("USER DATA >>> ",arg)

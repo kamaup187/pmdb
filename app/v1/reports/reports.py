@@ -2201,8 +2201,8 @@ class CombinedReport(Resource):
                 if bill.deposit_paid:
                     paidtotal -= bill.deposit_paid
 
-                depositptotal += bill_item['depositpaid']
-                depositdtotal += bill_item['depositdue']
+                depositptotal += bill_item['deposit-paid']
+                depositdtotal += bill_item['deposit-due']
 
 
                 # if total < 0:
@@ -2259,6 +2259,9 @@ class CombinedReport(Resource):
 
                 bbftotal += bill.arrears if bill.arrears > 0 else 0.0
                 paidtotal += bill.paid_amount
+
+                depositptotal += to_float(bill_item['deposit-paid'])
+                depositdtotal += to_float(bill_item['deposit-due'])
 
                 if bill.paidll:
                     paidll += bill.paidll
@@ -2353,12 +2356,49 @@ class CombinedReport(Resource):
         tpaid = (f"{paidtotal:,}")
         tbcf= (f"{bcftotal:,}")
 
+        # expenses = apartment_obj.expenses
+        # expenses_amount = 0.0
+
+        # for exp in expenses:
+        #     if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
+        #         expenses_amount += exp.amount
+
+
+        expense_list = []
+
         expenses = apartment_obj.expenses
         expenses_amount = 0.0
+        expenses_amount_table = 0.0
+        depositrecovery = 0.0
+        remittances = 0.0
+        
+
+        exceptions = ["deposit refund", "remittance"]
 
         for exp in expenses:
-            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type != "deposit_refund":
-                expenses_amount += exp.amount
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                if exp.expense_type == "deposit recovery":
+                    depositrecovery += exp.amount
+                else:
+                    expenses_amount += exp.amount
+
+                expenses_amount_table += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+
 
         loan = 0.0
 
@@ -2371,7 +2411,7 @@ class CombinedReport(Resource):
         formatted_paidll = (f"{paidll:,.1f}")
 
         if apartment_obj.commission:
-            commission = netrent * apartment_obj.commission * 0.01
+            commission = paid_rent * apartment_obj.commission * 0.01
             commission_percentage = f"({apartment_obj.commission} %)"
 
         else:
@@ -2383,7 +2423,9 @@ class CombinedReport(Resource):
 
         ll=0.0
 
-        raw_netpay = netrent - commission - expenses_amount - loan - ll - paidll
+        gross_amount = netrent + watertotal +garbagetotal + electricitytotal + securitytotal + servicetotal + depositptotal
+
+        raw_netpay = gross_amount - commission - expenses_amount - paidll - depositrecovery
         netpay = (f"{raw_netpay:,.1f}")
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
@@ -2430,10 +2472,13 @@ class CombinedReport(Resource):
 
             billtotal=tbill,
             amounttotal=tamount,
+            rentpaid=f"{paid_rent:,.1f}",
             paidtotal=tpaid,
             bcftotal=tbcf,
 
             expenses = f"{expenses_amount:,.1f}",
+            expenses_amount_table = f"{expenses_amount_table:,.1f}",
+            formatted_deprecovery = f"{depositrecovery:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             formatted_paidmgt=formatted_paidmgt,
@@ -2442,6 +2487,7 @@ class CombinedReport(Resource):
             commission_percentage=commission_percentage,
             netpay=netpay,
             bills=detailed_bills,
+            expenselist=expense_list,
             paging=page(detailed_bills),
             props=props,
             apartment_name=selected_apartment,

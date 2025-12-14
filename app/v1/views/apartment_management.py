@@ -4848,6 +4848,8 @@ class Expenses(Resource):
 
         amount = cost + labour
 
+        print("printinggg prodpidd", propid)
+
         prop_obj = ApartmentOp.fetch_apartment_by_name(propid)
         if not prop_obj:
             prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))

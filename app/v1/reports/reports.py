@@ -2394,6 +2394,7 @@ class CombinedReport(Resource):
                     ename = exp.name
 
                 exp_dict = {
+                    "id":exp.id,
                     "house":exp.house,
                     "name":ename,
                     "amount":exp.amount,

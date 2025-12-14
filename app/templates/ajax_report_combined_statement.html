@@ -1,6 +1,7 @@
 
 <span id="edit_bill_identifier" class="dispnone"></span>
 <span id="del_bill_identifier" class="dispnone"></span>
+<span id="del_expense_identifier" class="dispnone"></span>
 <span id="unique_bill_identifier" class="dispnone"></span>
 <!-- <span id="collapseid" class="dispnone">{{prop}}</span> -->
 <span id="filename" class="dispnone">{{prop}} {{timeline}} combined statement.pdf</span>
@@ -182,7 +183,7 @@
                     <tbody>
                       {% for item in expenselist%}
                       <tr>
-                        <td class="p-0">{{ item['name'] }}</td>
+                        <td class="p-0 btn-outline-primary delete-expense text-black" data-id="{{ item['id'] }}" data-toggle="modal" data-target="#discardExpenseModal">{{ item['name'] }}</td>
                         <td class="p-0">{{ item['amount'] }}</td>
                       </tr>
                       {% endfor %}
@@ -624,6 +625,30 @@
 </div>
 
 
+<div class="modal fade center-btn" id="discardExpenseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger text-xx" id="exampleModalLabel">Warning!</h5>
+      </div>
+      <div class="text-info expense-info"></div>
+
+      <!-- of <span id="invhouse"> loading...</span> -->
+
+      <div id="expense-confirmation" class="dispnone">
+        <div class="modal-body text-danger">Confirm to delete this record</div>
+        <span class="text-gray-700 small mb-2 mr-2 ml-2">This action cannot be <span class="text-danger">REVERSED</span> Continue?</span>
+      </div>
+
+      <div class="has-margin-bottom divbg mt-2">
+          <button id="delete-expense" type="button" class="btn btn-danger borderless text-white btn-sm has-margin-bottom">Delete</button>
+          <button type="button" class="btn btn-info btn-sm has-margin-bottom closemodal" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
   var rawIds = "{{ billids|safe }}";
   var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
@@ -862,6 +887,14 @@
 </script>
 
 <script>
+  $("#discardExpenseModal").on('shown.bs.modal', function(){
+    $("#expense-confirmation").removeClass("dispnone");
+    $(".expense-info").empty();
+  });
+
+</script>
+
+<script>
     
   $("#delete_payment").on('click',function(){   
     
@@ -894,6 +927,55 @@
         $("#invhouse").text("loading ...")
 
         $(".payment-info").html('<span class="text-danger font-weight-bold">Error deleting the bill');
+        }
+    });
+  });
+  
+  </script>
+
+
+  <script>
+			// Attach a click event to the button
+		$(document).on('click', '.delete-expense', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+      $("#del_expense_identifier").text(id)
+		});
+	</script>
+
+  <script>
+    
+  $("#delete-expense").on('click',function(){   
+    
+    $('#delete-expense').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>deleting...');
+    $("#invhouse").text($(this).text())
+    $.ajax({
+      url: "/expenses",
+      type: "POST",
+      data: {
+            propid: $("#prop").val(),
+            delid:$("#del_expense_identifier").text(),
+            run:"expensedelete"
+          },
+      success: function(response) {
+        $(".closemodal").click();
+        $(".expense-info").html("<span class='text-success'>Record deleted successfully</span>");  
+        $('#delete-expense').html('Discard !');
+        $("#invhouse").text("loading ...")
+
+        $(".modal-backdrop").remove();
+        $("#view_general").click();
+
+        // getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
+        
+      },
+      error: function(xhr) {
+        $("#expense-confirmation").addClass("dispnone");
+        $('#delete-expense').html('Discard !');
+        $("#invhouse").text("loading ...")
+
+        $(".expense-info").html('<span class="text-danger font-weight-bold">Error deleting record');
         }
     });
   });

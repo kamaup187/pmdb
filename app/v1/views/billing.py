@@ -3603,6 +3603,12 @@ class ReceivePayment(Resource):
                     update_paidll = curr_paidll + valid_amount
                     MonthlyChargeOp.update_paidll(specific_charge_obj,update_paidll)
 
+
+                    expense_obj = InternalExpenseOp("Paid owner: " + house_obj.name + "(" + tenant_obj.name + ")",pay_period_date,None,None,None,valid_amount,0.0,valid_amount,"","paid ll",prop.id,current_user.id)
+                    expense_obj.save()
+
+                    InternalExpenseOp.update_status(expense_obj,"completed")
+
                 db.session.expire(specific_charge_obj)
                 bala = specific_charge_obj.balance     
                 bala-=valid_amount

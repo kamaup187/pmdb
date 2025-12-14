@@ -2264,7 +2264,7 @@ class CombinedReport(Resource):
                 depositdtotal += to_float(bill_item['deposit-due'])
 
                 if bill.paidll:
-                    paidll += bill.paidll
+                    # paidll += bill.paidll
                     paidtotal -= bill.paidll
 
                 if bill.total_bill < 0:
@@ -2379,6 +2379,10 @@ class CombinedReport(Resource):
             if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
                 if exp.expense_type == "deposit recovery":
                     depositrecovery += exp.amount
+
+                elif exp.expense_type == "paid ll":
+                    paidll += exp.amount
+
                 else:
                     expenses_amount += exp.amount
 

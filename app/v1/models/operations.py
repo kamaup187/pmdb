@@ -4288,14 +4288,15 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         tids = []
 
         try:
-            if self.tenant.id in tids:
-                badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
-                return badge
-            elif self.paidll:
-                badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
-                return badge
-            else:
-                return decor_fig
+            return decor_fig
+            # if self.tenant.id in tids:
+            #     badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
+            #     return badge
+            # elif self.paidll:
+            #     badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
+            #     return badge
+            # else:
+            #     return decor_fig
         except:
             return decor_fig
 

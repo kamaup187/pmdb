@@ -16,6 +16,11 @@
     zoom: 87%;
   }
 </style>
+
+<style id="dynamicPrintStyle" type="text/css" media="print">
+  /* This will be overridden by JavaScript */
+</style>
+
  
   <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
   <div class="col-lg-12 noprint">
@@ -43,6 +48,11 @@
               <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
             </button>
 
+
+            <label for="printZoom">Print Zoom Level (%):</label>
+            <input type="range" id="printZoom" min="50" max="150" value="87" step="1">
+            <span id="zoomValue">87%</span>
+
             <script>
               feather.replace()
 
@@ -52,6 +62,33 @@
                 window.print()
               });
             </script>
+
+
+            <script>
+              const zoomInput = document.getElementById('printZoom');
+              const zoomValueDisplay = document.getElementById('zoomValue');
+              const dynamicStyle = document.getElementById('dynamicPrintStyle');
+
+              // Function to update the print zoom
+              function updatePrintZoom() {
+                const zoomLevel = zoomInput.value;
+                zoomValueDisplay.textContent = zoomLevel + '%';
+
+                // Update the print-only stylesheet
+                dynamicStyle.innerHTML = `
+                  body {
+                    zoom: ${zoomLevel}%;
+                  }
+                `;
+              }
+
+              // Initial update
+              updatePrintZoom();
+
+              // Update on input change (for slider: real-time; for number: on change)
+              zoomInput.addEventListener('input', updatePrintZoom);
+            </script>
+
             <span>Dated : <span class="text-black">{{reportdate}}</span></span>
           </div>
 

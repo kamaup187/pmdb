@@ -11626,9 +11626,9 @@ class ReconAccount(Resource):
             "num":num,
             "narration":"' ' ' ' ' ' Cheques & Payments"
         })
-
+        
+        index = 1
         for rc in target_recons:
-            index = 1
             if rc.transaction_type == "credit":
                 recon_obj = AppTransactionOp.view(rc)
                 num +=1
@@ -11655,9 +11655,9 @@ class ReconAccount(Resource):
             "num":num+1,
             "narration":"' ' ' ' ' ' Deposits & Credits"
         })
-                
+        
+        index = 1
         for rc in target_recons:
-            index = 1
             if rc.transaction_type == "debit":
                 recon_obj = AppTransactionOp.view(rc)
                 num +=1

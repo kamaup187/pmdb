@@ -11518,22 +11518,257 @@ class Floats(Resource):
             return f"Error :{e}"
     
 class ReconAccount(Resource):
+    def get(self):
+
+        from datetime import datetime, time
+        # target = request.args.get('target')
+        # if target == "generate":
+        recon_date = request.args.get('date')
+        recon_desc = request.args.get('desc')
+
+        tdate = datetime.strptime(recon_date, "%Y-%m").date()
+
+        account = request.form.get("account")
+        destination = request.form.get("destination")
+        # shiftstart = request.form.get("start")
+        # shiftend = request.form.get("end")
+
+        # begin_t = request.form.get("tstart")
+        # end_t = request.form.get("tend")
+
+        if not destination:
+            destination = "agent"
+
+        if not account:
+            account = "all"
+
+
+        if isinstance(tdate, datetime):
+            date_only = tdate.date()
+        else:
+            date_only = tdate
+
+        first_of_month = date_only.replace(day=1)
+        start = datetime.combine(first_of_month, time.min)
+
+        # Calculate 1st of next month
+        if first_of_month.month == 12:
+            first_of_next_month = first_of_month.replace(year=first_of_month.year + 1, month=1)
+        else:
+            first_of_next_month = first_of_month.replace(month=first_of_month.month + 1)
+
+        end = datetime.combine(first_of_next_month, time.min)
+
+        print("Start:", start)
+        print("End:  :", end)
+
+        str_day = start.day
+        str_year = start.year
+
+        timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
+        detailed_bills = []
+
+        recons = current_user.company.apptransactions
+        cumulative_balance = 0
+        target_recons = []
+
+        for recon in recons:
+            print("RECON BANK >>> ",recon.bank)
+            if recon.date >= start and recon.date <= end:
+                print("START >>> ",account)
+
+                if recon.transaction_category == "opening balance":
+                    continue
+                
+                if account == "all" or account is None:
+                    if destination == "owner":
+                        if recon.paid_ll:
+                            target_recons.append(recon)
+                    else:
+                        if not recon.paid_ll:
+                            target_recons.append(recon)
+                else: 
+                    if recon.bank:
+                        if account in recon.bank.lower():
+                            if destination == "owner":
+                                if recon.paid_ll:
+                                    target_recons.append(recon)
+                            else:
+                                if not recon.paid_ll:
+                                    target_recons.append(recon)
+
+        opening_balance_obj = AppTransactionOp.fetch_opening_balance_transaction_by_date(start, current_user.company.id)
+        num = 1
+        stored_ob = 0.0
+        if opening_balance_obj:
+            ob_dict = AppTransactionOp.view(opening_balance_obj)
+            stored_ob += opening_balance_obj.amount
+            ob_dict['num'] = num
+            ob_dict['narration'] = "Beginning balance"
+            ob_dict['date'] = ""
+            ob_dict['amount'] = ""
+            ob_dict['trans_type'] = ""
+            ob_dict['desc'] = ""
+            ob_dict['trans_category'] = ""
+            ob_dict['balance'] = opening_balance_obj.amount
+            detailed_bills.append(ob_dict)
+
+        num += 1
+
+        detailed_bills.append({
+            "num":num,
+            "narration":"' ' ' Cleared transactions"
+        })
+
+        num += 1
+
+        detailed_bills.append({
+            "num":num,
+            "narration":"' ' ' ' ' ' Cheques & Payments"
+        })
+
+        for rc in target_recons:
+            index = 1
+            if rc.transaction_type == "credit":
+                recon_obj = AppTransactionOp.view(rc)
+                num +=1
+                recon_obj['balance'] = cumulative_balance
+                recon_obj['balance'] -= rc.amount
+                recon_obj['num'] = num
+                recon_obj['index'] = index
+                cumulative_balance -= rc.amount
+                detailed_bills.append(recon_obj)
+                index += 1
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"' ' ' ' ' ' Total Cheques & Payments",
+            "amount": cumulative_balance,
+            "balance": cumulative_balance
+        })
+
+        stored_payments = cumulative_balance
+
+        cumulative_balance = 0.0
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"' ' ' ' ' ' Deposits & Credits"
+        })
+                
+        for rc in target_recons:
+            index = 1
+            if rc.transaction_type == "debit":
+                recon_obj = AppTransactionOp.view(rc)
+                num +=1
+                recon_obj['balance'] = cumulative_balance
+                recon_obj['balance'] += rc.amount
+                recon_obj['num'] = num
+                recon_obj['index'] = index
+                cumulative_balance += rc.amount
+                detailed_bills.append(recon_obj)
+                index += 1
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"' ' ' ' ' ' Total Deposits & Credits",
+            "amount": cumulative_balance,
+            "balance": cumulative_balance
+        })
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"' ' ' Total cleared transactions",
+            "amount":stored_payments + cumulative_balance,
+            "balance": stored_payments + cumulative_balance
+        })
+
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"Cleared balance",
+            "amount": stored_payments + cumulative_balance,
+            "balance": stored_ob + (stored_payments + cumulative_balance)
+
+        })
+
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"Total cleared transactions",
+            "amount": stored_payments + cumulative_balance,
+            "balance": stored_ob + (stored_payments + cumulative_balance)
+        })
+
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":f"Cleared balance as of {datetime.now().strftime('%d/%m/%Y')}",
+            "amount": stored_payments + cumulative_balance,
+            "balance": stored_ob + (stored_payments + cumulative_balance)
+        })
+
+        detailed_bills.append({
+            "num":num+1,
+            "narration":"Ending balance",
+            "amount": stored_payments + cumulative_balance,
+            "balance": stored_ob + (stored_payments + cumulative_balance)
+        })
+        
+
+        return Response(render_template(
+            "ajax_report_recon_statement2.html",
+
+            tenantlist=[],
+            timeline = timeline,
+
+            bills=detailed_bills,
+            paging=page(detailed_bills),
+ 
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            # reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            reportdate = generate_exact_date(datetime.now().day,datetime.now().month,datetime.now().year).strftime("%d/%m/%Y"),
+            printdate = datetime.now().strftime("%d/%m/%Y"),
+            destination = "Paid " + destination,
+            name=current_user.name))
+
     def post(self):
         trans_amount = request.form.get('amount')
         valid_amount = validate_input(trans_amount)
         trans_date = request.form.get('date')
         trans_ref = request.form.get('ref')
         trans_type = request.form.get('type')
+        trans_category = request.form.get('category')
         trans_desc = request.form.get('desc')
 
-        print("mayai ndio hizi ", valid_amount,trans_date,trans_ref,trans_type,trans_desc)
+        print("success ndio hizi ", valid_amount,trans_date,trans_ref,trans_type,trans_desc)
 
         tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
 
-        recon = AppTransactionOp(trans_ref,tdate,trans_desc,False,None,None,None,None,valid_amount,trans_type,current_user.company.id)
-        recon.save()
+        if trans_category == "opening balance":
+            existing_recon = AppTransactionOp.fetch_opening_balance_transaction_by_date(tdate,current_user.company.id)
+            print("existing ",existing_recon)
+            if existing_recon:
+                AppTransactionOp.update_opening_balance(existing_recon,valid_amount)
+                print("Opening balance updated to ",existing_recon.amount, " fo date ",tdate)
+                # AppTransactionOp.delete(existing_recon)
+                # print("Duplicate opening balances deleted")
+            else:
+                trans_type = "n/a"
+                tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date().replace(day=1)
+                recon = AppTransactionOp(trans_ref,tdate,"Opening balance",False,None,None,None,None,valid_amount,trans_type,trans_category,current_user.company.id)
+                recon.save()
+                print("Opening balance created with amount ",recon.amount)
 
-        return "mayai"
+        else:
+            recon = AppTransactionOp(trans_ref,tdate,trans_desc,False,None,None,None,None,valid_amount,trans_type,trans_category,current_user.company.id)
+            recon.save()
+
+        return "success"
 
 class Accounts(Resource):
     def get(self):

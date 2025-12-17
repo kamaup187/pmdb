@@ -28,7 +28,11 @@
                 </a>
 
                 <button class="btn btn-success btn-sm mt-2 mb-2 mr-2" data-toggle="modal" data-target="#addRecordModal">
-                  <i class="text-white feather-16 font-weight-bold" data-feather="edit"></i><span class="ml-1 text-white">Add record</span>
+                  <i class="text-white feather-16 font-weight-bold" data-feather="plus"></i><span class="ml-1 text-white">Add record</span>
+                </button>
+
+                <button class="btn btn-success btn-sm mt-2 mb-2 mr-2" data-toggle="modal" data-target="#generateReconModal">
+                  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">Generate report</span>
                 </button>
 
               </div>
@@ -122,18 +126,31 @@
                     <form autocomplete="off" method="POST" action="">
      
                       <div class="form-group">
-                        <label for="transaction-date">Transaction Date</label>
+                        <label for="trans-date">Transaction Date</label>
                         <input type="date" class="form-control" id="trans-date" name="transaction-date" required>
                       </div>
 
                       <div class="form-group text-black">
-                        <label for="reference">Reference</label>
+                        <label class="small mb-1" for="trans-category">Choose category</label>
+                        <select id="trans-category" class="form-control" aria-label="Default select example">
+                            <option selected disabled  value="">choose</option>
+                            <option value="opening balance">Opening Balance</option>
+                            <option value="bank transfer">Bank transfer</option>
+                            <option value="mpesa deposit">Mpesa Deposit</option>
+                            <option value="cheque deposit">Cheque Deposit</option>
+                            <option value="other">Other</option>
+
+                        </select>
+                    </div>
+
+                      <div class="form-group text-black">
+                        <label for="trans-ref">Reference</label>
                         <input type="text" class="form-control" id="trans-ref" name="reference" placeholder="Enter reference" required>
                     </div>
 
                     <!-- Amount Field -->
                     <div class="form-group text-black">
-                        <label for="amount">Amount</label>
+                        <label for="trans-amount">Amount</label>
                         <input type="number" step="0.01" class="form-control" id="trans-amount" name="amount" placeholder="Enter amount" required>
                     </div>
 
@@ -142,17 +159,17 @@
                         <label>Payment Type</label>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paymentType" id="trans-debit" value="debit" required>
-                            <label class="form-check-label" for="debit">Debit</label>
+                            <label class="form-check-label" for="trans-debit">Debit</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="paymentType" id="trans-credit" value="credit" required>
-                            <label class="form-check-label" for="credit">Credit</label>
+                            <label class="form-check-label" for="trans-credit">Credit</label>
                         </div>
                     </div>
 
                     <!-- Description Field -->
                     <div class="form-group text-black">
-                        <label for="description">Description</label>
+                        <label for="trans-desc">Description</label>
                         <textarea class="form-control" id="trans-desc" name="description" rows="3" placeholder="Enter a description"></textarea>
                     </div>
  
@@ -160,6 +177,47 @@
                     <div class="mt-3">
                       <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
                       <button id="submit-transaction" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div class="modal fade" id="generateReconModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Add transaction record</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                      <div class="form-group">
+                        <label for="recon-date">Reconciliation Month</label>
+                        <input type="month" class="form-control" id="recon-date">
+                      </div>
+
+                    <!-- Description Field -->
+                    <div class="form-group text-black">
+                        <label for="recon-desc">Description</label>
+                        <textarea class="form-control" id="recon-desc" name="description" rows="3" placeholder="Enter a description"></textarea>
+                    </div>
+ 
+                    </form>
+                    <div class="mt-3">
+                      <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                      <button id="generate-recon" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Generate</span> </button>
                     </div>
                   </div>
                 </div>
@@ -279,6 +337,7 @@ $("#checkindate").datepicker({
           type: "post",
           data: {
               date: $("#trans-date").val(),
+              category: $("#trans-category").val(),
               ref: $("#trans-ref").val(),
               amount:$("#trans-amount").val(),
               type:$('input[name="paymentType"]:checked').val(),
@@ -306,6 +365,29 @@ $("#checkindate").datepicker({
                   }
               });
 
+
+          }
+      });
+    
+  });
+
+
+  $("#generate-recon").click(function () {
+    $(this).text("generating...");
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "/recon/account",
+          type: "get",
+          data: {
+              date: $("#recon-date").val(),
+              desc: $("#recon-desc").val(),
+              target: "generate"
+          },
+          success: function (response) {
+              console.log(response);
+              $("#generate-recon").text("Generate");
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
 
           }
       });

@@ -8551,6 +8551,9 @@ class Recon(Resource):
             print("RECON BANK >>> ",recon.bank)
             if recon.date >= start and recon.date <= end:
                 print("START >>> ",account)
+
+                if recon.transaction_category == "opening balance":
+                    continue
                 
                 if account == "all" or account is None:
                     if destination == "owner":
@@ -8569,15 +8572,23 @@ class Recon(Resource):
                                 if not recon.paid_ll:
                                     target_recons.append(recon)                   
 
+        opening_balance_obj = AppTransactionOp.fetch_opening_balance_transaction_by_date(start, current_user.company.id)
+        if opening_balance_obj:
+            ob_dict = AppTransactionOp.view(opening_balance_obj)
+            ob_dict['balance'] = cumulative_balance
+            ob_dict['balance'] += opening_balance_obj.amount
+            cumulative_balance += opening_balance_obj.amount
+            detailed_bills.append(ob_dict)
+
         for rc in target_recons:
             recon_obj = AppTransactionOp.view(rc)
             recon_obj['balance'] = cumulative_balance
-            if recon.transaction_type == "debit":
-                recon_obj['balance'] += recon.amount
-                cumulative_balance += recon.amount
+            if rc.transaction_type == "debit":
+                recon_obj['balance'] += rc.amount
+                cumulative_balance += rc.amount
             else:
-                recon_obj['balance'] -= recon.amount
-                cumulative_balance -= recon.amount
+                recon_obj['balance'] -= rc.amount
+                cumulative_balance -= rc.amount
             detailed_bills.append(recon_obj)
 
         return Response(render_template(

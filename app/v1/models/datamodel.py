@@ -346,6 +346,7 @@ class AppTransaction(db.Model):
     amount = db.Column(db.Float, default=0.0)
     reconciled = db.Column(db.Boolean, default=False)
     transaction_type = db.Column(db.String, default="credit")
+    transaction_category = db.Column(db.String, default="bank transfer")
     trans_desc = db.Column(db.String)
 
     company_id = db.Column(db.Integer, db.ForeignKey(Company.id))

@@ -843,7 +843,7 @@ class TransactionDataOp(TransactionData,Base):
 
 
 class AppTransactionOp(AppTransaction,Base):
-    def __init__(self,ref,trans_time,trans_desc,paid_ll,pay_id,prop,house,bank,amount,trans_type,company_id):
+    def __init__(self,ref,trans_time,trans_desc,paid_ll,pay_id,prop,house,bank,amount,trans_type,category,company_id):
         self.ref=ref
         self.date=trans_time
         self.trans_desc=trans_desc
@@ -854,10 +854,36 @@ class AppTransactionOp(AppTransaction,Base):
         self.bank = bank
         self.amount=amount
         self.transaction_type=trans_type
+        self.transaction_category=category
         self.company_id=company_id
 
     def fetch_transaction_by_id(id):
         return AppTransaction.query.filter_by(id=id).first()
+
+    def fetch_opening_balance_transaction_by_date(date,company_id):
+        from datetime import datetime, time, timedelta
+        if isinstance(date, datetime):
+            date_only = date.date()
+        else:
+            date_only = date
+        
+        # Always target the 1st of the month, no matter what day user picked
+        first_of_month = date_only.replace(day=1)
+        
+        # Build the precise 24-hour range for the 1st
+        start = datetime.combine(first_of_month, time.min)   # 00:00:00 on the 1st
+        end = start + timedelta(days=1)                            # 2025-12-02 00:00:00
+        print("Start ",start, " End ",end)
+        return (AppTransaction.query
+                .filter(AppTransaction.transaction_category == 'opening balance')
+                .filter(AppTransaction.date >= start)
+                .filter(AppTransaction.date < end)
+                .filter(AppTransaction.company_id == company_id)          # exact match on first of month
+                .first())
+
+    def update_opening_balance(self,valid_amount):
+        self.amount = valid_amount
+        db.session.commit()
     
     def fetch_all_transactions_by_company_id(company_id):
         return AppTransaction.query.filter_by(company_id=company_id).all()
@@ -872,8 +898,10 @@ class AppTransactionOp(AppTransaction,Base):
         elif trans == "amount":
             if self.transaction_type == "debit":
                 return f"{self.amount:,.1f}"
-            else:
+            elif self.transaction_type == "credit":
                 return f"-{self.amount:,.1f}"
+            else:
+                return f"{self.amount:,.1f}"
 
         else:
             if self.transaction_type == "credit":
@@ -885,14 +913,14 @@ class AppTransactionOp(AppTransaction,Base):
         return {
             "id":self.id,
             "ref":self.ref,
-            "prop":self.prop,
-            "house":self.house,
-            "bank":self.bank,
+            "prop":self.prop if self.prop else "",
+            "house":self.house if self.house else "",
+            "bank":self.bank if self.bank else "",
             "date":self.date.strftime("%Y-%m-%d"),
             "debit":AppTransactionOp.get_amount(self,"debit"),
             "credit": AppTransactionOp.get_amount(self,"credit"),
             "amount": AppTransactionOp.get_amount(self,"amount"),
-            "trans_type":self.transaction_type,
+            "trans_category":self.transaction_category if self.transaction_category else "",
             "desc": self.trans_desc,
             "company_id":self.company_id
         }

@@ -192,7 +192,7 @@
         <div class="modal-content">
           <div class="indicator"></div>
           <div class="modal-header pb-0 text-center">
-            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Add transaction record</h5>
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Generate recon statement</h5>
             <span id="update-reloader" class="dispnone"></span>
             <div class="alert-msgs"></div>
           </div>
@@ -203,10 +203,36 @@
                   <div class="card-body modal-forms">
                     <form autocomplete="off" method="POST" action="">
      
-                      <div class="form-group">
+                      <!-- <div class="form-group">
                         <label for="recon-date">Reconciliation Month</label>
                         <input type="month" class="form-control" id="recon-date">
-                      </div>
+                      </div> -->
+
+                        <div class="form-group input-icons">
+                          <span class="divjust-end">
+                            <span class="text-danger font-weight-bold">Start date</span>
+                            <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
+                          </span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkindate2" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
+                            <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                            <input class="form-contro ph dispnone" type="time" id="begin2" min="00:00" max="24:00" value="00:00">
+  
+                          </div>
+                        </div>
+  
+                        <div class="form-group input-icons">
+                          <span class="divjust-end">
+                            <span class="text-danger font-weight-bold">End date</span>
+                            <!-- <span class="text-black font-weight-bold dispnone">(10 AM)</span> -->
+                          </span>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="checkoutdate2" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
+                            <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
+                            <input class="form-contro ph dispnone" type="time" id="end2" min="00:00" max="24:00" value="23:59">
+  
+                          </div>
+                        </div>
 
                     <!-- Description Field -->
                     <div class="form-group text-black">
@@ -281,6 +307,32 @@ $("#checkindate").datepicker({
   $("#checkoutdate").datepicker("setDate", date); //set default checkoutdate
 </script>
 
+
+<script>
+
+$("#checkindate2").datepicker({
+    autoclose: true,
+    todayHighlight: true,
+    format: "DD, dd-mm-yyyy"
+  }).on('changeDate', function (e) {
+    var checkin2 = $(this).datepicker('getDate')
+    checkin2.setDate(checkin2.getDate() + 1);
+    $("#checkoutdate").datepicker("setDate", checkin2); //set default checkoutdate
+  });
+
+  $("#checkoutdate2").datepicker({
+    autoclose: true,
+    format: "DD, dd-mm-yyyy"
+  });
+
+
+  var date2 = new Date();
+  date2.setDate(date2.getDate());
+  $("#checkindate2").datepicker("setDate", date2); //set default checkindate
+
+  date2.setDate(date2.getDate() + 1);
+  $("#checkoutdate2").datepicker("setDate", date2); //set default checkoutdate
+</script>
 
 <!-- <script type="text/javascript">
   $(document).ready(function () {
@@ -379,7 +431,11 @@ $("#checkindate").datepicker({
           url: "/recon/account",
           type: "get",
           data: {
-              date: $("#recon-date").val(),
+              // date: $("#recon-date").val(),
+              start: $("#checkindate2").val(),
+              end: $("#checkoutdate2").val(),
+              tstart:$("#begin2").val(),
+              tend:$("#end2").val(),
               desc: $("#recon-desc").val(),
               target: "generate"
           },

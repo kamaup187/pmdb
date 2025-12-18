@@ -11523,18 +11523,35 @@ class ReconAccount(Resource):
         from datetime import datetime, time
         # target = request.args.get('target')
         # if target == "generate":
-        recon_date = request.args.get('date')
+        # recon_date = request.args.get('date')
         recon_desc = request.args.get('desc')
 
-        tdate = datetime.strptime(recon_date, "%Y-%m").date()
+        # tdate = datetime.strptime(recon_date, "%Y-%m").date()
 
-        account = request.form.get("account")
-        destination = request.form.get("destination")
-        # shiftstart = request.form.get("start")
-        # shiftend = request.form.get("end")
+        account = request.args.get("account")
+        destination = request.args.get("destination")
+        shiftstart = request.args.get("start")
+        shiftend = request.args.get("end")
 
-        # begin_t = request.form.get("tstart")
-        # end_t = request.form.get("tend")
+        begin_t = request.args.get("tstart")
+        end_t = request.args.get("tend")
+
+        if not shiftstart:
+            return "shift not specified"
+        else:
+            str_start = date_formatter_weekday(shiftstart)
+            # timestring = str_start + " " + '10:00'
+            timestring = str_start + " " + begin_t
+            start = parse(timestring)
+
+                            
+            str_end = date_formatter_weekday(shiftend)
+            # timestring = str_end + " " + '10:00'
+            timestring = str_end + " " + end_t
+
+            end = parse(timestring)
+
+        # return "mayai"
 
         if not destination:
             destination = "agent"
@@ -11543,21 +11560,21 @@ class ReconAccount(Resource):
             account = "all"
 
 
-        if isinstance(tdate, datetime):
-            date_only = tdate.date()
-        else:
-            date_only = tdate
+        # if isinstance(tdate, datetime):
+        #     date_only = tdate.date()
+        # else:
+        #     date_only = tdate
 
-        first_of_month = date_only.replace(day=1)
-        start = datetime.combine(first_of_month, time.min)
+        # first_of_month = date_only.replace(day=1)
+        # start = datetime.combine(first_of_month, time.min)
 
-        # Calculate 1st of next month
-        if first_of_month.month == 12:
-            first_of_next_month = first_of_month.replace(year=first_of_month.year + 1, month=1)
-        else:
-            first_of_next_month = first_of_month.replace(month=first_of_month.month + 1)
+        # # Calculate 1st of next month
+        # if first_of_month.month == 12:
+        #     first_of_next_month = first_of_month.replace(year=first_of_month.year + 1, month=1)
+        # else:
+        #     first_of_next_month = first_of_month.replace(month=first_of_month.month + 1)
 
-        end = datetime.combine(first_of_next_month, time.min)
+        # end = datetime.combine(first_of_next_month, time.min)
 
         print("Start:", start)
         print("End:  :", end)
@@ -11759,7 +11776,7 @@ class ReconAccount(Resource):
                 # print("Duplicate opening balances deleted")
             else:
                 trans_type = "n/a"
-                tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date().replace(day=1)
+                tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
                 recon = AppTransactionOp(trans_ref,tdate,"Opening balance",False,None,None,None,None,valid_amount,trans_type,trans_category,current_user.company.id)
                 recon.save()
                 print("Opening balance created with amount ",recon.amount)

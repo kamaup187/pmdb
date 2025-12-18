@@ -867,13 +867,23 @@ class AppTransactionOp(AppTransaction,Base):
         else:
             date_only = date
         
-        # Always target the 1st of the month, no matter what day user picked
-        first_of_month = date_only.replace(day=1)
+        # # Always target the 1st of the month, no matter what day user picked
+        # first_of_month = date_only.replace(day=1)
         
-        # Build the precise 24-hour range for the 1st
-        start = datetime.combine(first_of_month, time.min)   # 00:00:00 on the 1st
-        end = start + timedelta(days=1)                            # 2025-12-02 00:00:00
-        print("Start ",start, " End ",end)
+        # # Build the precise 24-hour range for the 1st
+        # start = datetime.combine(first_of_month, time.min)   # 00:00:00 on the 1st
+        # end = start + timedelta(days=1)                            # 2025-12-02 00:00:00
+        # print("Start ",start, " End ",end)
+
+        # Start: midnight of the selected day
+        start = datetime.combine(date_only, time.min)   # e.g., 2025-12-07 00:00:00
+        
+        # End: midnight of the next day
+        end = start + timedelta(days=1)                     # 2025-12-08 00:00:00
+        
+        print(f"Fetching opening balance for exact day: {date_only}")
+        print(f"Date range: {start} <= date < {end}")
+
         return (AppTransaction.query
                 .filter(AppTransaction.transaction_category == 'opening balance')
                 .filter(AppTransaction.date >= start)

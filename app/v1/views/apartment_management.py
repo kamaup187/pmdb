@@ -11754,6 +11754,16 @@ class ReconAccount(Resource):
             name=current_user.name))
 
     def post(self):
+
+        target = request.form.get('target')
+        if target == "discard transaction":
+            trans_id = get_identifier(request.form.get('transid'))
+            trans_obj = AppTransactionOp.fetch_transaction_by_id(trans_id)
+            if trans_obj:
+                AppTransactionOp.delete(trans_obj)
+                return "success"
+            else:
+                abort(404)
         trans_amount = request.form.get('amount')
         valid_amount = validate_input(trans_amount)
         trans_date = request.form.get('date')

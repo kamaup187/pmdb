@@ -2640,7 +2640,7 @@ class Dashboard(Resource):
 
                     for item in apartment.payment_data:
                         if item.pay_period.month == month and item.pay_period.year == period.year and not item.voided:
-                            
+
                             # #############################################################
                             # if item.pay_period.month == 12 and item.pay_period.year == 2025 and not item.voided and current_user.company.id == 45:
                             #     trans_obj = AppTransactionOp.fetch_transaction_by_payment_id(item.id)
@@ -11638,21 +11638,21 @@ class ReconAccount(Resource):
             ob_dict['trans_type'] = ""
             ob_dict['desc'] = ""
             ob_dict['trans_category'] = ""
-            ob_dict['balance'] = opening_balance_obj.amount
+            ob_dict['balance'] = f"{opening_balance_obj.amount:,.1f}"
             detailed_bills.append(ob_dict)
 
         num += 1
 
         detailed_bills.append({
             "num":num,
-            "narration":"' ' ' Cleared transactions"
+            "narration":"' ' ' ' ' ' Cleared transactions"
         })
 
         num += 1
 
         detailed_bills.append({
             "num":num,
-            "narration":"' ' ' ' ' ' Cheques & Payments"
+            "narration":"' ' ' ' ' ' ' ' ' ' ' ' Cheques & Payments"
         })
         
         index = 1
@@ -11670,9 +11670,9 @@ class ReconAccount(Resource):
 
         detailed_bills.append({
             "num":num+1,
-            "narration":"' ' ' ' ' ' Total Cheques & Payments",
-            "amount": cumulative_balance,
-            "balance": cumulative_balance
+            "narration":"' ' ' ' ' ' ' ' ' ' ' ' Total Cheques & Payments",
+            "amount": f"{cumulative_balance:,.1f}",
+            "balance": f"{cumulative_balance:,.1f}"
         })
 
         stored_payments = cumulative_balance
@@ -11681,7 +11681,7 @@ class ReconAccount(Resource):
 
         detailed_bills.append({
             "num":num+1,
-            "narration":"' ' ' ' ' ' Deposits & Credits"
+            "narration":"' ' ' ' ' ' ' ' ' ' ' ' Deposits & Credits"
         })
         
         index = 1
@@ -11699,48 +11699,46 @@ class ReconAccount(Resource):
 
         detailed_bills.append({
             "num":num+1,
-            "narration":"' ' ' ' ' ' Total Deposits & Credits",
-            "amount": cumulative_balance,
-            "balance": cumulative_balance
+            "narration":"' ' ' ' ' ' ' ' ' ' ' ' Total Deposits & Credits",
+            "amount": f"{cumulative_balance:,.1f}",
+            "balance": f"{cumulative_balance:,.1f}"
         })
+
+        # detailed_bills.append({
+        #     "num":num+1,
+        #     "narration":"' ' ' Total cleared transactions",
+        #     "amount":stored_payments + cumulative_balance,
+        #     "balance": stored_payments + cumulative_balance
+        # })
+
 
         detailed_bills.append({
             "num":num+1,
-            "narration":"' ' ' Total cleared transactions",
-            "amount":stored_payments + cumulative_balance,
-            "balance": stored_payments + cumulative_balance
+            "narration":"' ' ' ' ' ' Total cleared transactions",
+            "amount": f"{stored_payments + cumulative_balance:,.1f}",
+            "balance": f"{stored_payments + cumulative_balance:,.1f}"
         })
-
 
         detailed_bills.append({
             "num":num+1,
             "narration":"Cleared balance",
-            "amount": stored_payments + cumulative_balance,
-            "balance": stored_ob + (stored_payments + cumulative_balance)
+            "amount": f"{stored_payments + cumulative_balance:,.1f}",
+            "balance": f"{stored_ob + (stored_payments + cumulative_balance):,.1f}"
 
         })
 
-
         detailed_bills.append({
             "num":num+1,
-            "narration":"Total cleared transactions",
-            "amount": stored_payments + cumulative_balance,
-            "balance": stored_ob + (stored_payments + cumulative_balance)
-        })
-
-
-        detailed_bills.append({
-            "num":num+1,
-            "narration":f"Cleared balance as of {datetime.now().strftime('%d/%m/%Y')}",
-            "amount": stored_payments + cumulative_balance,
-            "balance": stored_ob + (stored_payments + cumulative_balance)
+            "narration":f"Register balance as of {datetime.now().strftime('%d/%m/%Y')}",
+            "amount": f"{stored_payments + cumulative_balance:,.1f}",
+            "balance": f"{stored_ob + (stored_payments + cumulative_balance):,.1f}"
         })
 
         detailed_bills.append({
             "num":num+1,
             "narration":"Ending balance",
-            "amount": stored_payments + cumulative_balance,
-            "balance": f"KES {(stored_ob + (stored_payments + cumulative_balance)):,.1f}"
+            "amount": f"{stored_payments + cumulative_balance:,.1f}",
+            "balance": f"{stored_ob + (stored_payments + cumulative_balance):,.1f}"
         })
         
 

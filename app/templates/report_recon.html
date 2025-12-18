@@ -31,10 +31,6 @@
                   <i class="text-white feather-16 font-weight-bold" data-feather="plus"></i><span class="ml-1 text-white">Add record</span>
                 </button>
 
-                <button class="btn btn-success btn-sm mt-2 mb-2 mr-2" data-toggle="modal" data-target="#generateReconModal">
-                  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">Generate report</span>
-                </button>
-
               </div>
               <!-- Card Content - Collapse -->
               <div class="" id="collapseCardExample">
@@ -75,7 +71,7 @@
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkindate" class="form-control ph" name="shiftstart" type="text" placeholder="Select date" readonly />
                             <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
-                            <input class="form-contro ph" type="time" id="begin" min="00:00" max="24:00" value="00:00">
+                            <input class="form-contro ph dispnone" type="time" id="begin" min="00:00" max="24:00" value="00:00">
   
                           </div>
                         </div>
@@ -88,13 +84,19 @@
                           <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
                             <input id="checkoutdate" class="form-control ph" name="shiftend" type="text" placeholder="Select date" readonly />
                             <!-- <span class="input-group-addon field-icon">(10 AM)</span> -->
-                            <input class="form-contro ph" type="time" id="end" min="00:00" max="24:00" value="23:59">
+                            <input class="form-contro ph dispnone" type="time" id="end" min="00:00" max="24:00" value="23:59">
   
                           </div>
                         </div>
                       
-                        <div class="col-lg-2 form-group mb-2">
+                        <div class="col-lg-2 form-group mb-2 divjust-end">
                           <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                        <!-- </div>
+
+                        <div class="col-lg-2 form-group mb-2"> -->
+                            <button type="button" class="form-control btn btn-success btn-sm mt-4 ml-3" data-toggle="modal" data-target="#generateReconModal">
+                              <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">Generate report</span>
+                            </button>
                         </div>
                       </div>
 

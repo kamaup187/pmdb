@@ -11729,7 +11729,7 @@ class ReconAccount(Resource):
             "num":num+1,
             "narration":"Ending balance",
             "amount": stored_payments + cumulative_balance,
-            "balance": stored_ob + (stored_payments + cumulative_balance)
+            "balance": f"KES {(stored_ob + (stored_payments + cumulative_balance)):,.1f}"
         })
         
 

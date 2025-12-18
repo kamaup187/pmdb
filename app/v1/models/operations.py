@@ -860,6 +860,9 @@ class AppTransactionOp(AppTransaction,Base):
     def fetch_transaction_by_id(id):
         return AppTransaction.query.filter_by(id=id).first()
 
+    def fetch_transaction_by_payment_id(pay_id):
+        return AppTransaction.query.filter_by(pay_id=pay_id).first()
+
     def fetch_opening_balance_transaction_by_date(date,company_id):
         from datetime import datetime, time, timedelta
         if isinstance(date, datetime):

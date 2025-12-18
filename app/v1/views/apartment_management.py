@@ -2640,6 +2640,16 @@ class Dashboard(Resource):
 
                     for item in apartment.payment_data:
                         if item.pay_period.month == month and item.pay_period.year == period.year and not item.voided:
+                            #############################################################
+                            if item.pay_period.month == 12 and item.pay_period.year == 2025 and not item.voided and current_user.company.id == 45:
+                                trans_obj = AppTransactionOp.fetch_transaction_by_payment_id(item.id)
+                                if not trans_obj:
+                                    trans = AppTransactionOp(item.ref_number,item.date,item.tenant.name + " (" + item.payment_name + ")",False,item.id,item.apartment.name,item.house.name,"Coop",item.amount,"debit","Rent deposit",current_user.company.id)
+                                    trans.save()
+                                else:
+                                    print("Trans exists")
+                            #############################################################
+
                             that_month_total += item.amount
 
                     for item in apartment.monthlybills:

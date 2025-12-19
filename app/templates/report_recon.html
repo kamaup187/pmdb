@@ -38,8 +38,8 @@
                     <form class="bg-white">
 
                       <div class="row">
-                        <div class="col-lg-2 form-group mb-2 ml-lg-5">
-                          <label class="mb-0">Select account:</label>
+                        <div class="col-lg-1 form-group mb-2 ml-lg-5">
+                          <label class="mb-0">Account:</label>
                           <select name="reconaccount" class="select-css" id="reconaccount">
                             <option disabled value="">Select account</option>
                             <option value="yetu">Yetu Sacco</option>
@@ -52,12 +52,24 @@
                           </select>
                         </div>
 
-                        <div class="col-lg-2 form-group mb-2 ml-lg-5">
-                          <label class="mb-0">Select destination:</label>
+                        <div class="col-lg-1 form-group mb-2 ml-lg-5">
+                          <label class="mb-0">Mgt/Owner:</label>
                           <select name="destination" class="select-css" id="destination">
-                            <option disabled value="">Select destination</option>
+                            <option disabled value="">Select</option>
                             <option value="agent" selected>Paid to agent</option>
                             <option value="owner">Paid to owner</option>
+
+
+                          </select>
+                        </div>
+
+                          <div class="col-lg-1 form-group mb-2 ml-lg-5">
+                          <label class="mb-0">Select property:</label>
+                          <select name="apartment" class="select-css" id="apartment">
+
+                            {%for property in properties%}
+                              <option value="{{property}}">{{property}}</option>
+                            {%endfor%}
 
 
                           </select>
@@ -373,7 +385,8 @@ $("#checkindate2").datepicker({
               tstart:$("#begin").val(),
               tend:$("#end").val(),
               account: $("#reconaccount").val(),
-              destination:$("#destination").val()
+              destination:$("#destination").val(),
+              prop:$("#apartment").val()
           },
           success: function (response) {
               $("#reportbase").html(response)
@@ -410,7 +423,9 @@ $("#checkindate2").datepicker({
                       end: $("#checkoutdate").val(),
                       tstart:$("#begin").val(),
                       tend:$("#end").val(),
-                      account: $("#reconaccount").val()
+                      account: $("#reconaccount").val(),
+                      destination:$("#destination").val(),
+                      prop:$("#apartment").val()
                   },
                   success: function (response) {
                       $("#reportbase").html(response)

@@ -8500,9 +8500,12 @@ class Financials(Resource):
 class Recon(Resource):
     @login_required
     def get(self):
+        all_props = fetch_all_apartments_by_user(current_user)
+        all_props.insert(0,"All")
         return Response(render_template(
             'report_recon.html',
             name=current_user.name,
+            properties=all_props,
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
             co=current_user.company
@@ -8511,6 +8514,7 @@ class Recon(Resource):
     def post(self):
         account = request.form.get("account")
         destination = request.form.get("destination")
+        prop_name = request.form.get("prop")
         shiftstart = request.form.get("start")
         shiftend = request.form.get("end")
 
@@ -8544,6 +8548,14 @@ class Recon(Resource):
         timeline = f"{str_day}/{start.month}/{str_year} to {end.day}/{end.month}/{end.year}"
         detailed_bills = []
 
+        # print("no propaaaaaaname >>> ",prop_name)
+
+        if prop_name and prop_name != "All":
+            propname = prop_name
+        else:
+            propname = None
+
+
         recons = current_user.company.apptransactions
         cumulative_balance = 0
         target_recons = []
@@ -8554,23 +8566,46 @@ class Recon(Resource):
 
                 if recon.transaction_category == "opening balance":
                     continue
-                
-                if account == "all" or account is None:
-                    if destination == "owner":
-                        if recon.paid_ll:
-                            target_recons.append(recon)
-                    else:
-                        if not recon.paid_ll:
-                            target_recons.append(recon)
-                else: 
-                    if recon.bank:
-                        if account in recon.bank.lower():
-                            if destination == "owner":
-                                if recon.paid_ll:
-                                    target_recons.append(recon)
-                            else:
-                                if not recon.paid_ll:
-                                    target_recons.append(recon)                   
+
+                if propname:
+                    if recon.prop:
+                        if recon.prop!= propname:
+                            continue
+                        else:
+                            if account == "all" or account is None:
+                                if destination == "owner":
+                                    if recon.paid_ll:
+                                        target_recons.append(recon)
+                                else:
+                                    if not recon.paid_ll:
+                                        target_recons.append(recon)
+                            else: 
+                                if recon.bank:
+                                    if account in recon.bank.lower():
+                                        if destination == "owner":
+                                            if recon.paid_ll:
+                                                target_recons.append(recon)
+                                        else:
+                                            if not recon.paid_ll:
+                                                target_recons.append(recon)  
+
+                else:
+                    if account == "all" or account is None:
+                        if destination == "owner":
+                            if recon.paid_ll:
+                                target_recons.append(recon)
+                        else:
+                            if not recon.paid_ll:
+                                target_recons.append(recon)
+                    else: 
+                        if recon.bank:
+                            if account in recon.bank.lower():
+                                if destination == "owner":
+                                    if recon.paid_ll:
+                                        target_recons.append(recon)
+                                else:
+                                    if not recon.paid_ll:
+                                        target_recons.append(recon)                   
 
         opening_balance_obj = AppTransactionOp.fetch_opening_balance_transaction_by_date(start, current_user.company.id)
         if opening_balance_obj:

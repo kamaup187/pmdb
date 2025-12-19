@@ -2083,7 +2083,7 @@ class SendInvoices(Resource):
         else:
             billid = ""
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
-            send_internal_email_notifications(current_user.company.name,txt)
+            send_internal_email_notifications_alt(current_user.company.name,txt)
 
             # try:
             #     advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")

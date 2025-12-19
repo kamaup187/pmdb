@@ -840,6 +840,11 @@ def send_internal_email_notifications(company,param):
     #     func=send_mail_notifications, args=(company,param,), result_ttl=5000
     # )
 
+def send_internal_email_notifications_alt(company,param):
+    job = q.enqueue_call(
+        func=send_mail_notifications_alt, args=(company,param,), result_ttl=5000
+    )
+
 def format_month(num):
     if num < 9:
         return f"0{num}"
@@ -860,6 +865,23 @@ def send_mail_notifications(company,param):
         mail.send(txt)
     except:
         pass
+
+def send_mail_notifications_alt(company,param):
+    from app import create_app
+    app = create_app()
+    app.app_context().push()
+
+    try:
+        with mail.connect() as conn:
+            print ("Mail connection successful, sending mails")
+            try:
+                txt = Message('KiotaPay, SMS Notification', sender = 'info@kiotapay.com', recipients = ["koechpetersn@gmail.com"])
+                txt.body = f"{param}"
+                conn.send(txt)
+            except Exception as e:
+                print(str(e))
+    except:
+        print("no net")
 
 def good_print(arr):
     import json

@@ -161,25 +161,9 @@
                     </div>
 
                     <div class="row">
-                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Period</span></div>
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Date</span></div>
                       <div class="form-group col-9 col-lg-10 no-paddin input-icons">
-                        <select class="select-css" id ="month" required>
-                          <option disabled selected value> Select month </option>
-                          
-                          <option value="January">January</option>
-                          <option value="February">February</option>
-                          <option value="March">March</option>
-                          <option value="April">April</option>
-                          <option value="May">May</option>
-                          <option value="June">June</option>
-                          <option value="July">July</option>
-                          <option value="August">August</option>
-                          <option value="September">September</option>
-                          <option value="October">October</option>
-                          <option value="November">November</option>
-                          <option value="December">December</option>
-                          
-                        </select>
+                          <input type="date" class="form-control" id="trans-date" name="transaction-date" required>
                         <!-- <span class="fa field-icon-two text-info small">Kshs</span> -->
                       </div>
                     </div>                    
@@ -232,6 +216,14 @@
                       <div class="form-group col-9 col-lg-10 no-paddin input-icons">
                         <input id="labourcost" class="form-control pl-5 ph" type="text" placeholder="Eg. 500">
                         <span class="fa field-icon-two text-info small">Kshs</span>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-3 col-lg-2 no-padding text-right"><span class="form-control border-0">Payment details</span></div>
+                      <div class="form-group col-9 col-lg-10 no-paddin input-icons">
+                        <input id="paydetails" class="form-control pl-5 ph" type="text" placeholder="Ref/Chq No">
+                        <span class="fa field-icon-two text-info small">Ref:</span>
                       </div>
                     </div>
 
@@ -736,11 +728,12 @@
               propid:$("#prop_identifier").text(),
               exp_type:$("#expense_type").val(),
               name:$("#itemname").val(),
-              month:$("#month").val(),
+              exp_date:$("#trans-date").val(),
               qty:$("#itemqty").val(),
               house:$("#itemhouse").val(),
               cost:$("#itemcost").val(),
               labour:$("#labourcost").val(),
+              paydetails:$("#paydetails").val(),
               desc:$("#itemdesc").val(),
               run:"expenserequest"
             },

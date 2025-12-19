@@ -4842,12 +4842,14 @@ class Expenses(Resource):
         expense_type = request.form.get('exp_type')
         name = request.form.get('name')
         month = request.form.get('month')
+        expense_date = request.form.get('exp_date')
         trans_date = request.form.get('date')
         qty = request.form.get('qty')
         house = request.form.get('house')
         deposit = request.form.get('deposit')
         cost = request.form.get('cost')
         labour = request.form.get('labour')
+        paydetails = request.form.get('paydetails')
         desc = request.form.get('desc')
 
         # date = request.form.get('date')
@@ -4879,15 +4881,19 @@ class Expenses(Resource):
             prop_obj = ApartmentOp.fetch_apartment_by_id(get_identifier(propid))
 
         if not trans_date:
-            if not month:
-                expense_period = prop_obj.billing_period
-            else:
-                int_month = get_numeric_month(month)
-                # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
-                if current_user.company.name == "Adorable Properties":
-                    expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
-                else:
-                    expense_period = generate_date_alt(int_month,2025) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            # if not month:
+            #     expense_period = prop_obj.billing_period
+            # else:
+            #     int_month = get_numeric_month(month)
+            #     # expense_period = generate_date(int_month,datetime.datetime.now().year) #TODO GET  APPROPRIATE YEAR
+            #     if current_user.company.name == "Adorable Properties":
+            #         expense_period = generate_date_alt(int_month,2024) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            #     else:
+            #         expense_period = generate_date_alt(int_month,2025) #VERY URGENT TODO, CHANGE TO DYNAMIC DATE
+            try:
+                expense_period = datetime.datetime.strptime(expense_date, "%Y-%m-%d").date()
+            except:
+                expense_period = datetime.datetime.now().date()
         else:
             # expense_period = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
             datestring = date_formatter_alt(trans_date)
@@ -4915,6 +4921,9 @@ class Expenses(Resource):
             expense_obj.save()
 
             InternalExpenseOp.update_status(expense_obj,"completed")
+
+            recon = AppTransactionOp(paydetails,expense_period,name,False,None,None,None,None,amount,"credit","cheque deposit",current_user.company.id)
+            recon.save()
 
             return success
 

@@ -502,6 +502,19 @@ class Index(Resource):
         # import pdb; pdb.set_trace()
 
 
+        # payses = PaymentOp.fetch_all_payments_by_date_range(datetime.datetime(2025,12,16),datetime.datetime(2025,12,19))
+
+        # crooked_payments = []
+
+        # for pp in payses:
+        #     if pp.balance is None and not pp.voided:
+        #         print("Displaying payment of company: ",pp.apartment.company.name,"apartment ",pp.apartment.name," with zero balance. Amount:",pp.balance," Date:",pp.date)
+        #         crooked_payments.append(pp)
+        #     else:
+        #         continue
+
+        # print("Crooked payments in 2025:", len(crooked_payments), "payments found. ", "shown as below:", crooked_payments)
+
 
 
         # aas = ApartmentOp.fetch_all_unlinked_apartments()

@@ -4333,6 +4333,8 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                 badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
                 return badge
             elif self.paidll:
+                if not self.paid_amount:
+                    return decor_fig
                 badge = f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
                 return badge
             else:
@@ -5253,6 +5255,9 @@ class PaymentOp(Payment,Base):
     @staticmethod
     def fetch_all_payments():
         return Payment.query.order_by(Payment.id.desc()).all()
+
+    def fetch_all_payments_by_date_range(start_date,end_date):
+        return Payment.query.filter(Payment.date >= start_date, Payment.date <= end_date).order_by(Payment.date.desc()).all()
 
     def update_payments(self,booking,instalment,addfee,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.booking_paid = booking

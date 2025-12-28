@@ -745,7 +745,7 @@ class House(db.Model):
     schedules = db.relationship('PaymentSchedule',backref='house', order_by='PaymentSchedule.schedule_date', cascade="all, delete-orphan")
     landlordsummaries = db.relationship('LandlordSummary',backref='house',order_by='LandlordSummary.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     payments = db.relationship('Payment',backref='house',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
-    submissions = db.relationship('Submission',backref='house',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    # submissions = db.relationship('Submission',backref='house',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     split_payments = db.relationship('SplitPayment',backref='house',order_by='SplitPayment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     tenantrequests = db.relationship('TenantRequest',backref='house',order_by='TenantRequest.date', cascade="all, delete-orphan")
     transferrequests = db.relationship('TransferRequest',backref='house',order_by='TransferRequest.date', cascade="all, delete-orphan")
@@ -1061,7 +1061,7 @@ class Tenant(db.Model):
     monthly_charges = db.relationship('MonthlyCharge',backref='tenant',order_by='MonthlyCharge.id', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     landlordsummaries = db.relationship('LandlordSummary',backref='tenant',order_by='LandlordSummary.month', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     payments = db.relationship('Payment',backref='tenant',order_by='Payment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
-    submissions = db.relationship('Submission',backref='tenant',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
+    # submissions = db.relationship('Submission',backref='tenant',order_by='Submission.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     split_payments = db.relationship('SplitPayment',backref='tenant',order_by='SplitPayment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     mpesarecords = db.relationship('MpesaPayment',backref='tenant',order_by='MpesaPayment.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
     mpesarequests = db.relationship('MpesaRequest',backref='tenant',order_by='MpesaRequest.date', cascade="all, delete-orphan")#use backref tenant to access the parent directly from child
@@ -1690,8 +1690,8 @@ class Submission(db.Model):
     date = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
-    tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
-    house_id = db.Column(db.Integer, db.ForeignKey(House.id))
+    # tenant_id = db.Column(db.Integer, db.ForeignKey(Tenant.id))
+    # house_id = db.Column(db.Integer, db.ForeignKey(House.id))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
 # class ChargePayment(db.Model):

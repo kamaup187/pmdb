@@ -2466,6 +2466,14 @@ class CombinedReport(Resource):
         disp_electricity = "" if electricitytotal else "dispnone"
         disp_water = "" if watertotal else "dispnone"
 
+        target_submissions = fetch_current_billing_period_data_alt(apartment_obj.billing_period,apartment_obj.submissions)
+        if target_submissions:
+            screenref = target_submissions[0].receipt_number
+            screendate = target_submissions[0].pay_date.strftime("%Y-%m-%d")
+        else:
+            screenref = ""
+            screendate = "--/--/----"
+
         return Response(render_template(
             template,
             prop=selected_apartment,
@@ -2516,6 +2524,8 @@ class CombinedReport(Resource):
             expenselist=expense_list,
             paging=page(detailed_bills),
             props=props,
+            screendate=screendate,
+            screenref=screenref,
             apartment_name=selected_apartment,
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],

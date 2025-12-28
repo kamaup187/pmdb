@@ -5472,7 +5472,7 @@ class PaymentOp(Payment,Base):
         }
 
 class SubmissionOp(Submission,Base):
-    def __init__(self,amount,receipt,payperiod,paydate,apartment_id,house_id,tenant_id,created_by):
+    def __init__(self,amount,receipt,payperiod,paydate,apartment_id,created_by):
 
         self.pay_date = paydate
         self.pay_period = payperiod
@@ -5480,8 +5480,8 @@ class SubmissionOp(Submission,Base):
         self.receipt_number = receipt
 
         self.apartment_id=apartment_id
-        self.house_id=house_id
-        self.tenant_id=tenant_id
+        # self.house_id=house_id
+        # self.tenant_id=tenant_id
         self.user_id = created_by
 
     def fetch_submission_by_id(id):
@@ -5494,10 +5494,10 @@ class SubmissionOp(Submission,Base):
 
         return obj
 
-    def combine_house_tenant_alt(self):
-        fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
-        house =  self.house.name
-        return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>'
+    # def combine_house_tenant_alt(self):
+    #     fname = self.tenant.name.split()[0] if self.tenant.name else "Tenant"
+    #     house =  self.house.name
+    #     return f'<span class="text-gray-600">({house})</span> <span class="text-gray-900 font-weight-bold">{fname}</span>'
 
     def get_paydate_time(self):
         paydate = self.pay_date if self.pay_date else self.date
@@ -5515,15 +5515,21 @@ class SubmissionOp(Submission,Base):
         paydate = self.date
         str_date = paydate.strftime("%d/%b/%y")
         return str_date
+
+    def update_submission(self,receipt,paydate):
+        self.pay_date = paydate
+        self.receipt_number = receipt
+
+        db.session.commit()
     
     def view(self):
         return {
             'id':self.id,
             'editid':SubmissionOp.generate_editid(self),
             'delid':SubmissionOp.generate_delid(self),
-            'tenant':self.tenant,
-            'house':self.house,
-            'hst':SubmissionOp.combine_house_tenant_alt(self),
+            # 'tenant':self.tenant,
+            # 'house':self.house,
+            # 'hst':SubmissionOp.combine_house_tenant_alt(self),
             'ref':self.receipt_number,
             'amount':SubmissionOp.fig_format(self.amount_paid),
             'monthpaid':SubmissionOp.get_payperiod_month(self),

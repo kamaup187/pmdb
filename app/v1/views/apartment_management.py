@@ -3751,96 +3751,178 @@ class TenantManagement(Resource):
 
         
 
+# class SubmissionsManagement(Resource):
+#     """class"""
+#     @login_required
+#     def get(self):
+
+#         target = request.args.get('target')
+#         prop = request.args.get("prop")
+#         house = request.args.get("house")
+
+#         prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
+#         if prop_obj:
+#             propid = prop_obj.id
+
+#         if target == "submissions":
+
+#             db.session.expire(prop_obj)
+#             submissions = prop_obj.submissions
+
+#             gtotal = 0.0
+
+#             target_submissions = fetch_current_billing_period_data_alt(prop_obj.billing_period,submissions)
+
+#             submissionlist = []
+
+#             for i in target_submissions:
+#                 gtotal += i.amount_paid
+#                 sub = SubmissionOp.view(i)
+#                 submissionlist.append(sub)
+
+#             subids = get_obj_ids(submissionlist)
+            
+#             return render_template("ajax_prop_submissions.html",prop=prop_obj,subids=subids,bills=submissionlist,gtotal=f"{gtotal:,.1f}")
+
+#         if target == "houses":
+#             tenant_list = tenantauto(propid)
+#             house_tenant_list = generate_house_tenants(tenant_list)
+#             return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access="",propid=propid)
+
+#         if target == "tname":
+#             house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house)
+#             tenant_obj = check_occupancy(house_obj)[1]
+#             if tenant_obj.multiple_houses:
+#                 houses = get_active_houses(tenant_obj)[1]
+#                 return render_template('ajax_target_houses.html',house_list=houses,tenant_obj=tenant_obj,propid=propid)
+#             return f'<i class="fas fa-user mr-1"></i>: Tenant <span class="text-black mr-2">{tenant_obj.name}</span> balance: Kes <span class="text-danger">{tenant_obj.balance:,.2f}</span>'
+
+#         if target == "tenant name2":
+#             house_obj = get_specific_house_obj(propid,house)
+#             bills = house_obj.monthlybills
+#             latest_bill = max(bills, key=lambda x: x.id) if bills else None
+#             if latest_bill:
+#                 latest_bill_balance = latest_bill.balance
+#             else:
+#                 latest_bill_balance = 0.0
+            
+#             return f'<i class="fas fa-home mr-1"></i>: House  <span class="text-black mr-2">{house_obj.name}</span>  balance : Kes <span class="text-danger">{latest_bill_balance:,.2f}</span>'
+
+#         else:
+#             period = current_user.company.billing_period
+#             props = fetch_all_apartments_by_user(current_user)
+#             return render_template("ajax_submissions_detail.html",dataperiod=get_str_month(period.month),co=current_user.company,subprops=props)
+
+
+            
+
+
+#     @login_required
+#     def post(self):
+#         prop = request.form.get('prop')
+#         house_name = request.form.get('house')
+#         house_name2 = request.form.get('house2')
+
+#         paydate = request.form.get("date")
+#         paymonth = request.form.get("select_month")
+
+#         from dateutil.parser import parse
+
+#         if paydate:
+#             formatted_paydate = date_formatter(paydate)
+#             pay_date = parse(formatted_paydate)
+#         else:
+#             pay_date = datetime.datetime.now()
+    
+#         raw_bill_ref = request.form.get('bill_ref')#typed
+#         amount = request.form.get('paidamount')#typed
+
+#         valid_amount = validate_input(amount)
+
+#         if not valid_amount:
+#             return "<div class='center-btn text-danger text-xx'>Invalid amount !</div"
+
+#         if raw_bill_ref.upper() == "N/A":
+#             bill_ref = raw_bill_ref
+#         elif raw_bill_ref.upper() == "NA":
+#             bill_ref = "N/A"
+#         elif len(raw_bill_ref) < 1:
+#             bill_ref = "N/A"
+#         else:
+#             bill_ref = raw_bill_ref
+
+#         ########################################################################################
+
+#         if house_name:
+#             prop = ApartmentOp.fetch_apartment_by_name(prop)
+
+#             if not paymonth:
+#                 period = prop.billing_period
+#             else:
+#                 num_month = get_numeric_month(paymonth)
+#                 period = generate_date(num_month,prop.billing_period.year)
+
+#             target_houses = []       
+
+#             if house_name2:
+
+#                 if house_name2 == "none selected":
+#                     return "<span class='text-danger text-xx'>Submission failed, please specify house!</span>"
+
+#                 str_houses = house_name2.replace(","," ")
+#                 houselist = list(str_houses.split(" "))
+
+#                 for hse in houselist:
+#                     hse_obj = get_specific_house_obj(prop.id,hse)
+#                     target_houses.append(hse_obj)
+
+#             else:
+#                 hse_obj = get_specific_house_obj_from_house_tenant_alt(prop.id,house_name)
+#                 target_houses.append(hse_obj)
+
+#             house_obj = target_houses[0]
+            
+
+#             tenant_obj = check_occupancy(house_obj)[1]
+
+#             house_id = house_obj.id
+#             tenant_id = tenant_obj.id
+#             created_by = current_user.id
+
+#             #######################################################################################
+#             # pay_period = paid to which bills
+#             # pay_date = alilipa lini?
+#             sub_obj = SubmissionOp(valid_amount,bill_ref,period,pay_date,prop.id, house_id,tenant_id,created_by)
+#             sub_obj.save()
+#             #################################################################################################
+
+#             return "Submitted successfully"
+#         else:
+#             print("FORGOT TO SELECT HOUSE WHILE MAKING SUBMISSION")
+#             abort(404)
+
+
 class SubmissionsManagement(Resource):
     """class"""
     @login_required
     def get(self):
-
-        target = request.args.get('target')
-        prop = request.args.get("prop")
-        house = request.args.get("house")
-
-        prop_obj = ApartmentOp.fetch_apartment_by_name(prop)
-        if prop_obj:
-            propid = prop_obj.id
-
-        if target == "submissions":
-
-            db.session.expire(prop_obj)
-            submissions = prop_obj.submissions
-
-            gtotal = 0.0
-
-            target_submissions = fetch_current_billing_period_data_alt(prop_obj.billing_period,submissions)
-
-            submissionlist = []
-
-            for i in target_submissions:
-                gtotal += i.amount_paid
-                sub = SubmissionOp.view(i)
-                submissionlist.append(sub)
-
-            subids = get_obj_ids(submissionlist)
-            
-            return render_template("ajax_prop_submissions.html",prop=prop_obj,subids=subids,bills=submissionlist,gtotal=f"{gtotal:,.1f}")
-
-        if target == "houses":
-            tenant_list = tenantauto(propid)
-            house_tenant_list = generate_house_tenants(tenant_list)
-            return render_template('ajax_multivariable.html',items=sort_items(house_tenant_list),placeholder="select tenant",access="",propid=propid)
-
-        if target == "tname":
-            house_obj = get_specific_house_obj_from_house_tenant_alt(propid,house)
-            tenant_obj = check_occupancy(house_obj)[1]
-            if tenant_obj.multiple_houses:
-                houses = get_active_houses(tenant_obj)[1]
-                return render_template('ajax_target_houses.html',house_list=houses,tenant_obj=tenant_obj,propid=propid)
-            return f'<i class="fas fa-user mr-1"></i>: Tenant <span class="text-black mr-2">{tenant_obj.name}</span> balance: Kes <span class="text-danger">{tenant_obj.balance:,.2f}</span>'
-
-        if target == "tenant name2":
-            house_obj = get_specific_house_obj(propid,house)
-            bills = house_obj.monthlybills
-            latest_bill = max(bills, key=lambda x: x.id) if bills else None
-            if latest_bill:
-                latest_bill_balance = latest_bill.balance
-            else:
-                latest_bill_balance = 0.0
-            
-            return f'<i class="fas fa-home mr-1"></i>: House  <span class="text-black mr-2">{house_obj.name}</span>  balance : Kes <span class="text-danger">{latest_bill_balance:,.2f}</span>'
-
-        else:
-            period = current_user.company.billing_period
-            props = fetch_all_apartments_by_user(current_user)
-            return render_template("ajax_submissions_detail.html",dataperiod=get_str_month(period.month),co=current_user.company,subprops=props)
-
-
-            
+        pass
 
 
     @login_required
     def post(self):
         prop = request.form.get('prop')
-        house_name = request.form.get('house')
-        house_name2 = request.form.get('house2')
+        trans_date = request.form.get("screendate")    
+        raw_bill_ref = request.form.get('screenref')#typed
+        amount = request.form.get('amount')#typed
 
-        paydate = request.form.get("date")
-        paymonth = request.form.get("select_month")
-
-        from dateutil.parser import parse
-
-        if paydate:
-            formatted_paydate = date_formatter(paydate)
-            pay_date = parse(formatted_paydate)
+        if not trans_date:
+            pay_date = datetime.datetime.now().date()
         else:
-            pay_date = datetime.datetime.now()
-    
-        raw_bill_ref = request.form.get('bill_ref')#typed
-        amount = request.form.get('paidamount')#typed
+            pay_date = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
+
 
         valid_amount = validate_input(amount)
-
-        if not valid_amount:
-            return "<div class='center-btn text-danger text-xx'>Invalid amount !</div"
 
         if raw_bill_ref.upper() == "N/A":
             bill_ref = raw_bill_ref
@@ -3853,53 +3935,28 @@ class SubmissionsManagement(Resource):
 
         ########################################################################################
 
-        if house_name:
-            prop = ApartmentOp.fetch_apartment_by_name(prop)
+        prop = ApartmentOp.fetch_apartment_by_name(prop)
 
-            if not paymonth:
-                period = prop.billing_period
-            else:
-                num_month = get_numeric_month(paymonth)
-                period = generate_date(num_month,prop.billing_period.year)
+        target_submissions = fetch_current_billing_period_data_alt(prop.billing_period,prop.submissions)
 
-            target_houses = []       
+        if not target_submissions:
+            period = prop.billing_period
 
-            if house_name2:
-
-                if house_name2 == "none selected":
-                    return "<span class='text-danger text-xx'>Submission failed, please specify house!</span>"
-
-                str_houses = house_name2.replace(","," ")
-                houselist = list(str_houses.split(" "))
-
-                for hse in houselist:
-                    hse_obj = get_specific_house_obj(prop.id,hse)
-                    target_houses.append(hse_obj)
-
-            else:
-                hse_obj = get_specific_house_obj_from_house_tenant_alt(prop.id,house_name)
-                target_houses.append(hse_obj)
-
-            house_obj = target_houses[0]
-            
-
-            tenant_obj = check_occupancy(house_obj)[1]
-
-            house_id = house_obj.id
-            tenant_id = tenant_obj.id
             created_by = current_user.id
 
             #######################################################################################
             # pay_period = paid to which bills
             # pay_date = alilipa lini?
-            sub_obj = SubmissionOp(valid_amount,bill_ref,period,pay_date,prop.id, house_id,tenant_id,created_by)
+            sub_obj = SubmissionOp(valid_amount,bill_ref,period,pay_date,prop.id,created_by)
             sub_obj.save()
             #################################################################################################
 
-            return "Submitted successfully"
         else:
-            print("FORGOT TO SELECT HOUSE WHILE MAKING SUBMISSION")
-            abort(404)
+            current_submission = target_submissions[0]
+            SubmissionOp.update_submission(current_submission,bill_ref,pay_date)
+
+        return "Submitted successfully"
+
 
 class PaymentsManagement(Resource):
     """class"""

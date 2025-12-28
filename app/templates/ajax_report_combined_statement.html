@@ -246,9 +246,18 @@
                 <div class="col-6 text-right text-black no-wrap">Approved By:</div>
                 <div class="col-6">........................</div>
               </div>
+
+              <style>
+                .editable:empty::before {
+                content: attr(data-placeholder);
+                color: #aaa;
+                pointer-events: none;
+              }
+              </style>
               <div class="row mb-3">
                 <div class="col-6 text-right text-black no-wrap">Cheque No: / Ref</div>
-                <div class="col-6 black" id="editableRefScreen" contenteditable="true">........................</div>
+                <!-- <div class="col-6 black" id="editableRefScreen" contenteditable="true">{{screenref}}</div> -->
+                <div class="col-6 black editable" id="editableRefScreen" contenteditable="true" data-placeholder="........................">{{ screenref }}</div>
               </div>
               <div class="row mb-3">
                 <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
@@ -256,8 +265,42 @@
               </div>
               <div class="row mb-3">
                 <div class="col-6 text-right text-black no-wrap">Date paid:</div>
-                <div class="col-6 black" id="editableDateScreen" contenteditable="true">........................</div>
+                <input class="col-6 black" type="date" id="editableDateScreen"value="{{screendate}}">
               </div>
+
+              <div class="center-btn">
+                <button class="btn btn-outline-success btn-sm mb-2" id="updateRefDateBtn">Update Ref/Date</button>
+              </div>
+
+              <script>
+                $("#updateRefDateBtn").click(function(){
+                  var newRef = $("#editableRefScreen").text();
+                  var newDate = $("#editableDateScreen").val();
+
+                  console.log("New Ref: ", newRef);
+                  console.log("New Date: ", newDate);
+
+                  $.ajax({
+                    url: '/submissions',
+                    type: 'POST',
+                    data: {
+                      prop: $("#prop").val(),
+                      screenref: newRef,
+                      screendate: newDate,
+                      amount: 0
+                    },
+                    success: function(response) {
+                      console.log("Screen Ref and Date updated successfully.");
+                      // Optionally, you can provide user feedback here
+                      $("#view_general").click(); // Refresh the report view
+                    },
+                    error: function(xhr, status, error) {
+                      console.error("Error updating Screen Ref and Date:", error);
+                    }
+                  });
+                });
+              </script>
+
             </div>
 
             <div class="divjust-end mr-5">
@@ -540,7 +583,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Cheque No / Ref:</div>
-                  <div class="col-6 black" id="editableRefPrint">........................</div>
+                  <div class="col-6 black" id="editableRefPrint">{{screenref}}</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
@@ -548,7 +591,7 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Date:</div>
-                  <div class="col-6 black" id="editableDatePrint">........................</div>
+                  <div class="col-6 black" id="editableDatePrint">{{screendate}} </div>
                 </div>
               </div>
 
@@ -567,7 +610,7 @@
 
                 screenDateElement.addEventListener('input', function() {
                     // Copy the text content to the hidden print element
-                    printDateElement.textContent = screenDateElement.textContent;
+                    printDateElement.textContent = screenDateElement.value;
                 });
               </script>
   

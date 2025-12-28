@@ -2378,6 +2378,8 @@ class CombinedReport(Resource):
         expenses_amount = 0.0
         expenses_amount_table = 0.0
         depositrecovery = 0.0
+        waterrecovery = 0.0
+        garbrecovery = 0.0
         remittances = 0.0
         
 
@@ -2387,6 +2389,12 @@ class CombinedReport(Resource):
             if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
                 if exp.expense_type == "deposit recovery":
                     depositrecovery += exp.amount
+
+                elif exp.expense_type == "water recovery":
+                    waterrecovery += exp.amount
+
+                elif exp.expense_type == "garbage recovery":
+                    garbrecovery += exp.amount
 
                 elif exp.expense_type == "paid ll":
                     paidll += exp.amount
@@ -2440,7 +2448,7 @@ class CombinedReport(Resource):
 
         gross_amount = amount_payable + watertotal + garbagetotal + electricitytotal + securitytotal + servicetotal + depositptotal
 
-        raw_netpay = gross_amount - expenses_amount - paidll - depositrecovery
+        raw_netpay = gross_amount - expenses_amount - paidll - depositrecovery - waterrecovery - garbrecovery
         netpay = (f"{raw_netpay:,.1f}")
 
         fieldshow_loan =  "" if apartment_obj.id == 33 else "dispnone"
@@ -2495,6 +2503,8 @@ class CombinedReport(Resource):
             expenses = f"{expenses_amount:,.1f}",
             expenses_amount_table = f"{expenses_amount_table:,.1f}",
             formatted_deprecovery = f"{depositrecovery:,.1f}",
+            formatted_waterrecovery = f"{waterrecovery:,.1f}",
+            formatted_garbrecovery = f"{garbrecovery:,.1f}",
             loan = formatted_loan,
             formatted_netrent=formatted_netrent,
             formatted_paidmgt=formatted_paidmgt,

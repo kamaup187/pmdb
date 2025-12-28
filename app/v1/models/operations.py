@@ -4557,7 +4557,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
                         # if self.tenant.phone in nums:
                         #     DepositPaymentOp.update_date(pp,datetime.datetime.now())
                         if pp.date.month == self.month and  pp.date.year == self.year:
-                            payments += pp.amount
+                            if not self.tenant.deposits.total_paid:
+                                pass
+                            else:
+                                payments += pp.amount
                     return f'{payments:,.1f}'
                 else:
                     # print("no segregated payments")

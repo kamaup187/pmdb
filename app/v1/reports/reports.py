@@ -48,6 +48,14 @@ class Reports(Resource):
         ###################################################################################################
         props = fetch_all_apartments_by_user(current_user)
 
+        allowed_users_for_114 = ["8760","6699"]
+
+        if current_user.company.id == 114:
+            if current_user.usercode in allowed_users_for_114:
+                pass
+            else:
+                props = []
+
         for prop in props:
             total_collections = 0.0
             

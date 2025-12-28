@@ -1552,7 +1552,17 @@ class DbInitializer(Resource):
         c=CreateChargeTypes()
         c.create_charge_types()
 
-        return "Initialized"       
+        return "Initialized"  
+
+class AuthUser(Resource):
+    """Handles login and access token generation."""
+    @login_required
+    def post(self):
+        password = request.form.get("pass")
+        if UserOp.password_is_valid(current_user,password):
+            return "1" 
+        else:
+            return "0"    
             
 class UserLogin(Resource):
     """Handles login and access token generation."""

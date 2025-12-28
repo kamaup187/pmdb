@@ -8,6 +8,11 @@
     size:landscape;
   } */
 
+  .masked{
+    -webkit-text-security: disc;
+    text-security:disc;
+  }
+
 </style>
 
 <button id="btnDownload" class="btn btn-success btn-sm dispnone">
@@ -531,7 +536,59 @@
               <div class="media-body">
                 <div class="position-relative">
                   <div class="card-body modal-forms">
-                    <form autocomplete="off" method="POST" action="">
+                    <form id="restrict_new_entry_form" class="" autocomplete="off" method="POST" action="">
+                      <div class="row form-group text-black">
+                        <div class="col-6">
+                          <label class="small mb-1" for="codeInput">Enter code to access</label>
+                          <input type="password" class="form-control masked" id="codeInput">
+                        </div>
+                        <div class="col-6">
+                          <label class="small mb-1 hide" for="submitCode">Enter code</label>
+                          <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                          <button id="submitCode" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
+                        </div>
+                    </div>
+                    </form>
+
+                    <!-- <script>
+                      $("#submitCode").on('click',function(){
+                        if($("#codeInput").val() === "2475") {
+                          $("#new_entry_form").removeClass("dispnone")
+                          $("#restrict_new_entry_form").addClass("dispnone")
+                        } else {
+                          alert("Code incorrect!")
+                        }
+                      })
+                    </script> -->
+
+                    <script>
+                      $("#submitCode").on('click',function(){
+
+                        $("#preloader-btn2").click();
+
+                        $.ajax({
+                            url: "/auth/user",
+                            type: "post",
+                            data: {
+                                pass: $("#codeInput").val(),
+                            },
+                            success: function (response) {
+                                $("#postloader-btn2").click();
+                                  if(response == "1") {
+                                    $("#new_entry_form").removeClass("dispnone")
+                                    $("#restrict_new_entry_form").addClass("dispnone")
+                                  } else {
+                                    alert("Code incorrect!")
+                                  }
+
+                            }
+                        });
+                        
+
+                      })
+                    </script>
+
+                    <form id="new_entry_form" class="dispnone" autocomplete="off" method="POST" action="">
      
                     <div class="form-group text-black dispnone">
                       <label class="small mb-1" for="inputDate">Choose Date</label>
@@ -575,11 +632,12 @@
                         <input type="number" class="form-control" id="inputAmount" placeholder="Enter amount" required>
                     </div>
  
-                    </form>
                     <div class="mt-3">
                       <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
                       <button id="submitRecord" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
                     </div>
+                    
+                    </form>
                   </div>
                 </div>
               </div>
@@ -692,6 +750,12 @@
 
 
 $("#submitRecord").click(function () {
+
+    if ($("#prop").val() == "" || $("#month").val() == "") {
+      alert("Please select property and date!")
+      return;
+    }
+
     $(this).text("submitting...");
       $.ajax({
           url: "/expenses",

@@ -247,16 +247,16 @@
                 <div class="col-6">........................</div>
               </div>
               <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
-                <div class="col-6">........................</div>
+                <div class="col-6 text-right text-black no-wrap">Cheque No: / Ref</div>
+                <div class="col-6" id="editableRefScreen" contenteditable="true">........................</div>
               </div>
               <div class="row mb-3">
                 <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
                 <div class="col-6">........................</div>
               </div>
               <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Date:</div>
-                <div class="col-6">........................</div>
+                <div class="col-6 text-right text-black no-wrap">Date paid:</div>
+                <div class="col-6" id="editableDateScreen" contenteditable="true">........................</div>
               </div>
             </div>
 
@@ -535,8 +535,8 @@
                   <div class="col-6">........................</div>
                 </div>
                 <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
-                  <div class="col-6">........................</div>
+                  <div class="col-6 text-right text-black no-wrap">Cheque No / Ref:</div>
+                  <div class="col-6" id="editableRefPrint">........................</div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
@@ -544,9 +544,28 @@
                 </div>
                 <div class="row mb-3">
                   <div class="col-6 text-right text-black no-wrap">Date:</div>
-                  <div class="col-6">........................</div>
+                  <div class="col-6" id="editableDatePrint">........................</div>
                 </div>
               </div>
+
+              <script>
+                const screenRefElement = document.getElementById('editableRefScreen');
+                const printRefElement = document.getElementById('editableRefPrint');
+
+                const screenDateElement = document.getElementById('editableDateScreen');
+                const printDateElement = document.getElementById('editableDatePrint');
+
+                // Listen for input changes in the visible element
+                screenRefElement.addEventListener('input', function() {
+                    // Copy the text content to the hidden print element
+                    printRefElement.textContent = screenRefElement.textContent;
+                });
+
+                screenDateElement.addEventListener('input', function() {
+                    // Copy the text content to the hidden print element
+                    printDateElement.textContent = screenDateElement.textContent;
+                });
+              </script>
   
 
             <div class="divjust-end mr-5">

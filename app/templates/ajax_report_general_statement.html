@@ -110,10 +110,11 @@
                       <th class="">TENANT NAME</th>
                       <th class="header-right">TYPE</th>
                       <th class="header-right">BB/F</th>
-                      <th class="header-right">DEP</th>
+                      <!-- <th class="header-right">DEP</th> -->
                       <th class="header-right">RENT</th>
                       <th class="header-right">WATER</th>
-                      <th class="header-right">GARB</th>
+                      <th class="header-right">SERV</th>
+                      <!-- <th class="header-right">GARB</th> -->
                       <th class="header-right">TOTAL DUE</th>
                       <th class="header-right">TOTAL PAID</th>
                       <th class="header-right">DATE PAID</th>
@@ -129,10 +130,11 @@
                       <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
                       <td class="data-cell text-right">{{ bill['arrears-no-star'] }}</td>
-                      <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                      <!-- <td class="data-cell text-right">{{ bill['deposit'] }}</td> -->
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{ bill['water'] }}</td>
-                      <td class="data-cell text-right">{{ bill['garbage'] }}</td>
+                      <td class="data-cell text-right">{{ bill['service'] }}</td>
+                      <!-- <td class="data-cell text-right">{{ bill['garbage'] }}</td> -->
                       <td class="data-cell text-right">{{bill['total']}}</td>
                       <td class="data-cell text-right">{{ bill['paid'] }}</td>
                       <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
@@ -145,10 +147,11 @@
                     <tr>
                       <td colspan="4" class="font-weight-bold">TOTALS ...</td>
                       <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                      <td class="font-weight-bold text-right">{{deptotal}}</td>
+                      <!-- <td class="font-weight-bold text-right">{{deptotal}}</td> -->
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{watertotal}}</td>
-                      <td class="font-weight-bold text-right">{{garbagetotal}}</td>
+                      <td class="font-weight-bold text-right">{{servtotal}}</td>
+                      <!-- <td class="font-weight-bold text-right">{{garbagetotal}}</td> -->
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
                       <td class="font-weight-bold text-right">-</td>
@@ -324,10 +327,11 @@
                   <th class="">TENANT NAME</th>
                   <!-- <th class="header-right">TYPE</th> -->
                   <th class="header-right">BB/F</th>
-                  <th class="header-right">DEP</th>
+                  <!-- <th class="header-right">DEP</th> -->
                   <th class="header-right">RENT</th>
                   <th class="header-right">WATER</th>
-                  <th class="header-right">GARB</th>
+                  <th class="header-right">SERV</th>
+                  <!-- <th class="header-right">GARB</th> -->
                   <th class="header-right">TOTAL DUE</th>
                   <th class="header-right">TOTAL PAID</th>
                   <th class="header-right">DATE PAID</th>
@@ -343,10 +347,11 @@
                   <td class="data-cell text-left {{bill['vacancy']}}">{{ bill['tenant-alt']}}</td>
                   <!-- <td class="data-cell text-right">{{ bill['desc'] }}</td> -->
                   <td class="data-cell text-right">{{ bill['arrears-no-star'] }}</td>
-                  <td class="data-cell text-right">{{ bill['deposit'] }}</td>
+                  <!-- <td class="data-cell text-right">{{ bill['deposit'] }}</td> -->
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
                   <td class="data-cell text-right">{{ bill['water'] }}</td>
-                  <td class="data-cell text-right">{{ bill['garbage'] }}</td>
+                  <td class="data-cell text-right">{{ bill['service'] }}</td>
+                  <!-- <td class="data-cell text-right">{{ bill['garbage'] }}</td> -->
                   <td class="data-cell text-right">{{bill['total']}}</td>
                   <td class="data-cell text-right">{{ bill['paid'] }}</td>
                   <td class="data-cell text-right">{{ bill['payment_date'] }}</td>
@@ -359,10 +364,11 @@
                 <tr>
                   <td colspan="3" class="font-weight-bold">TOTALS ...</td>
                   <td class="font-weight-bold text-right">{{bbftotal}}</td>
-                  <td class="font-weight-bold text-right">{{deptotal}}</td>
+                  <!-- <td class="font-weight-bold text-right">{{deptotal}}</td> -->
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{watertotal}}</td>
-                  <td class="font-weight-bold text-right">{{garbagetotal}}</td>
+                  <td class="font-weight-bold text-right">{{servtotal}}</td>
+                  <!-- <td class="font-weight-bold text-right">{{garbagetotal}}</td> -->
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
                   <td class="font-weight-bold text-right">-</td>

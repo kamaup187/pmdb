@@ -871,11 +871,13 @@ def send_mail_notifications_alt(company,param):
     app = create_app()
     app.app_context().push()
 
+    # print("Preparing to send mail notification...", mailsender)
+
     try:
         with mail.connect() as conn:
             print ("Mail connection successful, sending mails")
             try:
-                txt = Message('KiotaPay, SMS Notification', sender = mailsender, recipients = ["koechpetersn@gmail.com"])
+                txt = Message('KiotaPay, SMS Notification', sender = "kiotapay@gmail.com", recipients = ["koechpetersn@gmail.com"])
                 txt.body = f"{param}"
                 conn.send(txt)
             except Exception as e:

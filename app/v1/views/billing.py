@@ -2083,7 +2083,7 @@ class SendInvoices(Resource):
         else:
             billid = ""
             txt = f'SMS Invoicing of type: {charge} and target: {message_invoice_type} requested by {current_user.company} for {prop}'
-            send_internal_email_notifications_alt(current_user.company.name,txt)
+            # send_internal_email_notifications_alt(current_user.company.name,txt)
 
             # try:
             #     advanta_send_sms(txt,kiotanum,kiotapay_api_key,kiotapay_partner_id,"KEVMAREAL")
@@ -2092,9 +2092,23 @@ class SendInvoices(Resource):
 
         # THIS IS INTENTIONAL, JOB IS NOT WITHIN THE IF BLOCK
 
-        job982 = q.enqueue_call(
-            func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000
-        )
+        sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
+
+        if sms_units:
+            if int(sms_units) < 30:
+                # advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                advanta_send_sms(f'Alert: Low SMS units balance of {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+            else:
+                advanta_send_sms(f'Info: SMS Invoicing: units bal: {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+
+            job982 = q.enqueue_call(
+                func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000
+            )
+
+        else:
+            advanta_send_sms(f'Alert: Failed to fetch SMS units balance for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+            
         return None
 
 class SendMail(Resource):

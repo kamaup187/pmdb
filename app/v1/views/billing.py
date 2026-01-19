@@ -7566,7 +7566,8 @@ class CallBackUrlAstrolRuiru(Resource):
         # response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         com = CompanyOp.fetch_company_by_id(company_id)
-        props = com.props
+        # props = com.props
+        props = [1133]
 
         prop = None
         if bill_ref_num:
@@ -7661,7 +7662,8 @@ class CallBackUrlAstrolThika(Resource):
         # response = sms.send("ASTROL RUIRU MPESA DATA JUST IN", ["+254716674695"],"KIOTAPAY")
 
         com = CompanyOp.fetch_company_by_id(company_id)
-        props = com.props
+        # props = com.props
+        props = [951]
 
         prop = None
         if bill_ref_num:

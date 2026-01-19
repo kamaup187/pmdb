@@ -7567,7 +7567,8 @@ class CallBackUrlAstrolRuiru(Resource):
 
         com = CompanyOp.fetch_company_by_id(company_id)
         # props = com.props
-        props = [1133]
+        pp = ApartmentOp.fetch_apartment_by_id(1133)
+        props = [pp]
 
         prop = None
         if bill_ref_num:
@@ -7663,7 +7664,8 @@ class CallBackUrlAstrolThika(Resource):
 
         com = CompanyOp.fetch_company_by_id(company_id)
         # props = com.props
-        props = [951]
+        pp = ApartmentOp.fetch_apartment_by_id(951)
+        props = [pp]
 
         prop = None
         if bill_ref_num:

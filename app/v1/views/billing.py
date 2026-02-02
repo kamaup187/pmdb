@@ -437,13 +437,13 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("THE OAKS")
+        cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
             clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("THE OAKS")
+            cl = CompanyOp.fetch_company_by_name("Lesama Ltd")
             if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
@@ -453,7 +453,7 @@ class ClientBilling(Resource):
         for c in clients:
             print("printing clients",c)
             if not c.bills:
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
                 new_month_bill.save()
             else: 
                 result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -464,14 +464,14 @@ class ClientBilling(Resource):
                 if current_month_bill:
                     # pass
                     ClientBillOp.delete(current_month_bill)
-                    new_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
                     new_month_bill.save()
                 else:
                     try:
                         ClientBillOp.delete(current_month_bill)
                     except:
                         pass
-                    current_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,3000.0,0.0,0.0,0.0,0.0,3000.0,c.id)
                     current_month_bill.save()
 
         if not current_month_bill:
@@ -537,7 +537,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name("THE OAKS")
+        comm = CompanyOp.fetch_company_by_name("Lesama Ltd")
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -612,7 +612,7 @@ class CreateWaterCharge(Resource):
         try:
             if data_format_error:
                 
-                nonexistent_item = sheet.row_values(1)[1000000] # INTRODUCE AN ERROR TO BE CAUGHT
+                nonexistent_item = sheet.row_values(1)[300000] # INTRODUCE AN ERROR TO BE CAUGHT
 
             for row in rows:
 
@@ -1438,7 +1438,7 @@ class EditBill(Resource):
                 try:
                     if data_format_error:
                         #Throw error
-                        nonexistent_item = sheet.row_values(1)[1000000]
+                        nonexistent_item = sheet.row_values(1)[300000]
 
                     dict_array = []
 
@@ -2093,8 +2093,11 @@ class SendInvoices(Resource):
         # THIS IS INTENTIONAL, JOB IS NOT WITHIN THE IF BLOCK
 
         sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
-
-        if sms_units:
+        if current_user.company.id in [45]:
+            job982 = q.enqueue_call(
+                func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000
+            )
+        else:
             if int(sms_units) < 30:
                 # advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
                 advanta_send_sms(f'Alert: Low SMS units balance of {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
@@ -2386,7 +2389,7 @@ class UploadPayments(Resource):
         try:
             if data_format_error:
                 #Throw error
-                nonexistent_item = sheet.row_values(1)[1000000]
+                nonexistent_item = sheet.row_values(1)[300000]
 
             dict_array = []
 

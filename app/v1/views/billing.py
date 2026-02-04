@@ -2095,10 +2095,10 @@ class SendInvoices(Resource):
         sms_units = advanta_sms_balance(kiotapay_api_key,kiotapay_partner_id)
 
         if sms_units:
-            if int(sms_units) < 30:
+            # if int(sms_units) < 30:
+            if int(sms_units) > 3000000000:
                 # advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
                 advanta_send_sms(f'Alert: Low SMS units balance of {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
-
             else:
                 advanta_send_sms(f'Info: SMS Invoicing: units bal: {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 

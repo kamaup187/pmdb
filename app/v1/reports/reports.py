@@ -2432,7 +2432,8 @@ class CombinedReport(Resource):
         formatted_paidll = (f"{paidll:,.1f}")
 
         if apartment_obj.commission:
-            commission = renttotal * apartment_obj.commission * 0.01
+            # commission = renttotal * apartment_obj.commission * 0.01
+            commission = paid_rent * apartment_obj.commission * 0.01
             commission_percentage = f"({apartment_obj.commission} %)"
 
         else:

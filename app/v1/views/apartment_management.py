@@ -4986,13 +4986,17 @@ class Expenses(Resource):
                     if inv.arrears > 0:
                         remove_arrears(inv)
 
+                new_name = name + f" (ROOM {house_obj.name})"
+            else:
+                new_name = name
 
-            expense_obj = InternalExpenseOp(name,expense_period,qty,house,deposit,cost,labour,amount,desc,expense_type,prop_obj.id,current_user.id)
+
+            expense_obj = InternalExpenseOp(new_name,expense_period,qty,house,deposit,cost,labour,amount,desc,expense_type,prop_obj.id,current_user.id)
             expense_obj.save()
 
             InternalExpenseOp.update_status(expense_obj,"completed")
 
-            recon = AppTransactionOp(paydetails,expense_period,name,False,None,None,None,None,amount,"credit","cheque deposit",current_user.company.id)
+            recon = AppTransactionOp(paydetails,expense_period,new_name,False,None,None,None,None,amount,"credit","cheque deposit",current_user.company.id)
             recon.save()
 
             return success

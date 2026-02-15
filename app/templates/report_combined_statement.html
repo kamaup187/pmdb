@@ -609,6 +609,15 @@
                         </select>
                     </div>
 
+                      <div class="form-group">
+                        <select class="select-css dispnone" id="remindertenant" required>
+                          <option disabled selected value> -- Select tenant -- </option>
+                          {% for o in tenants%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
                     <!-- Payment Type Field -->
                     <!-- <div class="form-group text-black">
                         <label>Payment Type</label>
@@ -768,6 +777,7 @@ $("#submitRecord").click(function () {
               cost:$("#inputAmount").val(),
               exp_type:$("#inputCategory").val(),
               name: $("#inputDescription").val(),
+              house: $("#remindertenant").val(),
               run: "expenserequest"
           },
           success: function (response) {
@@ -796,6 +806,36 @@ $("#submitRecord").click(function () {
     
   });
 
+
+  $("#inputCategory").on('change', function(){
+
+    // $("#tt-details").html("");
+    // $("#reminderphone").addClass("dispnone")
+    // $("#reminderphone").val("")
+    if(this.value == "rent recovery") {
+      $("#remindertenant").removeClass("dispnone")
+    }else{
+      $("#remindertenant").addClass("dispnone")
+      $("#remindertenant").val("")
+      return;
+    }
+
+    var option = `<option disabled selected value> loading tenants... </option>`
+
+    $("#remindertenant").html(option);
+    $.ajax({
+      url: "{{ url_for('api.allocatetenants') }}",
+      type: "POST",
+      data: {
+            // propid: $("#reminderprop").val(),
+            propid: $("#prop").val(),
+            target:"recovery house options"
+          },
+      success: function(response) {
+        $("#remindertenant").html(response);
+      }
+    });
+  });
 
 
   feather.replace()

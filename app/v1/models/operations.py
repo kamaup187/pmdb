@@ -3907,6 +3907,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.fine_status = status
         db.session.commit()
 
+    def update_house(self,house_id):
+        self.house_id = house_id
+        db.session.commit()
+
     def update_dep_journal(self,status):
         self.dep_journal = status
         db.session.commit()

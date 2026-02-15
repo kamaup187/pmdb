@@ -103,41 +103,56 @@ def advanta_send_sms(txt,tel,apikey,partnerid,shortcode):
 
     url = "https://quicksms.advantasms.com/api/services/sendsms/"
 
-    payload = {
-    "apikey":apikey,
-    "partnerID":partnerid,
-    "message":txt,
-    "shortcode":shortcode,
-    "mobile":tel
-    }
+    tel_arr = []
+    respdict = None
 
-    try:
-        response = requests.post(url, json=payload)
-        print("ADVANTA sms sending successful")
-    except Exception as e:
-        response = ""
-        print("ADVANTA sms sending failed",e)
+    if "/" in tel:
 
-    try:
-        print(response.json())
-        print(response.json()["responses"])
-        print(response.json()["responses"][0])
-        print(response.json()["responses"][0]["messageid"])
+        part1 = tel.split("/")[0]
+        tel_arr.append(part1)
+        part2 = tel.split("/")[1]
+        tel_arr.append(part2)
 
-        msgid = response.json()["responses"][0]["messageid"]
-        print("ADVANTA sms response success")
-    except Exception as e:
-        print("ADVANTA sms response error",e)
-        msgid = ""
+    else:
+        tel_arr.append(tel)
 
-    if msgid:
-        respdict = {
+    for tele in tel_arr:
+
+        payload = {
         "apikey":apikey,
         "partnerID":partnerid,
-        "msgid":msgid
+        "message":txt,
+        "shortcode":shortcode,
+        "mobile":tele
         }
-    else:
-        respdict = None
+
+        try:
+            response = requests.post(url, json=payload)
+            print("ADVANTA sms sending successful")
+        except Exception as e:
+            response = ""
+            print("ADVANTA sms sending failed",e)
+
+        try:
+            print(response.json())
+            print(response.json()["responses"])
+            print(response.json()["responses"][0])
+            print(response.json()["responses"][0]["messageid"])
+
+            msgid = response.json()["responses"][0]["messageid"]
+            print("ADVANTA sms response success")
+        except Exception as e:
+            print("ADVANTA sms response error",e)
+            msgid = ""
+
+        if msgid:
+            respdict = {
+            "apikey":apikey,
+            "partnerID":partnerid,
+            "msgid":msgid
+            }
+        else:
+            respdict = None
 
     return respdict
 

@@ -437,13 +437,13 @@ class ClientBilling(Resource):
         timenow = datetime.datetime.now()
         clients = []
         # clients = CompanyOp.fetch_all_active_companies()
-        cl = CompanyOp.fetch_company_by_name("THE OAKS")
+        cl = CompanyOp.fetch_company_by_name("Premier Realty")
         if cl:
             print("changing name............")
             # CompanyOp.update_name(cl,"THE PEACEFIELD")
             clients.append(cl)
         else:
-            cl = CompanyOp.fetch_company_by_name("THE OAKS")
+            cl = CompanyOp.fetch_company_by_name("Premier Realty")
             if cl:clients.append(cl)
 
         print("CLIENTS >>>>>>>>>>>>>",cl)
@@ -453,7 +453,7 @@ class ClientBilling(Resource):
         for c in clients:
             print("printing clients",c)
             if not c.bills:
-                new_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                new_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                 new_month_bill.save()
             else: 
                 result = fetch_current_billing_period_bills(timenow,c.bills)
@@ -464,14 +464,14 @@ class ClientBilling(Resource):
                 if current_month_bill:
                     # pass
                     ClientBillOp.delete(current_month_bill)
-                    new_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                    new_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                     new_month_bill.save()
                 else:
                     try:
                         ClientBillOp.delete(current_month_bill)
                     except:
                         pass
-                    current_month_bill = ClientBillOp(timenow.year,timenow.month,10000.0,0.0,0.0,0.0,0.0,10000.0,c.id)
+                    current_month_bill = ClientBillOp(timenow.year,timenow.month,4000.0,0.0,0.0,0.0,0.0,4000.0,c.id)
                     current_month_bill.save()
 
         if not current_month_bill:
@@ -537,7 +537,7 @@ class ClientInvoice(Resource):
                 co=current_user.company,
                 name=current_user.name))
 
-        comm = CompanyOp.fetch_company_by_name("THE OAKS")
+        comm = CompanyOp.fetch_company_by_name("Premier Realty")
 
         mycomm = CompanyOp.fetch_company_by_name('RENTLIB TECHNOLOGIES')
 
@@ -551,14 +551,14 @@ class ClientInvoice(Resource):
         # bill = ClientBillOp.fetch_specific_bill(clientbillid)
 
         client = bill.company
-        invnum = bill.id + 33085
+        invnum = bill.id + 38085
         # invnum = 
 
         timenow = datetime.datetime.now()
         
         # diff = timenow.day - 2
         # invdate = bill.date - relativedelta(days = diff)
-        invdate = generate_exact_date(2,1,2026)
+        invdate = generate_exact_date(2,2,2026)
         inv_date = invdate.strftime("%d/%b/%y")
 
         # invdue = invdate + relativedelta(days=1)
@@ -3411,6 +3411,9 @@ class ReceivePayment(Resource):
         
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
+
+        if house_obj.locked:
+            HouseOp.update_lock_status(house_obj, False)
 
         # trans_time = datetime.datetime.now()
         trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",paidll_bool,payment_obj.id,house_obj.apartment.name,house_obj.name,bank,valid_amount,"debit","Rent deposit",co.id)

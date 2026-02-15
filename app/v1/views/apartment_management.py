@@ -4974,6 +4974,19 @@ class Expenses(Resource):
             if not expense_type:
                 expense_type = "other"
 
+            if house:
+                house_part = house.split("-")[0]
+                house_obj = get_specific_house_obj(prop_obj.id, house_part)
+                tenant_obj_check = check_occupancy(house_obj)
+                if tenant_obj_check[0] == "occupied":
+                    tenant_obj = tenant_obj_check[1]
+
+                    inv = fetch_latest_tenant_invoice(tenant_obj)
+
+                    if inv.arrears > 0:
+                        remove_arrears(inv)
+
+
             expense_obj = InternalExpenseOp(name,expense_period,qty,house,deposit,cost,labour,amount,desc,expense_type,prop_obj.id,current_user.id)
             expense_obj.save()
 
@@ -7958,6 +7971,34 @@ class AllocateTenants(Resource):
             items.insert(0, "All")
 
             return render_template('ajax_multivariable.html',items=items,placeholder=placeholder)
+
+        if target == "recovery house options":
+            # stored_apartment = ApartmentOp.fetch_apartment_by_id(get_identifier(request.form.get("propid")))
+            # print("njegeee",request.form.get("propid"))
+            house_list = filter_in_occupied_houses(stored_apartment.name) if stored_apartment else None
+            if not house_list:
+                placeholder = "No occupied houses!"
+            else:
+                placeholder = "select tenant"
+
+            str_objs = []
+            for hh in house_list:
+                tt_obj = None
+                tt_check = check_occupancy(hh)
+                if tt_check[0] == "occupied":
+                    tt_obj = tt_check[1]
+
+                inv = None
+                if tt_obj:
+                    inv = fetch_latest_tenant_invoice(tt_obj)
+                if inv:
+                    str_obj = f"{hh.name}-{tt_obj.name} Arrears {inv.arrears}"
+                    str_objs.append(str_obj)
+
+            items = sort_items(str_objs)
+            # items.insert(0, "All")
+
+            return render_template('ajax_multivariable.html',items=items,placeholder=placeholder)
         
         if target == "house grid options":
             house_list = houseauto(apartment_id)
@@ -8118,6 +8159,10 @@ class AllocateTenants(Resource):
                 TenantOp.update_residency(tenant_obj,"Old")
             else:
                 TenantOp.update_residency(tenant_obj,"New")
+
+            if target == "transfer":
+                latest_inv = fetch_latest_tenant_invoice(tenant_obj)
+                MonthlyChargeOp.update_house(latest_inv,house_id)
 
             msg = f"Tenant {tenant_obj.name} has been allocated house {house_num} successfully"
         else:

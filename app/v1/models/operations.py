@@ -1975,6 +1975,10 @@ class HouseOp(House,Base):
         except:
             return '<span class="text-danger">-n/a-</span>'
 
+    def get_date_locked(self):
+        lock_date = self.updated_on + datetime.timedelta(hours=3) if self.updated_on else None
+        return lock_date.strftime("%d/%b/%Y %H:%M:%S") if lock_date else "N/A"
+
     def view(self):
         if not self.housecode:
             return {
@@ -2012,6 +2016,7 @@ class HouseOp(House,Base):
                 'description':self.description,
                 'status':HouseOp.get_status(self),
                 'locked':HouseOp.get_locked(self),
+                'date':HouseOp.get_date_locked(self),
 
                 'agent':HouseOp.get_agentname(self),
                 'booking':HouseOp.get_booking(self),

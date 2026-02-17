@@ -75,9 +75,11 @@
                     <tr>
                       <th class="">PNO</th>
                       <th class="">HOUSE</th>
-                      <th class="">STATUS</th>
                       <th class="">TENANT NAME</th>
-                      <!-- <th class="">RENT BC/F</th> -->
+                      <th class="">PAID</th>
+                      <th class="">BALANCE</th>
+                      <th class="">STATUS</th>
+                      <th class="">DATE LOCKED</th>
 
                     </tr>
                   </thead>
@@ -86,9 +88,11 @@
                     <tr>
                       <td class="data-cell">{{ bill['prop'] }}</td>
                       <td class="data-cell text-center">{{ bill['house'] }}</td>
-                      <td class="data-cell text-center">{{ bill['locked'] | safe }}</td>
                       <td class="data-cell">{{ bill['tenant']}}</td>
-                      <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
+                      <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                      <td class="data-cell text-center">{{ bill['balance']}}</td>
+                      <td class="data-cell text-center">{{ bill['locked'] | safe }}</td>
+                      <td class="data-cell text-right">{{ bill['date'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -98,31 +102,6 @@
 
           </div>
 
-          <div class="divjust-end ln-16 mobile-malaysian nobreak">
-            <div>
-              <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
-                <div class="col-6">........................</div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Approved By:</div>
-                <div class="col-6">........................</div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
-                <div class="col-6">........................</div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
-                <div class="col-6">........................</div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-6 text-right text-black no-wrap">Date:</div>
-                <div class="col-6">........................</div>
-              </div>
-            </div>
-
-          </div>
         </div>
       </div>
     </div>
@@ -176,9 +155,11 @@
                 <tr>
                   <th class="">PNO</th>
                   <th class="">HOUSE</th>
-                  <th class="">STATUS</th>
                   <th class="">TENANT NAME</th>
-                  <!-- <th class="">BALANCE</th> -->
+                  <th class="">PAID</th>
+                  <th class="">BALANCE</th>
+                  <th class="">STATUS</th>
+                  <th class="">DATE LOCKED</th>
                 </tr>
               </thead>
               <tbody>
@@ -186,9 +167,11 @@
                 <tr>
                   <td class="data-cell">{{ bill['prop'] }}</td>
                   <td class="data-cell text-center">{{ bill['house'] }}</td>
-                  <td class="data-cell text-center">{{ bill['locked'] | safe }}</td>
                   <td class="data-cell">{{ bill['tenant']}}</td>
-                  <!-- <td class="data-cell text-right">{{ bill['balance'] }}</td> -->
+                  <td class="data-cell text-right">{{ bill['paid'] }}</td>
+                  <td class="data-cell text-right">{{ bill['balance'] }}</td>
+                  <td class="data-cell text-center">{{ bill['locked'] | safe }}</td>
+                  <td class="data-cell text-right">{{ bill['date'] }}</td>
                 </tr>
               {% endfor %}
 
@@ -196,31 +179,6 @@
 
             </table>
             <!-- <div class="divjust-end ln-16 mobile-malaysian noprint"> -->
-            <div class="divjust-end ln-16 mobile-malaysian nobreak">
-              <div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Approved By:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
-                  <div class="col-6">........................</div>
-                </div>
-                <div class="row mb-3">
-                  <div class="col-6 text-right text-black no-wrap">Date:</div>
-                  <div class="col-6">........................</div>
-                </div>
-              </div>
-  
-            </div>
           {% endif %}
         </div>
       </div>

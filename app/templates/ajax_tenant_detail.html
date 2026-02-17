@@ -1894,6 +1894,7 @@
                 // billid: $("#edit_bill_identifier").text(),
                 tenantid: $("#tenant_identifier").text(),
                 target: "lockunlock",
+                passcode:$("#unlockpasscode").val(),
                 lock: $("#lockunlockbed").find("input[name='lockstatus']:checked").val(),
             },
       success: function(response) {

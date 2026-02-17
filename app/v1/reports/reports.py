@@ -1982,7 +1982,14 @@ class LockedReport(Resource):
             if not house.locked:
                 continue
             item = HouseOp.view(house)
-            item['balance'] = house.monthlybills[0].balance
+            tt = check_occupancy(house)
+            if tt[0] == "occupied":
+                invoice = fetch_latest_tenant_invoice(tt[1])
+            else:
+                invoice = None
+
+            item['balance'] = invoice.balance if invoice else 0.0
+            item['paid'] = invoice.paid_amount if invoice else 0.0
             items.append(item)
 
         return Response(render_template(

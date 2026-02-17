@@ -1401,7 +1401,18 @@ class EditBill(Resource):
             # db.session.expire(house)
             if request.form.get('lock'):
                 lock_bool = get_bool(request.form.get('lock'))
+                if lock_bool == False:
+                    passcode = request.form.get('passcode')
+                    if not passcode:
+                        return "Passcode required to unlock house"
+                    else:
+                        if UserOp.password_is_valid(current_user,passcode):
+                            pass                        
+                        else:
+                            return "Invalid passcode"
+
                 HouseOp.update_lock_status(house, lock_bool)
+
             db.session.expire(house)
 
             lock_date = house.updated_on + datetime.timedelta(hours=3) if house.updated_on else None
@@ -3412,8 +3423,8 @@ class ReceivePayment(Resource):
         payment_obj = PaymentOp(paymode,bill_ref,description,narration,pay_date,period,bal,valid_amount,propid, house_id,tenant_id,ptenant_id,created_by)
         payment_obj.save()
 
-        if house_obj.locked:
-            HouseOp.update_lock_status(house_obj, False)
+        # if house_obj.locked:
+        #     HouseOp.update_lock_status(house_obj, False)
 
         # trans_time = datetime.datetime.now()
         trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",paidll_bool,payment_obj.id,house_obj.apartment.name,house_obj.name,bank,valid_amount,"debit","Rent deposit",co.id)
@@ -3631,6 +3642,10 @@ class ReceivePayment(Resource):
                 bala-=valid_amount
 
                 MonthlyChargeOp.update_balance(specific_charge_obj,bala)
+
+                if bala < 1:
+                    if house_obj.locked:
+                        HouseOp.update_lock_status(house_obj, False)
 
                 paid_amount = specific_charge_obj.paid_amount
                 if depositpaidalt:

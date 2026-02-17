@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<div class="row underline-thin-fade">
+<div class="mr-3 ml-3 row underline-thin-fade">
 
   <div class="col-3 hide">Lock/unlock</div>
   <div class="col-9 form-group row">
@@ -27,3 +27,22 @@
 
 
 </div>
+
+<div class="mb-3 mr-3 ml-3 underline-thin-fade dispnone" id="passcode-div">
+    <div class="mb-3 form-group">
+    Passcode: <input class="text-black form-control" id="unlockpasscode" name="unlockpasscode" type="password"/>
+  </div>
+
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('input[name="lockstatus"]').change(function() {
+      if ($(this).val() === 'False') {
+        $('#passcode-div').removeClass('dispnone');
+      } else {
+        $('#passcode-div').addClass('dispnone');
+      }
+    });
+  });
+</script>

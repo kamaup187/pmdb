@@ -1944,7 +1944,8 @@ class LockedReport(Resource):
         selected_apartment = request.args.get("prop")
         if not selected_apartment:
             apartment_list = fetch_all_apartments_by_user(current_user)
-            apartment_list.append("All")
+            # apartment_list.append("All")
+            apartment_list.insert(0,"All")
             return Response(render_template(
                 "report_locked_statement.html",
                 tenantlist=[],

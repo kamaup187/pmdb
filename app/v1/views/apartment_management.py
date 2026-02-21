@@ -3916,6 +3916,16 @@ class SubmissionsManagement(Resource):
         raw_bill_ref = request.form.get('screenref')#typed
         amount = request.form.get('amount')#typed
 
+        selected_month = request.form.get("month")
+
+        print("selectrorriiiiii ",selected_month)
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
         if not trans_date:
             pay_date = datetime.datetime.now().date()
         else:
@@ -3937,10 +3947,10 @@ class SubmissionsManagement(Resource):
 
         prop = ApartmentOp.fetch_apartment_by_name(prop)
 
-        target_submissions = fetch_current_billing_period_data_alt(prop.billing_period,prop.submissions)
+        target_submissions = fetch_current_billing_period_data_alt(target_period,prop.submissions)
 
         if not target_submissions:
-            period = prop.billing_period
+            period = target_period
 
             created_by = current_user.id
 
@@ -3949,11 +3959,14 @@ class SubmissionsManagement(Resource):
             # pay_date = alilipa lini?
             sub_obj = SubmissionOp(valid_amount,bill_ref,period,pay_date,prop.id,created_by)
             sub_obj.save()
+
+            print("submission recorded for ", sub_obj.pay_period)
             #################################################################################################
 
         else:
             current_submission = target_submissions[0]
             SubmissionOp.update_submission(current_submission,bill_ref,pay_date)
+            print("submission updated for ", current_submission.pay_period)
 
         return "Submitted successfully"
 

@@ -2475,13 +2475,17 @@ class CombinedReport(Resource):
         disp_electricity = "" if electricitytotal else "dispnone"
         disp_water = "" if watertotal else "dispnone"
 
-        target_submissions = fetch_current_billing_period_data_alt(apartment_obj.billing_period,apartment_obj.submissions)
+        target_submissions = fetch_current_billing_period_data_alt(target_period,apartment_obj.submissions)
         if target_submissions:
             screenref = target_submissions[0].receipt_number
             screendate = target_submissions[0].pay_date.strftime("%Y-%m-%d")
+            print("submission displayed for ", target_submissions[0].pay_period)
         else:
             screenref = ""
             screendate = "--/--/----"
+            print("no submissions displayed")
+
+
 
         return Response(render_template(
             template,

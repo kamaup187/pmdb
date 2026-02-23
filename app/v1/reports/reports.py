@@ -8711,7 +8711,8 @@ class Recon(Resource):
             credittotal = f"{credittotal:,.1f}",
             debittotal = f"{debittotal:,.1f}",
 
-            paging=page(detailed_bills),
+            # paging=page(detailed_bills),
+            paging = "landscape",
  
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],

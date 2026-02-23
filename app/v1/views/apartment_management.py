@@ -3918,8 +3918,6 @@ class SubmissionsManagement(Resource):
 
         selected_month = request.form.get("month")
 
-        print("selectrorriiiiii ",selected_month)
-
         if selected_month:
             datestring = date_formatter_alt(selected_month)
             target_period = parse(datestring)

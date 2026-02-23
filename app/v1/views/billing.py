@@ -3497,15 +3497,15 @@ class ReceivePayment(Resource):
         rand_id = random_generator()
         if PaymentOp.fetch_payment_by_rand_id(rand_id):
             rand_id = random_generator(size=11)
-            awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
+            # awe = sms.send("Ran random the second time !", ["+254716674695"],sender)
             if PaymentOp.fetch_payment_by_rand_id(rand_id):
                 rand_id = random_generator(size=12)
-                awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
+                # awe = sms.send("Ran random the third time !", ["+254716674695"],sender)
                 if PaymentOp.fetch_payment_by_rand_id(rand_id):
                     rand_id = random_generator(size=13)
-                    awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
+                    # awe = sms.send("Ran random the fouth time !", ["+254716674695"],sender)
                     if PaymentOp.fetch_payment_by_rand_id(rand_id):
-                        awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
+                        # awe = sms.send("There is a problem with random, payment aborted !", ["+254716674695"],sender)
                         return "Payment could not be processed at this time! Try again later"
 
         if depositpaidalt:
@@ -6502,6 +6502,10 @@ class EditPayment(Resource):
                 print("Payment voided")
                 PaymentOp.void(payment_obj,True,current_user.id)
 
+                target_trans = AppTransactionOp.fetch_transaction_by_payment_id(payment_obj.id)
+                if target_trans:
+                    AppTransactionOp.delete(target_trans)
+
                 balance = target_bill.balance
                 balance += payment_obj.amount
                 MonthlyChargeOp.update_balance(target_bill,balance)
@@ -6649,9 +6653,12 @@ class EditPayment(Resource):
                     except Exception as e:
                         print(f"Houston, we have a problem {e}")
                 else:
-                    txt = f"{co} has depleted sms"
-                    response = sms.send(txt, ["+254716674695"],sender)
-                    print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    try:
+                        txt = f"{co} has depleted sms"
+                        response = sms.send(txt, ["+254716674695"],sender)
+                        print("XXXXXXXXXXXXXXXXXXXXXXXXXX HEY ADMIN CLIENT HAS DEPLETED SMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    except:
+                        pass
             else:
                 print("XXXXXXXXXXXXXXXXXXXXXXXXXX Tenant sms disabled",tenant_obj,prop, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
 
@@ -7222,7 +7229,7 @@ class CallBackUrlKiotapay(Resource):
 
         txtx = f'SMS MPESA PAYMENT DATA JUST IN from {bill_ref_num} of {trans_amnt}'
 
-        response = sms.send(txtx, ["+254716674695"],"KIOTAPAY")
+        # response = sms.send(txtx, ["+254716674695"],"KIOTAPAY")
 
         auto_consume_ctob2(ctob_obj)
 

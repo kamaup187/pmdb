@@ -343,6 +343,11 @@ class AppTransaction(db.Model):
     prop = db.Column(db.String)
     house = db.Column(db.String)
     bank = db.Column(db.String)
+    
+    rent = db.Column(db.Float, default=0.0)
+    water = db.Column(db.Float, default=0.0)
+    garbage = db.Column(db.Float, default=0.0)
+    
     amount = db.Column(db.Float, default=0.0)
     reconciled = db.Column(db.Boolean, default=False)
     transaction_type = db.Column(db.String, default="credit")

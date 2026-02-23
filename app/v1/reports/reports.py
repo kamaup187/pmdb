@@ -8600,6 +8600,13 @@ class Recon(Resource):
 
         recons = current_user.company.apptransactions
         cumulative_balance = 0
+        renttotal = 0.0
+        watertotal = 0.0
+        garbtotal = 0.0
+
+        credittotal = 0.0
+        debittotal = 0.0
+
         target_recons = []
         for recon in recons:
             print("RECON BANK >>> ",recon.bank)
@@ -8657,16 +8664,38 @@ class Recon(Resource):
             cumulative_balance += opening_balance_obj.amount
             detailed_bills.append(ob_dict)
 
+        # for rc in target_recons:
+        #     recon_obj = AppTransactionOp.view(rc)
+        #     recon_obj['balance'] = cumulative_balance
+        #     if rc.transaction_type == "debit":
+        #         recon_obj['balance'] += rc.amount
+        #         cumulative_balance += rc.amount
+        #     else:
+        #         recon_obj['balance'] -= rc.amount
+        #         cumulative_balance -= rc.amount
+        #     detailed_bills.append(recon_obj)
+
         for rc in target_recons:
             recon_obj = AppTransactionOp.view(rc)
-            recon_obj['balance'] = cumulative_balance
+
+            renttotal += rc.rent if rc.rent else 0.0
+            watertotal += rc.water if rc.water else 0.0
+            garbtotal += rc.garbage if rc.garbage else 0.0
+
             if rc.transaction_type == "debit":
-                recon_obj['balance'] += rc.amount
+                debittotal += rc.amount
+            else:
+                credittotal -= rc.amount
+
+            if rc.transaction_type == "debit":
                 cumulative_balance += rc.amount
             else:
-                recon_obj['balance'] -= rc.amount
                 cumulative_balance -= rc.amount
+
+            recon_obj['balance'] = f"{cumulative_balance:,.1f}"
             detailed_bills.append(recon_obj)
+
+        
 
         return Response(render_template(
             "ajax_report_recon_statement.html",
@@ -8675,6 +8704,13 @@ class Recon(Resource):
             timeline = timeline,
 
             bills=detailed_bills,
+
+            renttotal = f"{renttotal:,.1f}",
+            watertotal = f"{watertotal:,.1f}",
+            garbtotal = f"{garbtotal:,.1f}",
+            credittotal = f"{credittotal:,.1f}",
+            debittotal = f"{debittotal:,.1f}",
+
             paging=page(detailed_bills),
  
             logopath=logo(current_user.company)[0],

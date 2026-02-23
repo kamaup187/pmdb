@@ -843,7 +843,7 @@ class TransactionDataOp(TransactionData,Base):
 
 
 class AppTransactionOp(AppTransaction,Base):
-    def __init__(self,ref,trans_time,trans_desc,paid_ll,pay_id,prop,house,bank,amount,trans_type,category,company_id):
+    def __init__(self,ref,trans_time,trans_desc,paid_ll,pay_id,prop,house,bank,rent,water,garb,amount,trans_type,category,company_id):
         self.ref=ref
         self.date=trans_time
         self.trans_desc=trans_desc
@@ -852,6 +852,9 @@ class AppTransactionOp(AppTransaction,Base):
         self.prop = prop
         self.house = house
         self.bank = bank
+        self.rent = rent
+        self.water = water
+        self.garbage = garb
         self.amount=amount
         self.transaction_type=trans_type
         self.transaction_category=category
@@ -922,6 +925,31 @@ class AppTransactionOp(AppTransaction,Base):
             else:
                 return 0.0
 
+    # def format_desc(self):
+    #     if "(" in self.trans_desc:
+    #         return self.trans_desc.split("(")[0].strip()
+    #     return self.trans_desc
+
+
+    # def format_desc(self):
+    #     if not self.trans_desc:
+    #         return ""
+    #     import re
+    #     return re.sub(r"\s*\(.*?\)", "", self.trans_desc).strip()
+
+
+    def format_desc(self):
+        import re
+        text = self.trans_desc or ""
+
+        cleaned = re.sub(r"\s*\(.*?\)", "", text).strip()
+
+        # If something was removed → apply title case
+        if cleaned != text.strip():
+            return cleaned.title()
+
+        return cleaned
+
     def view(self):
         return {
             "id":self.id,
@@ -930,11 +958,14 @@ class AppTransactionOp(AppTransaction,Base):
             "house":self.house if self.house else "",
             "bank":self.bank if self.bank else "",
             "date":self.date.strftime("%Y-%m-%d"),
+            "rent": f"{self.rent:,.1f}" if self.rent else "0.0",
+            "water": f"{self.water:,.1f}" if self.water else "0.0",
+            "garbage": f"{self.garbage:,.1f}" if self.garbage else "0.0",
             "debit":AppTransactionOp.get_amount(self,"debit"),
             "credit": AppTransactionOp.get_amount(self,"credit"),
             "amount": AppTransactionOp.get_amount(self,"amount"),
             "trans_category":self.transaction_category if self.transaction_category else "",
-            "desc": self.trans_desc,
+            "desc": AppTransactionOp.format_desc(self),
             "company_id":self.company_id
         }
 

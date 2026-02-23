@@ -8507,7 +8507,7 @@ def read_payments_excel(dict_array,payperiod,apartment_id,userid,cbid):
             payment_obj = PaymentOp(paymode,bill_ref,desc,narration,pay_date,pay_period_date,invoice_bal,valid_amount,apartment_id, house_obj.id,tenant_obj.id,tenant_id,userid)
             payment_obj.save()
 
-            trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",False,payment_obj.id,house_obj.apartment.name,house_obj.name,"Coop",valid_amount,"debit","Rent deposit",co.id)
+            trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",False,payment_obj.id,house_obj.apartment.name,house_obj.name,"Coop",rentpaid,waterpaid,garbagepaid,valid_amount,"debit","Rent deposit",co.id)
             trans.save()
 
 

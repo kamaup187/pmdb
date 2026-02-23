@@ -69,6 +69,11 @@
                       <th class="">HSE</th>
                       <th class="">BANK</th>
                       <th class="">DESC</th>
+
+                      <th class="">RENT</th>
+                      <th class="">WATER</th>
+                      <th class="">GARB</th>
+
                       <th class="">DEBIT</th>
                       <th class="">CREDIT</th>
                       <th class="">AMOUNT</th>
@@ -86,6 +91,10 @@
                       <td class="data-cell text-right">{{ bill['bank'] }}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
 
+                      <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right">{{ bill['water'] }}</td>
+                      <td class="data-cell text-right">{{ bill['garbage'] }}</td>
+
                       <td class="data-cell text-right">{{ bill['debit'] }}</td>
                       <td class="data-cell text-right">{{ bill['credit'] }}</td>
                       <td class="data-cell text-right">{{ bill['amount'] }}</td>
@@ -94,6 +103,22 @@
                   {% endfor %}
 
                   </tbody>
+
+              <tfoot class="custom-footer-alt">
+                  <tr>
+                    <td colspan="6" class="font-weight-bold">TOTALS ...</td>
+
+                    <td class="font-weight-bold text-right">{{renttotal}}</td>
+                    <td class="font-weight-bold text-right">{{watertotal}}</td>
+                    <td class="font-weight-bold text-right">{{garbtotal}}</td>
+
+                    <td class="font-weight-bold text-right">{{debittotal}}</td>
+                    <td class="font-weight-bold text-right">{{credittotal}}</td>
+                    <td class="font-weight-bold text-right">-</td>
+                    <td class="font-weight-bold text-right">-</td>
+                  </tr>
+                </tfoot>
+
                 </table>
 
           </div>
@@ -152,6 +177,11 @@
                   <th class="">HSE</th>
                   <th class="">BANK</th>
                   <th class="">DESC</th>
+
+                  <th class="">RENT</th>
+                  <th class="">WATER</th>
+                  <th class="">GARB</th>
+
                   <th class="">DEBIT</th>
                   <th class="">CREDIT</th>
                   <th class="">AMOUNT</th>
@@ -168,6 +198,11 @@
                   <td class="data-cell text-right">{{ bill['house'] }}</td>
                   <td class="data-cell text-right">{{ bill['bank'] }}</td>
                   <td class="data-cell text-right">{{ bill['desc'] }}</td>
+
+                  <td class="data-cell text-right">{{ bill['rent'] }}</td>
+                  <td class="data-cell text-right">{{ bill['water'] }}</td>
+                  <td class="data-cell text-right">{{ bill['garbage'] }}</td>
+
                   <td class="data-cell text-right">{{ bill['debit'] }}</td>
                   <td class="data-cell text-right">{{ bill['credit'] }}</td>
                   <td class="data-cell text-right">{{ bill['amount'] }}</td>
@@ -176,6 +211,21 @@
               {% endfor %}
 
               </tbody>
+
+              <tfoot class="custom-footer-alt">
+                  <tr>
+                    <td colspan="6" class="font-weight-bold">TOTALS ...</td>
+
+                    <td class="font-weight-bold text-right">{{renttotal}}</td>
+                    <td class="font-weight-bold text-right">{{watertotal}}</td>
+                    <td class="font-weight-bold text-right">{{garbtotal}}</td>
+
+                    <td class="font-weight-bold text-right">{{debittotal}}</td>
+                    <td class="font-weight-bold text-right">{{credittotal}}</td>
+                    <td class="font-weight-bold text-right">-</td>
+                    <td class="font-weight-bold text-right">-</td>
+                  </tr>
+                </tfoot>
 
             </table>
             <!-- <div class="divjust-end ln-16 mobile-malaysian noprint"> -->

@@ -5007,7 +5007,7 @@ class Expenses(Resource):
 
             InternalExpenseOp.update_status(expense_obj,"completed")
 
-            recon = AppTransactionOp(paydetails,expense_period,new_name,False,None,None,None,None,amount,"credit","cheque deposit",current_user.company.id)
+            recon = AppTransactionOp(paydetails,expense_period,new_name,False,None,None,None,None,0.0,0.0,0.0,amount,"credit","cheque deposit",current_user.company.id)
             recon.save()
 
             return success
@@ -11935,12 +11935,12 @@ class ReconAccount(Resource):
             else:
                 trans_type = "n/a"
                 tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
-                recon = AppTransactionOp(trans_ref,tdate,"Opening balance",False,None,None,None,None,valid_amount,trans_type,trans_category,current_user.company.id)
+                recon = AppTransactionOp(trans_ref,tdate,"Opening balance",False,None,None,None,None,0.0,0.0,0.0,valid_amount,trans_type,trans_category,current_user.company.id)
                 recon.save()
                 print("Opening balance created with amount ",recon.amount)
 
         else:
-            recon = AppTransactionOp(trans_ref,tdate,trans_desc,False,None,None,None,None,valid_amount,trans_type,trans_category,current_user.company.id)
+            recon = AppTransactionOp(trans_ref,tdate,trans_desc,False,None,None,None,None,0.0,0.0,0.0,valid_amount,trans_type,trans_category,current_user.company.id)
             recon.save()
 
         return "success"

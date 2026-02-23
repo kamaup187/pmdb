@@ -8,10 +8,10 @@
 
 
 <style type="text/css" media="print">
-  @page{
+  /* @page{
     size:A4 landscape;
     margin: 3mm; 
-  }
+  } */
   body {
     zoom: 100%;
   }
@@ -38,11 +38,18 @@
             </div>
           </div>
 
+          <div class="mb-2">
+            <select id="printOrientation" class="form-control form-control-sm w-auto d-inline-block">
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+
           <div class="ln-14 divjust-end">
             <button id="ajaxbtnDownload" class="btn btn-success btn-sm">
               <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
             </button>
-            <script>
+            <!-- <script>
               feather.replace()
 
               button = document.getElementById('ajaxbtnDownload');
@@ -50,7 +57,54 @@
                 document.title=$("#filename").text(); 
                 window.print()
               });
-            </script>
+            </script> -->
+
+
+
+<script>
+feather.replace()
+
+const buttona = document.getElementById('ajaxbtnDownload');
+const orientationSelect = document.getElementById('printOrientation');
+
+buttona.addEventListener('click', () => {
+
+    // Set document title
+    document.title = $("#filename").text();
+
+    // // Remove old dynamic style if exists
+    // const oldStyle = document.getElementById('dynamicPrintStyle');
+    // if (oldStyle) oldStyle.remove();
+
+    // Get selected orientation
+    const orientation = orientationSelect.value;
+
+    // Create new style element
+    const style = document.createElement('style');
+    style.id = 'dynamicPrintStyle';
+
+    style.innerHTML = `
+        @media print {
+            @page {
+                size: A4 ${orientation};
+                margin: 10mm;
+            }
+
+            #ajaxbtnDownload,
+            #printOrientation {
+                display: none;
+            }
+        }
+    `;
+
+    document.head.appendChild(style);
+
+    window.print();
+});
+</script>
+
+
+
             <span>Dated : <span class="text-black">{{reportdate}}</span></span>
           </div>
 

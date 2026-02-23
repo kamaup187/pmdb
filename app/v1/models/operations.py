@@ -944,11 +944,17 @@ class AppTransactionOp(AppTransaction,Base):
 
         cleaned = re.sub(r"\s*\(.*?\)", "", text).strip()
 
-        # If something was removed → apply title case
-        if cleaned != text.strip():
-            return cleaned.title()
+        # # If something was removed → apply title case
+        # if cleaned != text.strip():
+        #     return cleaned.title()
+        # If parentheses were removed
+        if cleaned != text:
+            first_name = cleaned.split()[0]
+            return first_name.title()
 
         return cleaned
+
+        # return cleaned
 
     def view(self):
         return {

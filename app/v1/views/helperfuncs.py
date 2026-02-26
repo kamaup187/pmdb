@@ -6629,11 +6629,13 @@ def send_out_sms_invoices(prop,houses,billid,charge,user_id):
 
             merit_house_ids = [22936,22963,22955,22553,22564,23137,22505,22933,22934,22984,22979,23182,22584]
             if bill.apartment.company.name == "Merit Properties Limited":
-                bankdetails = f'\n\nPaybill: 542542, \nAccount: 50961#house no \n or \nPaybill: 999294, \nAccount: your name and house no \n\nPlease pay by 5th. Note: Penalties will be charged for late payments.'
-            if bill.apartment.name == "M+S Apartment":
-                bankdetails = f'\n\nPaybill: 522533, \nAccount: 7949148#house no \n\n Share message confirmation to 0797653745.'
-            if bill.house_id in merit_house_ids:
-                bankdetails = f'\n\nPaybill: 880100, \nAccount: 105119#house no \n\n Share message confirmation to 0797653745.'
+                # bankdetails = f'\n\nPaybill: 542542, \nAccount: 50961#house no \n or \nPaybill: 999294, \nAccount: your name and house no \n\nPlease pay by 5th. Note: Penalties will be charged for late payments.'
+                bankdetails = f'\n\nPaybill: 999294, \nAccount: your name and house no \n\nPlease pay by 5th. Note: Penalties will be charged for late payments.'
+
+            # if bill.apartment.name == "M+S Apartment":
+            #     bankdetails = f'\n\nPaybill: 522533, \nAccount: 7949148#house no \n\n Share message confirmation to 0797653745.'
+            # if bill.house_id in merit_house_ids:
+            #     bankdetails = f'\n\nPaybill: 880100, \nAccount: 105119#house no \n\n Share message confirmation to 0797653745.'
                
             smsgarb = f"\nGarbage:{bill.garbage}," if bill.garbage else ""
             smssec = f"\nSecurity:{bill.security}," if bill.security else ""

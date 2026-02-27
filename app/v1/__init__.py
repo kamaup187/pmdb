@@ -396,6 +396,7 @@ api.add_resource(CustomCombinedReport,"/customcombined/report")
 
 api.add_resource(RentStatement,"/rent/statement")
 api.add_resource(RentStatement2,"/rent/statement2")
+api.add_resource(ExpensesStatement,"/expenses/statement")
 
 api.add_resource(BasicStatement,"/custom/statement")
 api.add_resource(GeneralRentStatement,"/generalrent/statement")

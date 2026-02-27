@@ -3720,6 +3720,148 @@ class RentStatement2(Resource):
             billids = get_obj_ids(detailed_bills),
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
+
+class ExpensesStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("prop")
+        selected_month = request.args.get("month")
+        reporttype = request.args.get("reporttype")
+
+        if not selected_apartment:
+
+            apartment_list = fetch_all_apartments_by_user(current_user)
+
+            template = "report_expenses_statement.html"
+
+            return Response(render_template(
+                template,
+                tenantlist=[],
+                prop_obj=None,
+                props=apartment_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        apartment_obj = ApartmentOp.fetch_apartment_by_name(selected_apartment)
+        db.session.expire(apartment_obj)
+
+        propid = apartment_obj.id
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        ##################################################################################################
+        expense_list = []
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0
+        expenses_amount_table = 0.0       
+
+        exceptions = ["deposit refund", "remittance"]
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                if exp.expense_type == "deposit recovery":
+                    depositrecovery += exp.amount
+
+                elif exp.expense_type == "water recovery":
+                    waterrecovery += exp.amount
+
+                elif exp.expense_type == "garbage recovery":
+                    garbrecovery += exp.amount
+
+                elif exp.expense_type == "paid ll":
+                    paidll += exp.amount
+
+                else:
+                    expenses_amount += exp.amount
+
+                expenses_amount_table += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "id":exp.id,
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                }
+                expense_list.append(exp_dict)
+
+            if exp.date.month == target_period.month and exp.status == "completed" and exp.expense_type == "remittance" and exp.expense_type != "deposit_refund":
+                remittances += exp.amount
+        ###################################################################################################
+
+        expense_list = []
+
+        expenses = apartment_obj.expenses
+        expenses_amount = 0.0        
+
+        exceptions = ["remittance"]
+
+        for exp in expenses:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year and exp.status == "completed" and exp.expense_type not in exceptions:
+                expenses_amount += exp.amount
+
+                if exp.expense_type == "deposit_refund":
+                    ename = exp.name + "(Refund)"
+                else:
+                    ename = exp.name
+
+                exp_dict = {
+                    "house":exp.house,
+                    "name":ename,
+                    "amount":exp.amount,
+                    'qty':exp.qty if exp.qty else "-",
+                    'desc':exp.description if exp.description else "-",
+                    'labour':exp.labour if exp.labour else "-",
+                    'cost':exp.cost if exp.cost else "-"
+
+                }
+                expense_list.append(exp_dict)
+
+
+        props = fetch_all_apartments_by_user(current_user)
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+
+        return Response(render_template(
+            'ajax_report_expenses_statement.html',
+
+            prop=selected_apartment,
+            propid=apartment_obj.id,
+            prop_obj=apartment_obj,
+            selected_month=selected_month,
+
+            tenantlist=[],
+            timeline = timeline,
+
+            expenses = f"{expenses_amount:,.1f}",
+            bills=expense_list,
+            paging="portrait",
+            props=props,
+            apartment_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
     
 class GeneralRentStatement(Resource):
     @login_required
@@ -9099,7 +9241,7 @@ class ExpenseDetail(Resource):
             tenantlist=[],
             apartment_list=apartment_list,
             month_list=month_list,
-            year_list=[2020,2021,2022,2023,2024,2025],
+            year_list=[2020,2021,2022,2023,2024,2025,2026],
             suggestions=generate_suggestions(apartment_list),
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],
@@ -9163,7 +9305,7 @@ class ExpenseDetail(Resource):
             paging=page(bill_list),
             apartment_list=apartment_list,
             month_list=month_list,
-            year_list=[2020,2021,2022,2023,2024,2025],
+            year_list=[2020,2021,2022,2023,2024,2025,2026],
             apartment_name=selected_apartment,
             suggestions=generate_suggestions(apartment_list),
             logopath=logo(current_user.company)[0],

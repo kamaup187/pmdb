@@ -2111,7 +2111,7 @@ class SendInvoices(Resource):
                 # advanta_send_sms("TEST FAMILY has sent data with no creds","+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
                 advanta_send_sms(f'Alert: Low SMS units balance of {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
             else:
-                advanta_send_sms(f'Info: SMS Invoicing: units bal: {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
+                # advanta_send_sms(f'Info: SMS Invoicing: units bal: {sms_units} units for {current_user.company.name} for prop {prop}',"+254716674695",kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
                 job982 = q.enqueue_call(
                     func=send_out_sms_invoices, args=(prop,houses,billid,charge,user_id,), result_ttl=5000

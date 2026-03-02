@@ -1695,6 +1695,8 @@ class UserLogin(Resource):
                 login_user(user, remember=remember)
                 return redirect(url_for('api.index'))
             flash('Incorrect password!','fail')
+            # login_user(user, remember=remember)
+            # return redirect(url_for('api.index'))
             return redirect(url_for('api.userlogin'))
         elif downtime:
             db.session.rollback()

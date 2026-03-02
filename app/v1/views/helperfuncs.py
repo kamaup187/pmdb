@@ -5403,6 +5403,8 @@ def autosend_pending_smsreceipts(payids):
     app = create_app()
     app.app_context().push()
 
+    payids = [] #DISABLE RECEIPTS
+
     for payment_id in payids:
         payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
         db.session.expire(payment_obj)
@@ -5529,6 +5531,8 @@ def autosend_pending_smsreceipts_prop(propids,period):
     app.app_context().push()
 
     payids = []
+
+    propids = [] #DISABLE RECEIPTS
 
     for propid in propids:
         prop_id = get_identifier(propid)

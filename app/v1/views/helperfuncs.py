@@ -5283,6 +5283,8 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
             TenantOp.update_phone(tenant_obj,tel)
             tenants.append(tenant_obj)
 
+    tenants = [] #DISABLE REMINDERS
+
     for tenant_obj in tenants:
 
         prop = tenant_obj.apartment

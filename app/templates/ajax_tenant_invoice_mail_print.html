@@ -404,6 +404,15 @@
             </div>
             {%endif%}
 
+            {%if merit%}
+            <div class="text-left mt-2">Payment should be channeled to:</div>
+            <p class="text-left">
+              <span class="linebrea">Mpesa Paybill: <span class="font-weight-bold text-125">999294</span></span> ACC: <span class="linebrea font-weight-bold">your name and house no</span><br>
+              <span class="linebrea">Please pay by 5th. Note: Penalties will be charged for late payments.</span><br>
+            </p>
+
+            {%else%}
+
             {%if p%}
 
 
@@ -438,6 +447,8 @@
                 </span>
               </p>
             {% endif %}
+
+            {%endif%}
  
       
             {% endif %}

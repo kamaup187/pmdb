@@ -1093,6 +1093,8 @@ class BillInvoice(Resource):
                 bill=bill,
                 month = str_month,
                 p = bill.apartment.paymentdetails,
+                # merit = "Merit" if current_user.company.name == "Merit Properties Limited" else "",
+                merit = "Merit" if current_user.company.name == "Merit Properties Limited" else "",
                 narration=narration.replace("None", ""),
                 readings = wbill,
                 breadings = bbill,

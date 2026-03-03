@@ -3484,6 +3484,16 @@ class RentStatement2(Resource):
                 """compute subtotals"""
                 # bill_item = LandlordSummaryOp.external_view(bill)
                 bill_item = MonthlyChargeOp.external_view(bill)
+
+                pp = fetch_target_period_tenant_house_payment(bill.tenant, bill.house, target_period.month, target_period.year)
+                bill_item['ref'] = pp.ref_number if pp else "-"
+                try:
+                    mode = pp.paymode.split()[0] if pp else "NA"
+                except:
+                    mode = pp.paymode if pp else "NA"
+
+                bill_item['mode'] = mode
+
                 detailed_bills.append(bill_item)
 
                 if bill.paidll:
@@ -3543,9 +3553,12 @@ class RentStatement2(Resource):
                 'rent':f"{vac.housecode.rentrate:,.1f}",
                 'calc_total':0.0,
                 'paid':0.0,
+                'ref':"N/A",
+                "mode":"N/A",
                 'balance': 0.0
             }
             detailed_bills.append(new_item)
+            
 
         totalrent += vacant_rents
 

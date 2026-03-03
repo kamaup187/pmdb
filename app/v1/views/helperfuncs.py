@@ -4406,6 +4406,20 @@ def fetch_target_period_tenant_house_invoice(tenant_obj,hh,period):
         continue
     return None
 
+def fetch_target_period_tenant_house_payment(tenant_obj,hh,month,year):
+
+    if isinstance(hh, tuple):
+        house = hh[0]
+    else:
+        house = hh
+
+    bills = tenant_obj.payments
+    for item in bills:
+        if item.pay_period.year == year and item.pay_period.month == month and item.house_id == house.id:
+            return item
+        continue
+    return None
+
 def fetch_target_period_tenant_invoice_update(tenant_obj,house_obj,period):
 
     bills = tenant_obj.monthly_charges

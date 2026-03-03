@@ -184,6 +184,10 @@
                       <th class="">TOTAL DUE</th>
                       <th class="">TOTAL PAID</th>
                       <th class="">DATE PAID</th>
+                      
+                      <th class="">REF</th>
+                      <th class="">MODE</th>
+
                       <th class="">BC/F</th>
 
                     </tr>
@@ -198,6 +202,10 @@
                       <td class="data-cell text-right">{{bill['rent-total']}}</td>
                       <td class="data-cell text-right">{{ bill['rent-paid']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
+                                            
+                      <td class="data-cell text-right">{{ bill['ref'] }}</td>
+                      <td class="data-cell text-right">{{ bill['mode'] }}</td>
+
                       <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                     </tr>
                   {% endfor %}
@@ -210,6 +218,8 @@
                       <td class="font-weight-bold text-right">{{renttotal}}</td>
                       <td class="font-weight-bold text-right">{{billtotal}}</td>
                       <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">-</td>
+                      <td class="font-weight-bold text-right">-</td>
                       <td class="font-weight-bold text-right">-</td>
                       <td class="font-weight-bold text-right">{{bcftotal}}</td>
                     </tr>
@@ -309,55 +319,6 @@
   
             </div>
 
-            <div class="divjust-end mr-5">
-              <div class="mr-4">
-                <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
-                <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
-                <!-- <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div> -->
-                <div class="text-gray-900 mb-1">TOTALS</div>
-                <div class="hide mb-2">space</div>
-
-
-
-
-                <div class="mb-1 pt-2 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
-                <div class="mb-1 text-gray-900">MGT FEES VAT</div>
-                <div class="mb-1 text-gray-900">LETTING FEE</div>
-                <!-- <div class="mb-1 text-gray-900">LETTING FEE VAT</div> -->
-
-                <div class="mb-1 text-gray-900">DISBURSEMENTS</div>
-                <div class="mb-1 text-gray-900">PAID TO L.LORD</div>
-
-                <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
-                <div class="mb-1 text-gray-900">LANDLORD BALANCE</div>
-
-                <div class="hide mb-2">space</div>
-                <div class="text-gray-900 mb-3">NET PAYABLE</div>
-              </div>
-
-              <div class="text-black">
-                <div class="mb-1 text-gray-900">Kshs {{paidtotal_alt}}</div>
-                <div class="mb-1 text-gray-900">Kshs {{paidll}}</div>
-                <!-- <div class="mb-1 text-gray-900">Kshs {{remits}}</div> -->
-                <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
-                <div class="hide mb-2">space</div>
-
-                <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
-
-                <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{paidll}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1 overline underline">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-                <div class="mb-1">Kshs {{remits}} (<span class="text-success">credit</span>)</div>
-
-
-                <div class="hide mb-2">space</div>
-
-                <div class="text-gray-900 mb-3 overline underline">Kshs {{netpay}}</div>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -440,6 +401,10 @@
                   <th class="">TOTAL DUE</th>
                   <th class="">TOTAL PAID</th>
                   <th class="">DATE PAID</th>
+
+                  <th class="">REF</th>
+                  <th class="">MODE</th>
+
                   <th class="">BC/F</th>
 
                 </tr>
@@ -455,6 +420,10 @@
                   <td class="data-cell text-right">{{bill['rent-total']}}</td>
                   <td class="data-cell text-right">{{ bill['rent-paid'] | safe}}</td>
                   <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
+
+                  <td class="data-cell text-right">{{ bill['ref'] }}</td>
+                  <td class="data-cell text-right">{{ bill['mode'] }}</td>
+
                   <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
                 </tr>
               {% endfor %}
@@ -467,6 +436,8 @@
                   <td class="font-weight-bold text-right">{{renttotal}}</td>
                   <td class="font-weight-bold text-right">{{billtotal}}</td>
                   <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                  <td class="font-weight-bold text-right">-</td>
+                  <td class="font-weight-bold text-right">-</td>
                   <td class="font-weight-bold text-right">-</td>
                   <td class="font-weight-bold text-right">{{bcftotal}}</td>
                 </tr>
@@ -561,54 +532,6 @@
     
               </div>
   
-              <div class="divjust-end mr-5">
-                <div class="mr-4">
-                  <div class="mb-1 text-gray-900">TOTAL RENT PAID TO MGT</div>
-                  <div class="text-gray-900 mb-1">RENT PAID TO L.LORD</div>
-                  <!-- <div class="text-gray-900 mb-1">PREV UNREMMITED RENT</div> -->
-                  <div class="text-gray-900 mb-1">TOTALS</div>
-                  <div class="hide mb-2">space</div>
-  
-  
-  
-  
-                  <div class="mb-1 pt-2 text-gray-900">MGT FEES @ {{commission_percentage}}</div>
-                  <div class="mb-1 text-gray-900">MGT FEES VAT</div>
-                  <div class="mb-1 text-gray-900">LETTING FEE</div>
-                  <!-- <div class="mb-1">LETTING FEE VAT</div> -->
-  
-                  <div class="mb-1 text-gray-900">DISBURSEMENTS</div>
-                  <div class="mb-1 text-gray-900">PAID TO L.LORD</div>
-
-                  <div class="mb-1 text-gray-900">TOTAL DEDUCTIONS</div>
-                  <div class="mb-1 text-gray-900">LANDLORD BALANCE</div>
-
-                  <div class="hide mb-2">space</div>
-                  <div class="text-gray-900 mb-3 text-110">NET PAYABLE</div>
-                </div>
-  
-                <div class="text-black">
-                  <div class="mb-1 text-gray-900">Kshs {{paidtotal_alt}}</div>
-                  <div class="mb-1 text-gray-900">Kshs {{paidll}}</div>
-                  <!-- <div class="mb-1 text-gray-900">Kshs. {{remits}}</div> -->
-                  <div class="mb-1 text-gray-900 underline overline">Kshs {{formatted_netrent}}</div>
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="mb-1">Kshs {{commission}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div>
-                  <!-- <div class="mb-1">0.0 (<span class="text-danger">debit</span>)</div> -->
-  
-                  <div class="mb-1">Kshs {{expenses}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{paidll}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1 overline underline">Kshs {{debits}} (<span class="text-danger">debit</span>)</div>
-                  <div class="mb-1">Kshs {{remits}} (<span class="text-primary">credit</span>)</div>
-  
-                  <div class="hide mb-2">space</div>
-  
-                  <div class="text-gray-900 mb-3 text-110 overline underline">Kshs {{netpay}}</div>
-                </div>
-              </div>
             </div>          
         </div>
       </div>

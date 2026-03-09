@@ -253,6 +253,24 @@ class User(db.Model,UserMixin):
     def __repr__(self):
         return self.username
 
+# class Account(db.Model):
+
+#     __tablename__ = 'accounts'
+
+#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     approval = db.Column(db.String)
+#     description = db.Column(db.String)
+#     status = db.Column(db.String,default="Open")
+
+#     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+#     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+#     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+#     company_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+#     def __repr__(self):
+#         return self.name
+
 
 class Account(db.Model):
 

@@ -1858,6 +1858,8 @@ class FetchActivity(Resource):
             
         unsorted_activities = []
         for activity in activities:
+            if "qc" in activity.activity_name:
+                continue
             unsorted_activities.append(activity)
 
         r_sorted_activities  = sorted(unsorted_activities, key=lambda x: x.id, reverse = True)

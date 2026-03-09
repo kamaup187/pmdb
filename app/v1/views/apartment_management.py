@@ -1858,7 +1858,7 @@ class FetchActivity(Resource):
             
         unsorted_activities = []
         for activity in activities:
-            if "qc" in activity.activity_name:
+            if "qc" in activity.activity_name.lower():
                 continue
             unsorted_activities.append(activity)
 

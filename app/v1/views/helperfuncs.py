@@ -5297,7 +5297,19 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
             TenantOp.update_phone(tenant_obj,tel)
             tenants.append(tenant_obj)
 
-    tenants = [] #DISABLE REMINDERS
+    try:
+        com = ApartmentOp.fetch_apartment_by_id(propid).company
+    except:
+        com = None
+
+    company_exceptions = [114,45,63]
+    if com:
+        if com.id in company_exceptions:
+            pass
+        else:
+            tenants = [] #DISABLE REMINDERS
+    else:
+        tenants = [] #DISABLE REMINDERS
 
     for tenant_obj in tenants:
 
@@ -5419,11 +5431,26 @@ def autosend_pending_smsreceipts(payids):
     app = create_app()
     app.app_context().push()
 
-    payids = [] #DISABLE RECEIPTS
+    # payids = [] #DISABLE RECEIPTS
 
     for payment_id in payids:
         payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
         db.session.expire(payment_obj)
+
+        try:
+            com = payment_obj.apartment.company
+        except:
+            com = None
+
+        company_exceptions = [45,63]
+        if com:
+            if com.id in company_exceptions:
+                pass
+            else:
+                continue #DISABLE REMINDERS
+        else:
+            continue #DISABLE REMINDERS
+
         if payment_obj.sms_status != "pending" or payment_obj.apartment.name == "Villa Park Guest House":
             print("Skipping ahead>>>>>>>>>>>>>>>>>>>>")
             continue
@@ -5548,7 +5575,7 @@ def autosend_pending_smsreceipts_prop(propids,period):
 
     payids = []
 
-    propids = [] #DISABLE RECEIPTS
+    # propids = [] #DISABLE RECEIPTS
 
     for propid in propids:
         prop_id = get_identifier(propid)
@@ -5569,6 +5596,23 @@ def autosend_pending_smsreceipts_prop(propids,period):
     for payment_id in payids:
         # continue
         payment_obj = PaymentOp.fetch_payment_by_id(payment_id)
+
+
+        try:
+            com = payment_obj.apartment.company
+        except:
+            com = None
+
+        company_exceptions = [45,63]
+        if com:
+            if com.id in company_exceptions:
+                pass
+            else:
+                continue #DISABLE REMINDERS
+        else:
+            continue #DISABLE REMINDERS
+
+
         db.session.expire(payment_obj)
         if payment_obj.sms_status == "pending" or payment_obj.sms_status == "off":
             print("Proceeding")

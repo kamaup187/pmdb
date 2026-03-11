@@ -5302,7 +5302,7 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
     except:
         com = None
 
-    company_exceptions = [1144444,45,63]
+    company_exceptions = [114,45,63]
     if com:
         if com.id in company_exceptions:
             pass

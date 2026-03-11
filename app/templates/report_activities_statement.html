@@ -1,0 +1,508 @@
+{% extends 'basereport.html' %}
+
+{% block content %}
+
+<style type="text/css" media="print">
+
+  /* @page{
+    size:landscape;
+  } */
+
+  .masked{
+    -webkit-text-security: disc;
+    text-security:disc;
+  }
+
+</style>
+
+<button id="btnDownload" class="btn btn-success btn-sm dispnone">
+  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+</button>
+
+    <div class="col-lg-12 noprint">
+        <div class="formwrapper">
+            <div class="card bt-none">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-light underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">Select below</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                  </div>
+                </a>
+
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body pt-0">
+                    <form class="bg-white">
+
+                      <div class="row">
+                      
+                        <div class="col-lg-3 form-group mb-2">
+                          <label class="mb-0">Select user:</label>
+                          <select name="user" class="select-css" id="user" required>
+                            <option disabled selected value> select user </option>
+                            {% for o in users %}
+                            <option value="{{ o.id }}">{{ o.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      
+                        <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                          <label class="mb-0">Select month:</label>
+                          <div id="datepicker7" class="date" data-date-format="dd-mm-yyyy">
+                            <input id="month" name="month" class="form-control ph" type="text" placeholder="-none set-" />
+                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                          </div>
+                        </div>
+                      
+                        <div class="col-lg-2 form-group mb-2">
+                          <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                        </div>
+                      </div>
+
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+  
+    <div id="reportbase" class="row">
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint">
+    <div class="card shadow mb-0">
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body pt-0">
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">ACTIVITIES STATEMENT FOR {{timeline}}</span></span>
+          </div>
+
+          {%if prop_obj%}
+          <div class="mb-2 mt-1">
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY CODE: {{prop_obj.id}}</span>
+            </div>
+            <div class="ln-16">
+              <span class="mr-1">PROPERTY NAME: {{prop_obj.name.upper()}}</span>
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.landlord%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord.upper()}}</span>
+              {%else%}
+              <span class="mr-1">LANDLORD : {{prop_obj.landlord}}</span>
+              {% endif %}
+            </div>
+            <div class="ln-16">
+              {% if prop_obj.location_id%}
+              <span class="mr-1">ESTATE : {{prop_obj.location.name.upper()}}</span>
+              {%else%}
+              <span class="mr-1">ESTATE : {{prop_obj.location}}</span>
+              {% endif %}
+            </div>
+          </div>
+          {%endif%}
+
+
+
+                    
+          <div class="table-responsive noprint">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                  <thead class="custom-header-alt small">
+                    <tr>
+                      <th class="">PNO</th>
+                      <th class="">TENANT NAME</th>
+                      <th class="">BB/F</th>
+                      <th class="rent">RENT</th>
+                      <th class="rent">RENT DUE</th>
+                      <th class="rent">RENT PAID</th>
+
+                      <th class="water">WATER</th>
+                      <th class="garbage">GARBAGE</th>
+                      <th class="security dispnone">SECURITY</th>
+                      <th class="service dispnone">SERVICE</th>
+                      <th class="deposit">D PAID</th>
+                      <th class="deposit">D BAL</th>
+
+                      <!-- <th class="penalty">LPF</th> -->
+                      <th class="">TOTAL</th>
+                      <th class="">PAID</th>
+                      <th class="">RENT BC/F</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for bill in bills%}
+                    <tr>
+                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
+                      <!-- <td class="data-cell text-right">{{ bill['arrears'] }}</td> -->
+                      <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-total'] }}</td>
+                      <td class="data-cell text-right rent">{{ bill['rent-paid'] }}</td>
+
+                      <td class="data-cell text-right water">{{ bill['water'] }}</td>
+                      <td class="data-cell text-right garbage">{{ bill['garbage'] }}</td>
+                      <td class="data-cell text-right security dispnone">{{ bill['security'] }}</td>
+                      <td class="data-cell text-right service dispnone">{{ bill['service'] }}</td>
+                      <td class="data-cell text-right deposit">{{ bill['deposit-paid'] }}</td>
+                      <td class="data-cell text-right deposit">{{ bill['deposit-due'] }}</td>
+                      <!-- <td class="data-cell text-right penalty">{{ bill['fine'] }}</td> -->
+                      <td class="data-cell text-right">{{bill['totaldue']}}</td>
+                      <td class="data-cell text-right">{{ bill['paid-alt-alt']|safe }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-due'] }}</td>
+                    </tr>
+                  {% endfor %}
+
+                  </tbody>
+                  <tfoot class="custom-footer-alt">
+                    <tr>
+                      <td colspan="2" class="font-weight-bold">TOTALS ...</td>
+                      <td class="font-weight-bold text-right">{{bbftotal}}</td>
+                      <td class="font-weight-bold text-right rent">{{renttotal}}</td>
+                      <td class="font-weight-bold text-right rent">-</td>
+                      <td class="font-weight-bold text-right rent">-</td>
+                      <td class="font-weight-bold text-right water">{{watertotal}}</td>
+                      <td class="font-weight-bold text-right garbage">{{garbagetotal}}</td>
+                      <td class="font-weight-bold text-right security dispnone">{{securitytotal}}</td>
+                      <td class="font-weight-bold text-right service dispnone">{{servicetotal}}</td>
+                      <td class="font-weight-bold text-right deposit">-</td>
+                      <td class="font-weight-bold text-right deposit">-</td>
+
+                      <!-- <td class="font-weight-bold text-right penalty">{{penaltytotal}}</td> -->
+                      <td class="font-weight-bold text-right">{{amounttotal}}</td>
+                      <td class="font-weight-bold text-right">{{paidtotal}}</td>
+                      <td class="font-weight-bold text-right">{{bcftotal}}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+
+          </div>
+
+          <div class="divjust-end ln-16 mobile-malaysian nobreak">
+            <div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Prepared By:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Approved By:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Cheque No:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Landlord rep:</div>
+                <div class="col-6">........................</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-6 text-right text-black no-wrap">Date:</div>
+                <div class="col-6">........................</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+    <div class="modal fade" id="addRecordModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Add new entry</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form id="restrict_new_entry_form" class="" autocomplete="off" method="POST" action="">
+                      <div class="row form-group text-black">
+                        <div class="col-6">
+                          <label class="small mb-1" for="codeInput">Enter code to access</label>
+                          <input type="password" class="form-control masked" id="codeInput">
+                        </div>
+                        <div class="col-6">
+                          <label class="small mb-1 hide" for="submitCode">Enter code</label>
+                          <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                          <button id="submitCode" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
+                        </div>
+                    </div>
+                    </form>
+
+                    <!-- <script>
+                      $("#submitCode").on('click',function(){
+                        if($("#codeInput").val() === "2475") {
+                          $("#new_entry_form").removeClass("dispnone")
+                          $("#restrict_new_entry_form").addClass("dispnone")
+                        } else {
+                          alert("Code incorrect!")
+                        }
+                      })
+                    </script> -->
+
+                    <script>
+                      $("#submitCode").on('click',function(){
+
+                        $("#preloader-btn2").click();
+
+                        $.ajax({
+                            url: "/auth/user",
+                            type: "post",
+                            data: {
+                                pass: $("#codeInput").val(),
+                            },
+                            success: function (response) {
+                                $("#postloader-btn2").click();
+                                  if(response == "1") {
+                                    $("#new_entry_form").removeClass("dispnone")
+                                    $("#restrict_new_entry_form").addClass("dispnone")
+                                  } else {
+                                    alert("Code incorrect!")
+                                  }
+
+                            }
+                        });
+                        
+
+                      })
+                    </script>
+
+                    <form id="new_entry_form" class="dispnone" autocomplete="off" method="POST" action="">
+     
+                    <div class="form-group text-black dispnone">
+                      <label class="small mb-1" for="inputDate">Choose Date</label>
+                      <input type="date" class="form-control" id="inputDate">
+                    </div>
+
+                    <div class="form-group text-black">
+                        <label class="small mb-1" for="inputCategory">Choose category</label>
+                        <select id="inputCategory" class="form-control" aria-label="Default select example">
+                            <option selected disabled  value="">choose</option>
+                            <option value="paid ll">Paid owner</option>
+                            <option value="rent recovery">Rent recovery</option>
+                            <option value="deposit recovery">Deposit sitting</option>
+                            <option value="water recovery">Water bill</option>
+                            <option value="garbage recovery">Garbage bill</option>
+                            <option value="other">Others e.g repairs</option>
+
+                        </select>
+                    </div>
+
+                      <div class="form-group">
+                        <select class="select-css dispnone" id="remindertenant" required>
+                          <option disabled selected value> -- Select tenant -- </option>
+                          {% for o in tenants%}
+                          <option value="{{ o }}">{{ o }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                    <!-- Payment Type Field -->
+                    <!-- <div class="form-group text-black">
+                        <label>Payment Type</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentType" id="trans-debit" value="debit" required>
+                            <label class="form-check-label" for="debit">Debit</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentType" id="trans-credit" value="credit" required>
+                            <label class="form-check-label" for="credit">Credit</label>
+                        </div>
+                    </div> -->
+
+                    <!-- Description Field -->
+                    <div class="form-group text-black">
+                        <label class="small mb-1" for="inputDescription">Description</label>
+                        <textarea class="form-control" id="inputDescription" rows="2" placeholder="Type description here..."></textarea>
+                    </div>
+
+                    <!-- Amount Field -->
+                    <div class="form-group text-black">
+                        <label class="small mb-1" for="inputAmount">Enter amount</label>
+                        <input type="number" class="form-control" id="inputAmount" placeholder="Enter amount" required>
+                    </div>
+ 
+                    <div class="mt-3">
+                      <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                      <button id="submitRecord" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
+                    </div>
+                    
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+<script>
+  $("#month").datepicker({ 
+    autoclose: true, 
+    todayHighlight: true,
+    format: "mm-yyyy",
+    startView: "months", 
+    minViewMode: "months"
+  });
+</script>
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+
+
+<script>
+  $("#view_general").click(function () {
+
+    if ($("#prop").val() == "" || $("#month").val() == "") {
+      alert("Please select user and date!")
+    }else{
+      //pass
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "/activities/statement",
+          type: "get",
+          data: {
+              user: $("#user").val(),
+              month: $("#month").val(),
+          },
+          success: function (response) {
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
+              // $.ajax({
+              //   url: "/resolve/invoices",
+              //   type: "POST",
+              //   data: {
+              //     proptext: $("#prop").val(),
+              //     period:$("#target_period").text()
+              //   },
+              //   success: function(response) {
+              //     // $("#"+item).html('all set');
+              //   }
+              // });
+
+          }
+      });
+    }
+  });
+
+
+
+
+
+  feather.replace()
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

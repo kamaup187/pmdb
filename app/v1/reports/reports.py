@@ -3875,6 +3875,88 @@ class ExpensesStatement(Resource):
             co=current_user.company,
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
+
+
+class ActivityStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("user")
+        selected_month = request.args.get("month")
+        reporttype = request.args.get("reporttype")
+
+        if not selected_apartment:
+
+            user_list = current_user.company.users
+
+            template = "report_activities_statement.html"
+
+            return Response(render_template(
+                template,
+                tenantlist=[],
+                prop_obj=None,
+                users=user_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+        if selected_month:
+            datestring = date_formatter_alt(selected_month)
+            target_period = parse(datestring)
+        else:
+            target_period = datetime.datetime.now()
+
+        user_obj = UserOp.fetch_user_by_id(selected_apartment)
+        db.session.expire(user_obj)
+
+        users = current_user.company.users
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        ##################################################################################################
+        activity_list = []
+
+        activities = user_obj.activities    
+
+        for exp in activities:
+            if exp.date.month == target_period.month and exp.date.year == target_period.year:
+                exp_dict = {
+                    "num":exp.id,
+                    "name":exp.activity_name,
+                    "date":exp.date.strftime("%a, %d-%b-%y %I:%M %p")
+                }
+                activity_list.append(exp_dict)
+
+        ###################################################################################################
+
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+
+        return Response(render_template(
+            'ajax_report_activities_statement.html',
+
+            user=selected_apartment,
+            userid=user_obj.id,
+            user_obj=user_obj,
+            selected_month=selected_month,
+
+            tenantlist=[],
+            timeline = timeline,
+
+            bills=activity_list,
+            paging="portrait",
+
+            users=users,
+            user_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
     
 class GeneralRentStatement(Resource):
     @login_required

@@ -1998,6 +1998,7 @@ class LockedReport(Resource):
             prop=prop,
             tenantlist=[],
             bills=items,
+            totallocked=len(items),
             paging=page(items),
             logopath=logo(current_user.company)[0],
             mobilelogopath=logo(current_user.company)[1],

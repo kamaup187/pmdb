@@ -49,6 +49,28 @@
                             {% endfor %}
                           </select>
                         </div>
+
+                        <div class="col-lg-3 form-group mb-2">
+                          <label class="mb-0">Select activity type</label>
+                          <select name="activity_type" class="select-css" id="activity_type">
+                            <option disabled selected value> select activity type </option>
+                            <option value="all">All activities</option>
+                            <option value="login">Logins</option>
+                            <option value="invoice">Invoice entries</option>
+                            <option value="payment">Payment entries</option>
+                            <option value="tenant">Tenant entries</option>
+                          </select>
+                        </div>
+
+                        <div class="col-lg-3 form-group mb-2">
+                          <label class="mb-0">Select date type</label>
+                          <select name="date_type" class="select-css" id="date_type">
+                            <option disabled selected value> select date type </option>
+                            <option value="daily">Daily</option>
+                            <option value="monthly">Monthly</option>
+
+                          </select>
+                        </div>
                       
                         <div class="col-lg-3 form-group mb-2 mr-lg-5">
                           <label class="mb-0">Select month:</label>
@@ -410,9 +432,9 @@
   $("#month").datepicker({ 
     autoclose: true, 
     todayHighlight: true,
-    format: "mm-yyyy",
-    startView: "months", 
-    minViewMode: "months"
+    format: "dd-mm-yyyy",
+    // startView: "months", 
+    // minViewMode: "months"
   });
 </script>
 

@@ -1858,6 +1858,8 @@ class FetchActivity(Resource):
             
         unsorted_activities = []
         for activity in activities:
+            if activity.date.year < 2026:
+                ActivityOp.delete(activity)
             if "qc" in activity.activity_name.lower():
                 continue
             unsorted_activities.append(activity)

@@ -866,6 +866,14 @@ class AppTransactionOp(AppTransaction,Base):
     def fetch_transaction_by_payment_id(pay_id):
         return AppTransaction.query.filter_by(pay_id=pay_id).first()
 
+    def void_transaction(self):
+        try:
+            print("Soft deleting item",self)
+            self.is_deleted = True
+            db.session.commit()
+        except:
+            print("Failed to soft delete item",self)
+
     def fetch_opening_balance_transaction_by_date(date,company_id):
         from datetime import datetime, time, timedelta
         if isinstance(date, datetime):
@@ -7259,3 +7267,48 @@ class KceEvent(KceEvent, Base):
         self.venue = venue
         self.category = category
         self.image_url = image
+
+class ChangeRequestOp(ChangeRequest,Base):
+    """class"""
+
+    def __init__(self,action,description,proposed,original,trans_id,inv_id,pay_id,user_id,company_id):
+        self.action = action
+        self.description = description
+        self.proposed_data = proposed
+        self.original_data = original
+        self.transaction_id = trans_id
+        self.invoice_id = inv_id
+        self.payment_id = pay_id
+        self.requested_by = user_id
+        self.company_id = company_id
+
+    def fetch_request_by_id(id):
+        return ChangeRequest.query.filter_by(id=id).first()
+
+    def fetch_requests_by_company_id(company_id):
+        return ChangeRequest.query.filter_by(company_id=company_id).order_by(ChangeRequest.id.desc()).all()
+
+    def update_status(self,status,user_id):
+
+        print("Updating status to ",status," by user id ",user_id)
+
+        self.status = status
+        self.approved_by = user_id
+        self.approved_at = datetime.datetime.now()
+        db.session.commit()
+
+    def view(self):
+        return {
+            'id':self.id,
+            'ref':f"TRN/00{self.transaction_id}/00{self.id}" if self.transaction_id else (f"INV/00{self.invoice_id}/00{self.id}" if self.invoice_id else (f"PAY/00{self.payment_id}/00{self.id}" if self.payment_id else "N/A")),
+            'property':self.description,
+            'action':self.action,
+            'description':self.description,
+            'proposed_data':self.proposed_data,
+            'original_data':self.original_data,
+            'status':self.status,
+            'requested_by':UserOp.fetch_user_by_id(self.requested_by).name if UserOp.fetch_user_by_id(self.requested_by) else "Unknown",
+            'approved_by':UserOp.fetch_user_by_id(self.approved_by).name if UserOp.fetch_user_by_id(self.approved_by) else "Unknown",
+            'created_at':self.created_at.strftime("%d/%m/%Y %H:%M") if self.created_at else "-",
+            'approved_at':self.approved_at.strftime("%d/%m/%Y %H:%M") if self.approved_at else "-"
+        }

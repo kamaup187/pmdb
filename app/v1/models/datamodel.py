@@ -348,6 +348,8 @@ class AppTransaction(db.Model):
     rent = db.Column(db.Float, default=0.0)
     water = db.Column(db.Float, default=0.0)
     garbage = db.Column(db.Float, default=0.0)
+
+    is_deleted = db.Column(db.Boolean, default=False)
     
     amount = db.Column(db.Float, default=0.0)
     reconciled = db.Column(db.Boolean, default=False)
@@ -2209,27 +2211,54 @@ class KceEvent(db.Model):
         return f'<Department {self.name}>'
 
 
+# class Approval(db.Model):
+
+#     __tablename__ = 'approvals'
+
+#     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     approval_name = db.Column(db.String)
+#     description = db.Column(db.String)
+#     status = db.Column(db.String,default="Pending")
+
+#     date = db.Column(db.DateTime, default=db.func.current_timestamp())
+#     modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+#     initiated_by = db.Column(db.Integer, db.ForeignKey(User.id))
+#     approved_by = db.Column(db.Integer, db.ForeignKey(User.id))
+#     company_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+#     payment_id = db.Column(db.Integer, db.ForeignKey(Payment.id))
+#     invoice_id = db.Column(db.Integer, db.ForeignKey(MonthlyCharge.id))
+#     transaction_id = db.Column(db.Integer, db.ForeignKey(AppTransaction.id))
+
+#     def __repr__(self):
+#         return self.approval_name
+
+class ChangeRequest(db.Model):
+
+    __tablename__ = 'change_requests'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    transaction_id = db.Column(db.Integer, db.ForeignKey('app_transactions.id'))
+    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'))
+    invoice_id = db.Column(db.Integer, db.ForeignKey('monthlycharges.id'))
     
-
-class Approval(db.Model):
-
-    __tablename__ = 'approvals'
-
-    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    approval_name = db.Column(db.String)
+    action = db.Column(db.String)  # 'update' | 'delete'
     description = db.Column(db.String)
-    status = db.Column(db.String,default="Pending")
 
-    date = db.Column(db.DateTime, default=db.func.current_timestamp())
-    modifiedon = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-    initiated_by = db.Column(db.Integer, db.ForeignKey(User.id))
-    approved_by = db.Column(db.Integer, db.ForeignKey(User.id))
+    # store proposed changes as JSON
+    proposed_data = db.Column(db.JSON)
+    original_data = db.Column(db.JSON)
+    status = db.Column(db.String, default='pending')  # pending, approved, rejected
+    
+    requested_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+    approved_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     company_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    payment_id = db.Column(db.Integer, db.ForeignKey(Payment.id))
-    invoice_id = db.Column(db.Integer, db.ForeignKey(MonthlyCharge.id))
-    transaction_id = db.Column(db.Integer, db.ForeignKey(AppTransaction.id))
+    
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    approved_at = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
-        return self.approval_name
+        return self.description

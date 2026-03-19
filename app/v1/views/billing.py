@@ -6506,7 +6506,25 @@ class EditPayment(Resource):
 
                 target_trans = AppTransactionOp.fetch_transaction_by_payment_id(payment_obj.id)
                 if target_trans:
-                    AppTransactionOp.delete(target_trans)
+                    # AppTransactionOp.delete(target_trans)
+                    # AppTransactionOp.delete(target_trans)
+                    desc = f"{target_trans.prop} {target_trans.house}"
+                    if "None" in desc:
+                        desc = target_trans.trans_desc
+
+                    original = {
+                        "amount": target_trans.amount,
+                        "rent": target_trans.rent,
+                        "water": target_trans.water,
+                        "garbage": target_trans.garbage,
+                        "date": target_trans.date.isoformat() if target_trans.date else None,
+                        "ref": target_trans.ref,
+                        "transaction_type": target_trans.transaction_type,
+                        "transaction_category": target_trans.transaction_category,
+                        "trans_desc": target_trans.trans_desc
+                    }
+                    change_request = ChangeRequestOp("delete", desc,original,None,target_trans.id,None,None,current_user.id,current_user.company.id)
+                    change_request.save()
 
                 balance = target_bill.balance
                 balance += payment_obj.amount
@@ -7008,7 +7026,23 @@ class TransactionStatus(Resource):
 
         print(data)
 
+    
+class ApproveTransactionChange(Resource):
+    def get(self):
+        pass
+    def post(self):
+        change_id = request.form.get("changeid")
+        target = request.form.get("target")
 
+        change = ChangeRequestOp.fetch_request_by_id(change_id)
+        txn = AppTransactionOp.fetch_transaction_by_id(change.transaction_id)
+
+        if target == "approve":
+            ChangeRequestOp.update_status(change,"approved",current_user.id)
+            AppTransactionOp.void_transaction(txn)
+        else:
+            ChangeRequestOp.update_status(change,"rejected",current_user.id)
+ 
 class StkCallBackUrlProminance(Resource):
     def get(self):
         pass

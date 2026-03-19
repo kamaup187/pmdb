@@ -1692,6 +1692,15 @@ class Index(Resource):
             cbids_num = len(cbids)
             cbids_num_alt = len(cbids_alt)
 
+
+            changes = ChangeRequestOp.fetch_requests_by_company_id(company.id)
+            target_changes = []
+            items = []
+            time = datetime.datetime.now()
+            for m in changes:
+                if m.created_at.month == time.month and m.created_at.year == time.year and m.status == "pending":
+                    target_changes.append(m)
+
             # apart1 = ApartmentOp.fetch_apartment_by_name("Aviv")
             # if not apart1.paymentdetails:
             #     print("noooooonnnoonooo",apart1.paymentdetails)
@@ -1765,6 +1774,8 @@ class Index(Resource):
                 sidebar = ""
                 toggle = ""
 
+            print("changes num", len(target_changes))
+
             return Response(render_template(
                 indexpage,
                 clientaccess = "access",
@@ -1779,6 +1790,7 @@ class Index(Resource):
                 co=company,
                 companyname = companyname,
                 cbids=cbids,
+                changes_num = len(target_changes),
                 shortcodes=company.shortcodes,
                 cbids_num=cbids_num,
                 cbids_num_alt=cbids_num_alt,
@@ -1914,6 +1926,35 @@ class FetchSentSms(Resource):
             items.append(SentMessagesOp.view(t))
 
         return render_template("ajax_sent_messages.html",items=items)
+
+class FetchChangeRequests(Resource):
+    @login_required
+    def get(self):
+        target = request.args.get('target')
+
+        if target == "requestdetails":
+            change_id = request.args.get('changeid')
+            print("change id", change_id)
+            change = ChangeRequestOp.fetch_request_by_id(change_id)
+            return render_template("ajax_change_request_details.html",change=ChangeRequestOp.view(change))
+
+        company = current_user.company
+
+        changes = ChangeRequestOp.fetch_requests_by_company_id(company.id)
+
+        target_changes = []
+        items = []
+        time = datetime.datetime.now()
+        for m in changes:
+            if m.created_at.month == time.month and m.created_at.year == time.year and m.status == target:
+                target_changes.append(m)
+
+        for t in target_changes:
+            items.append(ChangeRequestOp.view(t))
+            items[-1]['disabled'] = "disabled" if t.status != "pending" else ""
+
+
+        return render_template("ajax_change_requests.html",items=items,changetitle=target.title())
 
 class PropSearchData(Resource):
     @login_required
@@ -11912,10 +11953,28 @@ class ReconAccount(Resource):
             trans_id = get_identifier(request.form.get('transid'))
             trans_obj = AppTransactionOp.fetch_transaction_by_id(trans_id)
             if trans_obj:
-                AppTransactionOp.delete(trans_obj)
+                # AppTransactionOp.delete(trans_obj)
+                desc = f"{trans_obj.prop} {trans_obj.house}"
+                if "None" in desc:
+                    desc = trans_obj.trans_desc
+
+                original = {
+                    "amount": trans_obj.amount,
+                    "rent": trans_obj.rent,
+                    "water": trans_obj.water,
+                    "garbage": trans_obj.garbage,
+                    "date": trans_obj.date.isoformat() if trans_obj.date else None,
+                    "ref": trans_obj.ref,
+                    "transaction_type": trans_obj.transaction_type,
+                    "transaction_category": trans_obj.transaction_category,
+                    "trans_desc": trans_obj.trans_desc
+                }
+                change_request = ChangeRequestOp("delete", desc,original,None,trans_obj.id,None,None,current_user.id,current_user.company.id)
+                change_request.save()
                 return "success"
             else:
                 abort(404)
+
         trans_amount = request.form.get('amount')
         valid_amount = validate_input(trans_amount)
         trans_date = request.form.get('date')

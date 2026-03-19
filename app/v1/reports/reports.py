@@ -8847,9 +8847,14 @@ class Recon(Resource):
 
         target_recons = []
         for recon in recons:
-            print("RECON BANK >>> ",recon.bank)
+            print("RECON BANK >>> ",recon.is_deleted)
             if recon.date >= start and recon.date <= end:
                 print("START >>> ",account)
+
+                if recon.is_deleted is None or recon.is_deleted == False:
+                    pass
+                else:
+                    continue
 
                 if recon.transaction_category == "opening balance":
                     continue

@@ -7308,7 +7308,7 @@ class ChangeRequestOp(ChangeRequest,Base):
             'original_data':self.original_data,
             'status':self.status,
             'requested_by':UserOp.fetch_user_by_id(self.requested_by).name if UserOp.fetch_user_by_id(self.requested_by) else "Unknown",
-            'approved_by':UserOp.fetch_user_by_id(self.approved_by).name if UserOp.fetch_user_by_id(self.approved_by) else "Unknown",
+            'approved_by':UserOp.fetch_user_by_id(self.approved_by).name if UserOp.fetch_user_by_id(self.approved_by) else "N/A",
             'created_at':self.created_at.strftime("%d/%m/%Y %H:%M") if self.created_at else "-",
             'approved_at':self.approved_at.strftime("%d/%m/%Y %H:%M") if self.approved_at else "-"
         }

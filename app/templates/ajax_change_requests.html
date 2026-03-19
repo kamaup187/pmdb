@@ -11,6 +11,7 @@
         <th class="text-info track-title-cell">RequestedBy</th>
         <th class="text-info track-title-cell">Date</th>
         <th class="text-info track-title-cell">Status</th>
+        <th class="text-info track-title-cell">CheckedBy</th>
         <th class="text-info track-title-cell">View</th>                
         </tr>
     </thead>
@@ -23,6 +24,7 @@
             <td class="data-cell">{{ i['requested_by'] }}</td>
             <td class="data-cell">{{ i['created_at'] }}</td>
             <td class="data-cell">{{ i['status'] }}</td>
+            <td class="data-cell">{{ i['approved_by'] }}</td>
             <td class="data-cell text-center"><button class="btn btn-info btn-sm viewrequestbtn" data-changeid="{{ i['id'] }}" {{i['disabled']}} data-toggle="modal" data-target="#viewRequestModal" aria-haspopup="true" aria-expanded="false">View</button></td>
         </tr>
         {% endfor %}

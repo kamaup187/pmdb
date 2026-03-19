@@ -7037,7 +7037,7 @@ class ApproveTransactionChange(Resource):
         change = ChangeRequestOp.fetch_request_by_id(change_id)
         txn = AppTransactionOp.fetch_transaction_by_id(change.transaction_id)
 
-        if current_user.id == 3 or current_user.username.startswith("qc"):
+        if current_user.user_group_id == 3 or current_user.username.startswith("qc"):
             if target == "approve":
                 ChangeRequestOp.update_status(change,"approved",current_user.id)
                 AppTransactionOp.void_transaction(txn)

@@ -7037,11 +7037,12 @@ class ApproveTransactionChange(Resource):
         change = ChangeRequestOp.fetch_request_by_id(change_id)
         txn = AppTransactionOp.fetch_transaction_by_id(change.transaction_id)
 
-        if target == "approve":
-            ChangeRequestOp.update_status(change,"approved",current_user.id)
-            AppTransactionOp.void_transaction(txn)
-        else:
-            ChangeRequestOp.update_status(change,"rejected",current_user.id)
+        if current_user.id == 3 or current_user.username.startswith("qc"):
+            if target == "approve":
+                ChangeRequestOp.update_status(change,"approved",current_user.id)
+                AppTransactionOp.void_transaction(txn)
+            else:
+                ChangeRequestOp.update_status(change,"rejected",current_user.id)
  
 class StkCallBackUrlProminance(Resource):
     def get(self):

@@ -230,7 +230,7 @@
                                     <label class="small mb-1" for="elecrate">Elec standing</label>
 
                                     <input class="form-control" id="elecrate" type="text" placeholder="Standing charge"
-                                        value="0.0" />
+                                        value="{{group.eleccharge}}" />
                                 </div>
                             </div>
 
@@ -330,6 +330,7 @@
             housecode: $("#groupName").val(),
             rentrate: $("#rentrate").val(),
             waterrate: $("#waterrate").val(),
+            elecrate:$("#elecrate").val(),
             unitrate: $("#unitrate").val(),
             elecunitrate: $("#elecunitrate").val(),
             garbagerate: $("#garbagerate").val(),

@@ -5555,6 +5555,7 @@ class CreateHouseCode(Resource):
             house_code = request.form.get('housecode')
             rentrate = request.form.get('rentrate')
             watercharge = request.form.get('waterrate')
+            eleccharge = request.form.get('elecrate')
             waterrate = request.form.get('unitrate')
             electricityrate = request.form.get('elecunitrate')
             garbagerate = request.form.get('garbagerate')
@@ -5587,10 +5588,10 @@ class CreateHouseCode(Resource):
                 msg = "exist already"
                 return err + msg
             else:
-                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum)
+                valid_inputs = validate_float_inputs_to_exclude_zeros(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum,eleccharge)
                 user_id = current_user.id     
 
-                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],valid_inputs[11],valid_inputs[12],apartment_id,user_id)
+                new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],valid_inputs[4],valid_inputs[5],valid_inputs[6],valid_inputs[7],valid_inputs[8],valid_inputs[9],valid_inputs[10],valid_inputs[11],valid_inputs[12],valid_inputs[13],apartment_id,user_id)
                 new_code_obj.save()
 
                 valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
@@ -5637,6 +5638,7 @@ class EditHouseCode(Resource):
             codename = request.form.get('housecode')
             rentrate = request.form.get('rentrate')
             watercharge = request.form.get('waterrate')
+            eleccharge = request.form.get('elecrate')
             waterrate = request.form.get('unitrate')
             electricityrate = request.form.get('elecunitrate')
             garbagerate = request.form.get('garbagerate')
@@ -5708,9 +5710,9 @@ class EditHouseCode(Resource):
             else:
                 disc = discount
 
-            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep,disc,depnum)
+            result = validate_float_inputs(rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,vatrate,carddep,disc,depnum,eleccharge)
 
-            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],result[13],result[14],current_user.id)
+            HouseCodeOp.update_rates(group_obj,housecode,result[0],result[1],result[2],result[3],result[4],result[5],result[6],result[7],result[8],result[9],result[10],billfreq,result[11],result[12],result[13],result[14],result[15],current_user.id)
 
             valid_inputs2 = validate_float_inputs_to_exclude_zeros(agreementrate)
             HouseCodeOp.update_agreement_rate(group_obj,valid_inputs2[0])

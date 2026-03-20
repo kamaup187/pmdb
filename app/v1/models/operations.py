@@ -1584,7 +1584,7 @@ class ApartmentOp(Apartment,Base):
 
 
 class HouseCodeOp(HouseCode,Base):
-    def __init__(self,codename,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum,apartment_id,user_id):
+    def __init__(self,codename,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,servicerate,seweragerate,discount,depnum,eleccharge,apartment_id,user_id):
         self.codename = codename
         self.rentrate=rentrate
         self.watercharge=watercharge
@@ -1599,6 +1599,7 @@ class HouseCodeOp(HouseCode,Base):
         self.seweragerate = seweragerate
         self.discount = discount
         self.depnum = depnum
+        self.eleccharge = eleccharge
         self.apartment_id = apartment_id
         self.user_id = user_id
 
@@ -1610,7 +1611,7 @@ class HouseCodeOp(HouseCode,Base):
     def fetch_all_housecodes_by_apartment_id(prop_id):
         return HouseCode.query.filter_by(apartment_id=prop_id).order_by(HouseCode.codename.asc()).all()
 
-    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,billfreq,vatrate,carddep,discount,depnum,modified_by):
+    def update_rates(self,housecode,rentrate,waterrate,garbagerate,securityrate,finerate,waterdep,elecdep,watercharge,electricityrate,service,sewerage,billfreq,vatrate,carddep,discount,depnum,eleccharge,modified_by):
         if housecode != "null":
             self.codename = housecode
         if rentrate != "null":
@@ -1645,6 +1646,8 @@ class HouseCodeOp(HouseCode,Base):
             self.discount = discount
         if depnum != "null":
             self.depnum = depnum
+        if eleccharge != "null":
+            self.eleccharge = eleccharge
             
         self.user_id = modified_by
         db.session.commit()

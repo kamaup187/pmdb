@@ -692,6 +692,8 @@ class HouseCode(db.Model):
     agreementrate = db.Column(db.Float,default=0)
 
     electricityrate = db.Column(db.Float,default=0)
+    eleccharge = db.Column(db.Float,default=0)
+
     securityrate = db.Column(db.Float,default=0)
     servicerate = db.Column(db.Float,default=0)
     garbagerate = db.Column(db.Float,default=0)

@@ -5534,7 +5534,7 @@ class CreateHouseCode(Resource):
                         valid_inputs = validate_float_inputs_to_exclude_zeros_alt(rentrate,waterrate,garbagerate,securityrate,waterdep,elecdep)
                         user_id = current_user.id     
 
-                        new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,valid_inputs[4],valid_inputs[5],0.0,0.0,0.0,apartment_id,user_id)
+                        new_code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],valid_inputs[3],0.0,valid_inputs[4],valid_inputs[5],0.0,0.0,0.0,0.0,apartment_id,user_id)
                         new_code_obj.save()
 
                 return '<span class="text-success">Upload successful</span>'
@@ -7314,14 +7314,14 @@ class AddTenant(Resource):
                     elif group:
                         valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group)
 
-                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
+                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
                         code_obj.save()
 
 
                     elif group == 0.0:
                         valid_inputs = validate_float_inputs_to_exclude_zeros_alt(group)
 
-                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
+                        code_obj = HouseCodeOp(housecode,valid_inputs[0],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,current_user.id)
                         code_obj.save()
            
 

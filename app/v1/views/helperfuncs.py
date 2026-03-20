@@ -7798,12 +7798,12 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
             if ttype == "ptenant":
                 print("creating service")
-                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
             else:
                 print("creating rent")
                 lfile("creating rent")
-                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
 
 
@@ -7815,12 +7815,12 @@ def read_excel(dict_array,apartment_id,ttype,user_id):
 
             if ttype == "ptenant":
                 print("creating service")
-                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,0.0,valid_inputs[1],0.0,0.0,0.0,0.0,0.0,0.0,0.0,valid_inputs[0],0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
             else:
                 print("creating rent")
                 lfile("creating rent")
-                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
+                code_obj = HouseCodeOp(housecode,valid_inputs[0],valid_inputs[1],valid_inputs[2],0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,apartment_id,user_id)
                 code_obj.save()
 
         else:
@@ -11004,6 +11004,75 @@ def fixed_water_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
                 water_charge_obj = ChargeOp(charge_type_id,fixed_water_charge,apartment_id,house_id,user_id,date)
                 water_charge_obj.save()
 
+
+def fixed_elec_bill_alt(apartment_id,houseids,chargetype,user_id,month,year):
+
+    charge_type_id = get_charge_type_id(chargetype)
+
+    house_list = []
+    if houseids:
+        for i in houseids:
+            hse = HouseOp.fetch_house_by_id(i)
+            if hse:
+                house_list.append(hse)
+    else:
+        house_list = houseauto(apartment_id)
+
+    for house in house_list:
+        house_id = house.id
+        if house.apartment_id != int(apartment_id):
+            continue
+        checker = None
+        fixed_elec_charge = 0
+
+        result = check_occupancy(house)
+        if result[0] == "occupied" or house.owner:
+            if not house.billable:
+                fixed_elec_charge = 0.0
+            else:
+                if not house.housecode:
+                    print("HOUSE GROUP MISSING FOR: ",house,"of",house.apartment)
+                    continue
+
+                fixed_elec_charge = house.housecode.eleccharge if house.housecode.eleccharge else 0.0
+
+            all_charges = ChargeOp.fetch_charges_by_house_id(house_id)
+
+            reading_obj = None
+
+            if house.apartment_id == 765:
+                meter_readings = house.meter_readings
+
+                for item in meter_readings:
+                    if item.reading_period:
+                        if item.reading_period.month == month and item.reading_period.year == year and item.description == "actual electricity reading":
+                            reading_obj = item
+                            # target_readings.append(item)
+
+            if reading_obj:
+                if reading_obj.units > 0:
+                    continue
+
+            for charge in all_charges:
+                if str(charge) == "Electricity" and charge.date.month == month and charge.date.year == year and not charge.reading_id:
+                    if charge.amount == 0.0:
+                        print("deleting zero charged fixed elec obj")
+                        ChargeOp.delete(charge)
+                    else:
+                        checker = "exists"
+                        break
+
+
+            if checker:
+                print("Skipping",house.name, "of",house.apartment,"fixed_elec charging",fixed_elec_charge,"exists")
+                continue
+            else:
+                print(">>>>>>>>> Charging",house.name, "of",house.apartment,"fixed_elec_charge")
+                date = generate_date(month,year)
+                elec_charge_obj = ChargeOp(charge_type_id,fixed_elec_charge,apartment_id,house_id,user_id,date)
+                elec_charge_obj.save()
+
+
 def rent_bill(apartment_id,houseids,chargetype,user_id,month,year):
     from app import create_app
     app = create_app()
@@ -13086,6 +13155,8 @@ def main_total_bill(apartment_id,houseids,rent_bill,user_id,month,year):
 
     electricity_bill_alt(apartment_id,houseids,"Electricity",user_id,month,year)
     fixed_water_bill_alt(apartment_id,houseids,"Water",user_id,month,year)
+    fixed_elec_bill_alt(apartment_id,houseids,"Electricity",user_id,month,year)
+
 
     co = user.company
     if apartment_obj.billing_period.month != month or apartment_obj.billing_period.year != year: # TO DO

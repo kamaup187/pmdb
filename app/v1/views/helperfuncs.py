@@ -5337,10 +5337,14 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
         if tenant_obj.sms:
 
             if raw_rem_sms > 0 or own_shortcode:
+                try:
 
-                if tenant_obj.balance > 0.0:
-                    pass
-                else:
+                    if tenant_obj.balance > 0.0:
+                        pass
+                    else:
+                        continue
+                except:
+                    print("Tenant object missing")
                     continue
 
                 #Send the SMS
@@ -5367,7 +5371,10 @@ def send_reminder_sms(propid,temp_txt,rem_bal,raw_house_string,tel):
                         f_dnow = d_now.strftime('%d-%m-%Y')
 
                         if co.id == 114:
-                            message = f"Dear {fname}, \n{temp_txt}. \nYour rent arrears as of date {f_dnow} is Kes. {tenant_obj.balance}, Deposit balance: Kes. {tenant_obj.deposits.balance} \n\n~{str_co}."
+                            try:
+                                message = f"Dear {fname}, \n{temp_txt}. \nYour rent arrears as of date {f_dnow} is Kes. {tenant_obj.balance}, Deposit balance: Kes. {tenant_obj.deposits.balance} \n\n~{str_co}."
+                            except:
+                                print("Sending failed")
                         else:
                             message = f"Dear {fname}, \n{temp_txt}. \nYour total arrears as of date {f_dnow} is Kes. {tenant_obj.balance} \n\n~{str_co}."
 

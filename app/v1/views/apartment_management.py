@@ -121,13 +121,13 @@ class ServiceWorker(Resource):
 
 # print(response.text)
 
-# telll = sms_phone_number_formatter("0716674695")
+# telll = sms_phone_number_formatter("0717636224")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?",phonenuma,merit_api_key,merit_partner_id,"MERIT_LTD")
 
 # advanta_send_sms("Good morning Faith 🙂, \nWant some lunch today?","254716674695",unipay_api_key,unipay_partner_id,"KEVMAREAL")
 
-# advanta_send_sms("Greetings PAUL 🙂, \MALIBU sms sender Id is ready ~ KiotaPay Team",telll,kiotapay_api_key,kiotapay_partner_id,"KIOTAPAY")
+# advanta_send_sms("Thatha Kazuri 🙂, \Testing our bulk sms server... ~ Rentlib Team",telll,kiotapay_api_key,kiotapay_partner_id,"RENTLIB")
 
 # report = advanta_send_sms("sms_text",phonenuma,kiotapay_api_key,kiotapay_partner_id,"Bizline")
 
@@ -11988,6 +11988,8 @@ class ReconAccount(Resource):
         print("success ndio hizi ", valid_amount,trans_date,trans_ref,trans_type,trans_desc)
 
         tdate = datetime.datetime.strptime(trans_date, "%Y-%m-%d").date()
+        # urao = parse(trans_date)
+        # import pdb; pdb.set_trace()
 
         if trans_category == "opening balance":
             existing_recon = AppTransactionOp.fetch_opening_balance_transaction_by_date(tdate,current_user.company.id)

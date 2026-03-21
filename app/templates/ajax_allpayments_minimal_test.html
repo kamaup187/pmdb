@@ -310,8 +310,9 @@
                         <div class="form-group col-md-6 no-paddin input-icons">
                           <span class="text-danger">DATE?</span>
                           <div id="datepicker" class="date" data-date-format="dd-mm-yyyy">
-                            <input id="pay-date" class="form-control ph" type="text" placeholder="Date of payment" readonly />
-                            <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span>
+                            <!-- <input id="pay-date" class="form-control ph" type="text" placeholder="Date of payment" readonly /> -->
+                            <input type="date" class="form-control ph" id="pay-date" name="transaction-date" placeholder="Date of payment">
+                            <!-- <span class="input-group-addon field-icon"><i class="fas fa-fw fa-calendar-day text-info"></i></span> -->
                           </div>
                         </div>
 
@@ -1178,12 +1179,12 @@
     // This script displays alerts and tenant name before clearance
     $("#addPaymentModal2").on('shown.bs.modal', function () {
 
-      $(function () {
-        $("#datepicker").datepicker({
-          autoclose: true,
-          todayHighlight: true
-        });
-      });
+      // $(function () {
+      //   $("#datepicker").datepicker({
+      //     autoclose: true,
+      //     todayHighlight: true
+      //   });
+      // });
 
       // if ($("#ctb_item_amount").text()) {
       //   $("#prop_selector").removeClass("dispnone")

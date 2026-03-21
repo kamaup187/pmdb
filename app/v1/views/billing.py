@@ -3034,15 +3034,15 @@ class ReceivePayment(Resource):
         print("PAYPERIOOOOOOOD",pay_period_date)
 
         if paydate:
-
-            formatted_paydate = date_formatter(paydate)
+            # formatted_paydate = date_formatter(paydate)
 
             if paytime:
-                timestring = formatted_paydate + " " + paytime
+                timestring = paydate + " " + paytime
                 pay_date = parse(timestring)
             else:
-                pay_date = parse(formatted_paydate)
+                pay_date = parse(paydate)
 
+            # import pdb; pdb.set_trace()
         else:
             pay_date = datetime.datetime.now()
     

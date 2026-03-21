@@ -8466,6 +8466,24 @@ class TenantClearance(Resource):
         #             cumulative_pay = paid_amount + float(amount_paid)
         #             MonthlyChargeOp.update_payment(specific_charge_obj,cumulative_pay)
         #             MonthlyChargeOp.update_payment_date(specific_charge_obj,datetime.datetime.now())
+        # desc = f"{trans_obj.prop} {trans_obj.house}"
+        # if "None" in desc:
+        #     desc = trans_obj.trans_desc
+
+        # original = {
+        #     "amount": trans_obj.amount,
+        #     "rent": trans_obj.rent,
+        #     "water": trans_obj.water,
+        #     "garbage": trans_obj.garbage,
+        #     "date": trans_obj.date.isoformat() if trans_obj.date else None,
+        #     "ref": trans_obj.ref,
+        #     "transaction_type": trans_obj.transaction_type,
+        #     "transaction_category": trans_obj.transaction_category,
+        #     "trans_desc": trans_obj.trans_desc
+        # }
+        # change_request = ChangeRequestOp("delete", desc,original,None,trans_obj.id,None,None,current_user.id,current_user.company.id)
+        # change_request.save()
+
 
         active_alloc = check_house_occupied(tenant_obj)[2]
 
@@ -8473,6 +8491,7 @@ class TenantClearance(Resource):
         TenantOp.update_status(tenant_obj,"Vacated")
 
         msg = f"{tenant_obj} cleared successfully"
+        # msg = "Submitted successfully"
 
         return render_template('ajaxproceed.html',alert=msg)
 

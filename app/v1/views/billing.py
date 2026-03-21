@@ -3434,8 +3434,12 @@ class ReceivePayment(Resource):
         #     HouseOp.update_lock_status(house_obj, False)
 
         # trans_time = datetime.datetime.now()
-        trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",paidll_bool,payment_obj.id,house_obj.apartment.name,house_obj.name,bank,rentpaid,waterpaid,garbagepaid,valid_amount,"debit","Rent deposit",co.id)
-        trans.save()
+        existing_trans = AppTransactionOp.fetch_transaction_by_ref(bill_ref)
+        if existing_trans:
+            pass
+        else:
+            trans = AppTransactionOp(bill_ref,pay_date,tenant_obj.name + " (" + narration + ")",paidll_bool,payment_obj.id,house_obj.apartment.name,house_obj.name,bank,rentpaid,waterpaid,garbagepaid,valid_amount,"debit","Rent deposit",co.id)
+            trans.save()
 
         values = validate_deposit_float_inputs(rentdep,waterdep,elecdep,otherdep)
         values2 = validate_deposit_float_inputs(paid_rentdep,paid_waterdep,paid_elecdep,paid_otherdep)

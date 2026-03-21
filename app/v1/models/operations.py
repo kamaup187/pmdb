@@ -866,6 +866,9 @@ class AppTransactionOp(AppTransaction,Base):
     def fetch_transaction_by_payment_id(pay_id):
         return AppTransaction.query.filter_by(pay_id=pay_id).first()
 
+    def fetch_transaction_by_ref(ref):
+        return AppTransaction.query.filter_by(ref=ref).first()
+
     def void_transaction(self):
         try:
             print("Soft deleting item",self)

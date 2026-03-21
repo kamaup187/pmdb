@@ -2245,6 +2245,7 @@ class ChangeRequest(db.Model):
     transaction_id = db.Column(db.Integer, db.ForeignKey('app_transactions.id'))
     payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'))
     invoice_id = db.Column(db.Integer, db.ForeignKey('monthlycharges.id'))
+    # tenant_id = db.Column(db.Integer, db.ForeignKey('tenants.id'))
     
     action = db.Column(db.String)  # 'update' | 'delete'
     description = db.Column(db.String)

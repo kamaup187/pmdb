@@ -3884,8 +3884,9 @@ class ActivityStatement(Resource):
     @login_required
     def get(self):
         selected_apartment = request.args.get("user")
-        selected_month = request.args.get("month")
-        reporttype = request.args.get("reporttype")
+        selected_period = request.args.get("period")
+        activity_type = request.args.get("activity_type")
+        range_type = request.args.get("range_type")
 
         if not selected_apartment:
 
@@ -3904,9 +3905,9 @@ class ActivityStatement(Resource):
                 name=current_user.name))
 
 
-        if selected_month:
-            datestring = date_formatter_alt(selected_month)
-            target_period = parse(datestring)
+        if selected_period:
+            # datestring = date_formatter_alt(selected_period)
+            target_period = parse(selected_period)
         else:
             target_period = datetime.datetime.now()
 
@@ -3914,7 +3915,11 @@ class ActivityStatement(Resource):
         db.session.expire(user_obj)
 
         users = current_user.company.users
-        str_month = get_str_month(target_period.month)
+
+        if range_type == "month":
+            str_month = get_str_month(target_period.month)
+        else:
+            str_month = f"{target_period.day} {get_str_month(target_period.month)}"
         timeline = f"{str_month.upper()} / {target_period.year}"
 
         ##################################################################################################
@@ -3923,13 +3928,27 @@ class ActivityStatement(Resource):
         activities = user_obj.activities    
 
         for exp in activities:
-            if exp.date.month == target_period.month and exp.date.year == target_period.year:
-                exp_dict = {
-                    "num":exp.id,
-                    "name":exp.activity_name,
-                    "date":(exp.date + relativedelta(hours=3)).strftime("%a, %d-%b-%y %I:%M %p")
-                }
-                activity_list.append(exp_dict)
+            # activity_types = ["logged in", "added payment", "added tenant", "landlord payments", "edited invoice", "all"]
+            if activity_type == "all" or activity_type in exp.activity_name.lower():
+
+                if range_type == "monthly":
+                    if exp.date.month == target_period.month and exp.date.year == target_period.year:
+                        exp_dict = {
+                            "num":exp.id,
+                            "name":exp.activity_name,
+                            "date":(exp.date + relativedelta(hours=3)).strftime("%a, %d-%b-%y %I:%M %p")
+                        }
+                        activity_list.append(exp_dict)
+
+                else:
+                    if exp.date.day == target_period.day and exp.date.month == target_period.month and exp.date.year == target_period.year:
+                        exp_dict = {
+                            "num":exp.id,
+                            "name":exp.activity_name,
+                            "date":(exp.date + relativedelta(hours=3)).strftime("%a, %d-%b-%y %I:%M %p")
+                        }
+                        activity_list.append(exp_dict)
+
 
         ###################################################################################################
 
@@ -3943,7 +3962,6 @@ class ActivityStatement(Resource):
             user=selected_apartment,
             userid=user_obj.id,
             user_obj=user_obj,
-            selected_month=selected_month,
 
             tenantlist=[],
             timeline = timeline,

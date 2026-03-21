@@ -1987,7 +1987,8 @@ class LockedReport(Resource):
             if tt[0] == "occupied":
                 invoice = fetch_latest_tenant_invoice(tt[1])
             else:
-                HouseOp.update_lock_status(house,False)
+                if house.locked:
+                    HouseOp.update_lock_status(house,False)
                 invoice = None
 
             item['balance'] = invoice.balance if invoice else 0.0

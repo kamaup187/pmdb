@@ -3927,7 +3927,7 @@ class ActivityStatement(Resource):
                 exp_dict = {
                     "num":exp.id,
                     "name":exp.activity_name,
-                    "date":exp.date.strftime("%a, %d-%b-%y %I:%M %p")
+                    "date":(exp.date + relativedelta(hours=3)).strftime("%a, %d-%b-%y %I:%M %p")
                 }
                 activity_list.append(exp_dict)
 

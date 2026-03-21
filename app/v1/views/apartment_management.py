@@ -4004,13 +4004,14 @@ class SubmissionsManagement(Resource):
             sub_obj.save()
 
             print("submission recorded for ", sub_obj.pay_period)
+            create_activity(current_user,f"submitted landlord payments for {prop.name} in {target_period.strftime('%B %Y')}")
             #################################################################################################
 
         else:
             current_submission = target_submissions[0]
             SubmissionOp.update_submission(current_submission,bill_ref,pay_date)
             print("submission updated for ", current_submission.pay_period)
-
+            create_activity(current_user,f"updated landlord payments for {prop.name} in {target_period.strftime('%B %Y')}")
         return "Submitted successfully"
 
 

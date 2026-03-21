@@ -2927,7 +2927,12 @@ class ReceivePayment(Resource):
                 else:
                     edit = ""
 
-                return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit)
+                if bill.house.locked:
+                    lock_status = "<span class='text-danger'><i class='fas fa-lock mr-1'></i> (locked)</span> <span class='text-success'> unlock?</span>"
+                else:
+                    lock_status = "<span class='text-success'><i class='fas fa-unlock mr-1'></i> (unlocked)</span> <span class='text-danger'> lock?</span>"
+
+                return render_template('ajax_bill_breakdown.html',bill=bill,dep=dep,edit=edit,lock_status=lock_status)
 
             return "<span class='text-danger text-xx'>Invoice unavailable</span>"
 

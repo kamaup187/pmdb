@@ -1465,7 +1465,7 @@ class LandingPage(Resource):
         if request.host == "kikuyucouncilofelders.org":
             return redirect(url_for('api.kikuyucouncilofelders'))
         if request.host == "pmdpgroup.com":
-            return redirect(url_for('api.signin'))
+            return redirect(url_for('api.userlogin'))
             # return redirect(url_for('api.index'))
         if os.getenv("HOMEPAGE") or HOMEPAGE == "False":
             return redirect(url_for('api.index'))

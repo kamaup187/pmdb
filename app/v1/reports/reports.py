@@ -4571,6 +4571,7 @@ class DepositRefundStatement(Resource):
                 num2 += 1
 
         if tenant_obj.balance:
+            num2 = 1
             detailed_deductions.append(
                 {
                     "item":"Arrears",

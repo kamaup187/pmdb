@@ -1243,7 +1243,7 @@ class EditBill(Resource):
         if request.args.get('target'):
             target = request.args.get('target')
             if target == "lockunlock":
-                if not permission(current_user, 'edit'):
+                if not permission(current_user, 'invoices'):
                     return err + "Insufficient permissions to lock/unlock house"
 
                 houseid = request.args.get('houseid')
@@ -1266,7 +1266,7 @@ class EditBill(Resource):
 
                 return render_template("ajax_lock_unlock.html",house=house,lockdate=lockdate,lockcolor=lockcolor,lockicon=lockicon,locktext=locktext)
             
-        if not permission(current_user, 'edit'):
+        if not permission(current_user, 'invoices'):
             return err + "Insufficient permissions to edit invoice"
         
         if current_user.company.name.lower() == "villa park":
@@ -2488,7 +2488,7 @@ class ReceivePayment(Resource):
         target2 = request.args.get("target2")
         housecheck = request.args.get("housecheck")
 
-        if not permission(current_user, 'write'):
+        if not permission(current_user, 'payments'):
             return err + "Insufficient permissions to add payments"
 
 
@@ -7046,10 +7046,63 @@ class ApproveTransactionChange(Resource):
         change = ChangeRequestOp.fetch_request_by_id(change_id)
         txn = AppTransactionOp.fetch_transaction_by_id(change.transaction_id)
 
-        if current_user.user_group_id == 3 or current_user.username.startswith("qc"):
-            if target == "approve":
+        if not has_right(current_user,"approve"): # or current_user.username.startswith("qc"):
+            print("permissions failing")
+            return err + "insufficient permissions to approve/reject"
+
+        if target == "approve":
+            if change.action == "hold":
+                inv = MonthlyChargeOp.fetch_specific_bill(change.invoice_id)
+
+                if inv:
+                    MonthlyChargeOp.update_hold_status(inv, "hold")
+                    print("Invoice pay hold updated to ","hold")
+                    ChangeRequestOp.update_status(change,"approved",current_user.id)
+
+                else:
+                    print("Invoice not found!")
+                return "success"
+
+            elif change.action == "unhold":
+                inv = MonthlyChargeOp.fetch_specific_bill(change.invoice_id)
+
+                if inv:
+                    MonthlyChargeOp.update_hold_status(inv, "unhold")
+                    print("Invoice pay hold updated to ","unhold")
+                    ChangeRequestOp.update_status(change,"approved",current_user.id)
+
+                else:
+                    print("Invoice not found!")
+                return "success"
+
+            else:
                 ChangeRequestOp.update_status(change,"approved",current_user.id)
                 AppTransactionOp.void_transaction(txn)
+        else:
+            if change.action == "hold":#pending hold to none (original state)
+                inv = MonthlyChargeOp.fetch_specific_bill(change.invoice_id)
+
+                if inv:
+                    MonthlyChargeOp.update_hold_status(inv, "none")
+                    print("Invoice pay hold updated to ","none")
+                    ChangeRequestOp.update_status(change,"rejected",current_user.id)
+
+                else:
+                    print("Invoice not found!")
+                return "success"
+
+            elif change.action == "unhold": #pending unhold to hold
+                inv = MonthlyChargeOp.fetch_specific_bill(change.invoice_id)
+
+                if inv:
+                    MonthlyChargeOp.update_hold_status(inv, "hold")
+                    print("Invoice pay hold updated to ","hold")
+                    ChangeRequestOp.update_status(change,"rejected",current_user.id)
+
+                else:
+                    print("Invoice not found!")
+                return "success"
+
             else:
                 ChangeRequestOp.update_status(change,"rejected",current_user.id)
  

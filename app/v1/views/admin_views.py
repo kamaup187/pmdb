@@ -1295,6 +1295,10 @@ class AddProp(Resource):
         prop = request.form.get("prop")
         agency = request.form.get("agency")
 
+        if not has_right(current_user,"properties"):
+            return f'<span class="text-danger">Error! Insufficient rights to add property</span>'
+
+
         present = ApartmentOp.fetch_apartment_by_name(prop.title())
         if present:
             print("SIMILAR PROP EXISTS >> ",present.name)

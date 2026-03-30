@@ -15825,9 +15825,21 @@ def permission_alt(user,param):
         return True
     else:
         if user.roles:
-            # print("roles length",len(user.roles),"param",param)
             roles = user.roles.split(",")
             if "admin" in roles:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+def has_right(user,param):
+    if user.username.startswith('qc'):
+        return True
+    else:
+        if user.roles:
+            roles = user.roles.split(",")
+            if param in roles:
                 return True
             else:
                 return False

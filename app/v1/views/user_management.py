@@ -591,7 +591,7 @@ class Users(Resource):
 
         if target == "delete user":
 
-            if not permission(current_user,"edit"):
+            if not permission(current_user,"users"):
                 return err + "insufficient permissions to edit" 
 
             userid = request.form.get("userid")
@@ -1816,7 +1816,7 @@ class UpdateUser(Resource):
     def get(self):
         """Handle GET request for this view. Url ---> /update/user"""
 
-        if not permission(current_user,"edit"):
+        if not permission(current_user,"users"):
             return err + "insufficient permissions to edit" 
 
         userid = request.args.get('userid')
@@ -1844,6 +1844,7 @@ class UpdateUser(Resource):
         # roles = ["admin","read","write","edit"]
 
         str_roles = ','.join(map(str, roles))
+        print("rolllessss",str_roles)
 
         return Response(render_template(
             'ajax_userform.html',

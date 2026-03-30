@@ -204,7 +204,7 @@
               data-dismiss="modal">X</button>
           </div>
         </h5>
-        <div class="alert-msgs"></div>
+        <div class="alert-msgs-prop"></div>
       </div>
       <div class="modal-body pt-0">
         <div class="media mb-2">
@@ -821,6 +821,27 @@
         target: ""
       },
       success: function (response) {
+        if(response.includes("Insufficient")){
+
+        $(".alert-msgs-prop").html(response);
+
+
+        $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="grid"></i> PROPERTY LISTING'); feather.replace();
+        $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
+
+        $("#dummyData").addClass('dispnone');
+        $("#propdisp-content").removeClass('dispnone');
+
+        $("#barloader-alt").addClass("dispnone")
+
+        $('#add_prop').html('Re-submit');
+
+        }else{
+
+
+
+
+
         $(".alert-msgs").html(response);
         $('#add_prop').html('Submit');
         $(".reset").click();
@@ -860,7 +881,7 @@
 
 
 
-      },
+      }},
       error: function () {
 
         $(".dismissparent").click();

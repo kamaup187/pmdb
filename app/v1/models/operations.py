@@ -133,7 +133,7 @@ class Base():
         except:
             decor_fig = f"{fig}"
         return decor_fig
-    
+
     def fig_format_ll(fig,ll_status):
         try:
             decor_fig = (f"{fig:,.1f}")
@@ -141,6 +141,50 @@ class Base():
             decor_fig = f"{fig}"
 
         if ll_status:
+            return f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
+
+        return decor_fig
+    
+    def fig_format_ll_alt_alt(self):
+        try:
+            if self.payhold == "hold" or self.payhold == "pending unhold":
+                decor_fig = "0.0"
+            else:
+                decor_fig = (f"{self.rent_paid:,.1f}")
+        except:
+            if self.payhold == "hold" or self.payhold == "pending unhold" :
+                decor_fig = "0.0"
+            else:
+                decor_fig = f"{self.rent_paid}"
+
+        if self.paidll:
+            return f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
+
+
+        if self.payhold == "hold":
+            return f'<span class="badge bg-danger badge-danger badge-counter dispnone">deleted</span> {decor_fig}'
+
+        if self.payhold == "pending hold":
+            return f'<span class="badge bg-warning badge-warning badge-counter">pending delete</span> {decor_fig}'
+
+        if self.payhold == "pending unhold":
+            return f'<span class="badge bg-secondary badge-secondary badge-counter">pending reverse</span> {decor_fig}'
+
+        return decor_fig
+
+    def fig_format_ll_alt(self):
+        try:
+            if self.payhold == "hold" or self.payhold == "pending unhold":
+                decor_fig = "0.0"
+            else:
+                decor_fig = (f"{self.rent_paid:,.1f}")
+        except:
+            if self.payhold == "hold" or self.payhold == "pending unhold":
+                decor_fig = "0.0"
+            else:
+                decor_fig = f"{self.rent_paid}"
+
+        if self.paidll:
             return f'<span class="badge bg-success badge-success badge-counter">paid owner</span> {decor_fig}'
 
         return decor_fig
@@ -3963,6 +4007,22 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         self.fine_status = status
         db.session.commit()
 
+    def update_hold_status(self,hold):
+        self.payhold = hold
+        db.session.commit()
+
+    def calculate_rent_due(self):
+        if self.rent_due:
+            bal = self.rent_due if self.rent_due > 0 else 0.0
+            if self.payhold == "hold" or self.payhold == "pending unhold":
+                bal += self.rent_paid if self.rent_paid > 0 else 0.0
+        else:
+            if self.payhold == "hold" or self.payhold == "pending unhold":
+                bal = self.rent_paid if self.rent_paid > 0 else 0.0
+            else:
+                bal = 0.0
+        return f"{bal:,.1f}"
+
     def update_house(self,house_id):
         self.house_id = house_id
         db.session.commit()
@@ -4266,13 +4326,13 @@ class MonthlyChargeOp(MonthlyCharge,Base):
 
     #########################TODO TODO ###########################
 
-    def get_date(self):
-        paydate = self.pay_date if self.pay_date else "-"
-        if not isinstance(paydate,str):
-            str_date = paydate.strftime("%d/%b/%y")
-        else:
-            str_date = paydate
-        return str_date
+    # def get_date(self):
+    #     paydate = self.pay_date if self.pay_date else "-"
+    #     if not isinstance(paydate,str):
+    #         str_date = paydate.strftime("%d/%b/%y")
+    #     else:
+    #         str_date = paydate
+    #     return str_date
 
     def minimal_view(self):
         
@@ -4700,6 +4760,17 @@ class MonthlyChargeOp(MonthlyCharge,Base):
         hh = self.house
         return f"{hh.name}"
     
+    def get_date(self):
+        paydate = self.pay_date if self.pay_date else "-"
+        if not isinstance(paydate,str):
+            str_date = paydate.strftime("%d/%b/%y")
+        else:
+            str_date = paydate
+        if self.payhold == "hold" or self.payhold == "pending unhold":
+            return "-"
+        else:
+            return str_date
+    
     def view_summary(self):
 
         return {
@@ -4836,7 +4907,10 @@ class MonthlyChargeOp(MonthlyCharge,Base):
             'rent':MonthlyChargeOp.fig_format(self.rent),
             'rent-total':MonthlyChargeOp.calculate_total_due(self.rent,self.rent_balance),
             'rent-paid':MonthlyChargeOp.fig_format_ll(self.rent_paid,self.paidll),
+            'rent-paid-alt':MonthlyChargeOp.fig_format_ll_alt(self),
+            'rent-paid-alt-alt':MonthlyChargeOp.fig_format_ll_alt_alt(self),
             'rent-bal':MonthlyChargeOp.fig_format(self.rent_due),
+            'rent-bal-alt':MonthlyChargeOp.calculate_rent_due(self),
 
             'water-arr':MonthlyChargeOp.fig_format(self.water_balance),
             'water':MonthlyChargeOp.fig_format(self.water),
@@ -5049,7 +5123,7 @@ class MonthlyChargeHistoryOp(MonthlyChargeHistory,Base):
         self.penalty=penalty
         # foreign keys
         self.invoice_id=invoice_id
-        self.user_id = created_by
+        self.createdby = created_by
 
     def update_dues(self,rent,water,electricity,garbage,security,service,penalty,deposit,agreement):
         self.rent_due = rent

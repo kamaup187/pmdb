@@ -400,6 +400,7 @@ api.add_resource(RentStatement,"/rent/statement")
 api.add_resource(RentStatement2,"/rent/statement2")
 api.add_resource(ExpensesStatement,"/expenses/statement")
 api.add_resource(ActivityStatement,"/activities/statement")
+api.add_resource(ChangeStatement,"/change/statement")
 
 api.add_resource(BasicStatement,"/custom/statement")
 api.add_resource(GeneralRentStatement,"/generalrent/statement")

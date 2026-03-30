@@ -2749,8 +2749,8 @@ window.Tawk_API.onChatMessageVisitor = function(message){
         </div>
 
         <div class="has-margin-bottom divbg">
-          <button class="btn btn-success" type="button" id="approve-request-btn" data-dismiss="modal"><i class="fas fa-check mr-2"></i>Approve</button>
-          <button class="btn btn-danger" type="button" id="reject-request-btn" data-dismiss="modal"><i class="fas fa-times mr-2"></i>Reject</button>
+          <button class="btn btn-success" type="button" id="approve-request-btn"><i class="fas fa-check mr-2"></i>Approve</button>
+          <button class="btn btn-danger" type="button" id="reject-request-btn"><i class="fas fa-times mr-2"></i>Reject</button>
           <button class="btn btn-secondary" type="button" data-dismiss="modal"><i class="fas fa-arrow-left mr-2"></i>Back</button>
 
         </div>
@@ -4453,19 +4453,34 @@ function animateHH(element) {
           target: "approve"
         },
         success: function (response) {
-          $.ajax({
-            url: "{{ url_for('api.fetchchangerequests') }}",
-            type: "get",
-            data: {
-              target: "pending",
-            },
-            success: function (response) {
 
-              $("#pendingchanges").html(response)
+          if (response.includes("insufficient")){
+
+            var newDiv = $("<div>")
+              .html(response)
+              .addClass("mt-3 mb-3 text-danger font-weight-bold");
+
+            $("#request-details").html(newDiv);
+
+          } else{
+            $.ajax({
+              url: "{{ url_for('api.fetchchangerequests') }}",
+              type: "get",
+              data: {
+                target: "pending",
+              },
+              success: function (response) {
+  
+                $("#pendingchanges").html(response)
+
+                $("#viewRequestModal").modal("hide");
+  
+  
+              },
+            });
+          }
 
 
-            },
-          });
 
         }
       });

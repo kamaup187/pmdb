@@ -16,6 +16,8 @@
 <span id="remitperiod" class="dispnone">{{selected_month}}</span>
 <span id="prop_identifier" class="dispnone">{{prop_obj.id}}</span>
 <span id="urlpattern" class="dispnone">/rent/statement</span>
+<span id="hold_pay_identifier" class="dispnone"></span>
+
 <span id="filename" class="dispnone">{{prop}} {{timeline}} landlord rent statement.pdf</span>
 
 <div class="row">
@@ -192,15 +194,17 @@
                   <tbody>
                     {% for bill in bills%}
                     <tr>
-                      <td class="data-cell text-center">{{ bill['house'] }}</td>
+                      <!-- <td class="data-cell text-center">{{ bill['house'] }}</td> -->
+                      <td class="data-cell text-center btn-outline-primary text-black hold-pay" data-id="{{ bill['id'] }}" data-toggle="modal" data-target="#holdPayModal">{{ bill['house']}}</td>
+
                       <td class="data-cell text-left">{{ bill['tenant-alt']}}</td>
                       <td class="data-cell text-right">{{ bill['desc'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                       <td class="data-cell text-right">{{ bill['rent'] }}</td>
                       <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                      <td class="data-cell text-right">{{ bill['rent-paid']|safe }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-paid-alt-alt']|safe }}</td>
                       <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
-                      <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                      <td class="data-cell text-right">{{ bill['rent-bal-alt'] }}</td>
                     </tr>
                   {% endfor %}
 
@@ -455,9 +459,9 @@
                   <td class="data-cell text-right">{{ bill['rent-arr'] }}</td>
                   <td class="data-cell text-right">{{ bill['rent'] }}</td>
                   <td class="data-cell text-right">{{bill['rent-total']}}</td>
-                  <td class="data-cell text-right">{{ bill['rent-paid'] | safe}}</td>
+                  <td class="data-cell text-right">{{ bill['rent-paid-alt'] | safe}}</td>
                   <td class="data-cell text-right">{{ bill['date-paid'] }}</td>
-                  <td class="data-cell text-right">{{ bill['rent-bal'] }}</td>
+                  <td class="data-cell text-right">{{ bill['rent-bal-alt'] }}</td>
                 </tr>
               {% endfor %}
 
@@ -653,6 +657,55 @@
   </div>
 </div>
 
+     <div class="modal fade" id="holdPayModal" tabindex="-1" role="dialog" aria-labelledby="paymentDetailModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="indicator"></div>
+          <div class="modal-header pb-0 text-center">
+            <h5 class="modal-title text-info" id="paymentDetailModalLabel">Void/Reverse voided payments</h5>
+            <span id="update-reloader" class="dispnone"></span>
+            <div class="alert-msgs"></div>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="media mb-2">
+              <div class="media-body">
+                <div class="position-relative">
+                  <div class="card-body modal-forms">
+                    <form autocomplete="off" method="POST" action="">
+     
+                    <!-- Payment Type Field -->
+                    <div class="form-group text-black">
+                        <label>Payment Status</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="holdType" id="hold-pay" value="hold" required>
+                            <label class="form-check-label" for="hold-pay">Void payment</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="holdType" id="unhold-pay" value="unhold" required>
+                            <label class="form-check-label" for="unhold-pay">Reverse voided</label>
+                        </div>
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="form-group text-black">
+                        <label for="trans-desc">Description</label>
+                        <textarea class="form-control" id="trans-desc" name="description" rows="3" placeholder="Enter a description"></textarea>
+                    </div>
+ 
+                    </form>
+                    <div class="mt-3">
+                      <button class="btn btn-light reset dispnone" type="reset" data-dismiss="modal"></i>Dismiss</button>
+                      <button id="submit-hold-unhold" class="btn malibu-bg btn-sm form-control font-weight-bold text-white" type="button"> <span> Submit</span> </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
 <script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
 
@@ -689,6 +742,54 @@
     minViewMode: "months"
   });
 </script>
+
+<script>
+
+			// Attach a click event to the button
+		$(document).on('click', '.hold-pay', function () {
+			var button = $(this); // Reference to the clicked button
+			var id = button.data('id'); // Get the ID from the button's data attribute
+      $("#hold_pay_identifier").text(id)
+		});
+	</script>
+
+  <script>
+    $("#submit-hold-unhold").on('click',function(){   
+      
+      $('#submit-hold-unhold').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>submitting...');
+      $("#invhouse").text($(this).text())
+      $.ajax({
+        url: "/rent/statement",
+        type: "POST",
+        data: {
+              inv_id:$("#hold_pay_identifier").text(),
+              hold_status:$("input[name='holdType']:checked").val(),
+            },
+        success: function(response) {
+          $(".closemodal").click();
+          $(".payment-info").html("<span class='text-success'>Submission successful</span>");  
+          $('#submit-hold-unhold').html('Submit');
+          $("#invhouse").text("loading ...")
+
+          // $(".modal-backdrop").remove();
+          // $("#view_general").click();
+          location.reload();
+
+          // getInvs($("#prop_identifier").text(),"",$("#currentinvpage").text())
+
+          
+        },
+        error: function(xhr) {
+          $("#confirmation").addClass("dispnone");
+          $('#submit-hold-unhold').html('Submission rror !');
+          $("#invhouse").text("loading ...")
+
+          $(".payment-info").html('<span class="text-danger font-weight-bold">Submission rror');
+          }
+      });
+    });
+
+  </script>
 
 
 <!-- <script type="text/javascript">

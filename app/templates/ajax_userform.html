@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-xl-4">
                 <!-- Profile picture card-->
-                <div class="card mb-4 mb-xl-0">
+                <div class="card mb-4 mb-xl-0 d-none">
                     <div class="card-header">Profile Picture</div>
                     <div class="card-body text-center">
                         <!-- Profile picture image-->
@@ -18,34 +18,64 @@
                     </div>
                 </div>
 
-                <div class="card mb-4 mb-xl-0 mt-3">
+                <div class="card mb-1 mb-xl-0 mt-33">
                     <div class="card-header">Access Levels</div>
                     <div class="card-body text-center">
-                        <fieldset class="mt-2 mb-2">
+                        <fieldset class="mt-1">
                             <legend class="legend">Select roles:</legend>
                             <div class="text-left">
 
                                 <div class="fancy-checkbox-group form-control mb-2 smallify">
                                     <input type="checkbox" name="rolecheckbox" id="admin" value="admin">
-                                    <label class="mr-3 me-3 hover-text" for="admin">Admin</label>
+                                    <label class="mr-3 me-3 hover-text" for="admin">Full system access</label>
                                   </div>
                                   <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="edit" value="edit">
-                                    <label class="mr-3 me-3 hover-text" for="edit">Edit</label>
+                                    <input type="checkbox" name="rolecheckbox" id="approve" value="approve">
+                                    <label class="mr-3 me-3 hover-text" for="approve">Approve/Reject changes</label>
                                   </div>
                                 <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="write" value="write">
-                                    <label class="mr-3 me-3 hover-text" for="write">Add</label>
+                                    <input type="checkbox" name="rolecheckbox" id="comms" value="comms">
+                                    <label class="mr-3 me-3 hover-text" for="comms">Send Email/sms</label>
                                   </div>
 
                                   <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="read" value="read">
-                                    <label class="mr-3 me-3 hover-text" for="read">View</label>
+                                    <input type="checkbox" name="rolecheckbox" id="props" value="props">
+                                    <label class="mr-3 me-3 hover-text" for="props">Add Properties</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="tenants" value="tenants">
+                                    <label class="mr-3 me-3 hover-text" for="tenants">Manage Tenants</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="users" value="users">
+                                    <label class="mr-3 me-3 hover-text" for="users">Manage users & Roles</label>
                                   </div>
 
                                   <div class="fancy-checkbox-group form-control mb-2 smallify">
-                                    <input type="checkbox" name="rolecheckbox" id="sendsms" value="sendsms">
-                                    <label class="mr-3 me-3 hover-text" for="sendsms">Send sms</label>
+                                    <input type="checkbox" name="rolecheckbox" id="readonly" value="readonly">
+                                    <label class="mr-3 me-3 hover-text" for="readonly">Read only access</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="payments" value="payments">
+                                    <label class="mr-3 me-3 hover-text" for="payments">Post payments</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="invoices" value="invoices">
+                                    <label class="mr-3 me-3 hover-text" for="invoices">Create invoices</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="reports" value="reports">
+                                    <label class="mr-3 me-3 hover-text" for="reports">View reports</label>
+                                  </div>
+
+                                <div class="fancy-checkbox-group form-control mb-2 smallify">
+                                    <input type="checkbox" name="rolecheckbox" id="demo" value="demo">
+                                    <label class="mr-3 me-3 hover-text" for="demo">Demo mode</label>
                                   </div>
 
                             </div>

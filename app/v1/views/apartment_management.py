@@ -5237,23 +5237,25 @@ class BulkSms(Resource):
                 send_internal_email_notifications(prop_obj.company.name,text)
                 # response = sms.send(text, ["+254716674695"],sender)
 
-                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551" or permission(current_user, 'sendsms'):
+                if current_user.username.startswith("qc") or current_user.national_id == "12345678" or current_user.usercode == "3551" or has_right(current_user, 'comms'):
                     ApartmentOp.update_reminder_status(prop_obj,"sent")
                     job8 = q.enqueue_call(
                         func=send_reminder_sms, args=(propid,rem_txt,channel,house,tel,), result_ttl=5000
                     )
+                    print("yaaaaa kassssit",permission(current_user, 'comms'))
                     return success
                 else:
                     if prop_obj.reminder_status == "sent":
                         text = f'Bulk sms requested again by {prop_obj.company} for {prop_obj.name}'
                         send_internal_email_notifications(prop_obj.company.name,text)
                         # response = sms.send(text, ["+254716674695"],sender)
-                        return failure + "sms already sent"
+                        return failure + "insufficient rights to send reminders"
                     else:
                         ApartmentOp.update_reminder_status(prop_obj,"sent")
                         job8 = q.enqueue_call(
                             func=send_reminder_sms, args=(propid,rem_txt,channel,house,tel,), result_ttl=5000
                         )
+                        print("chcehcheche")
                         return success
         
 
@@ -5479,8 +5481,8 @@ class CreateHouseCode(Resource):
 
     def post(self):
 
-        if not permission(current_user, 'write'):
-            return err + "Insufficient permissions to add sizes/rates"
+        if not permission(current_user, 'invoices'):
+            return err + "Insufficient permissions to add/update rates"
 
         target = request.form.get('target')
         apartment_id = request.form.get('propid')
@@ -5624,7 +5626,7 @@ class EditHouseCode(Resource):
     def post(self):
 
         if not permission(current_user, 'edit'):
-            return err + "Insufficient permissions to edit sizes/rates"
+            return err + "Insufficient permissions to add/edit rates"
 
         target = request.form.get("target")
 
@@ -5764,7 +5766,7 @@ class CreateHouse(Resource):
     @login_required
     def post(self):
 
-        if not permission(current_user, 'write'):
+        if not permission(current_user, 'invoices'):
             return err + "Insufficient permissions to add units/plots"
 
         target = request.form.get('target')
@@ -5976,7 +5978,7 @@ class EditHouse(Resource):
 
     def post(self):
 
-        if not permission(current_user, 'edit'):
+        if not permission(current_user, 'invoices'):
             return err + "Insufficient permissions to edit units/plots"
 
         propid = request.form.get('propid')

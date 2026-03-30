@@ -1,0 +1,268 @@
+{% extends 'basereport.html' %}
+
+{% block content %}
+
+<style type="text/css" media="print">
+
+  /* @page{
+    size:landscape;
+  } */
+
+  /* .masked{
+    -webkit-text-security: disc;
+    text-security:disc;
+  } */
+
+</style>
+
+<button id="btnDownload" class="btn btn-success btn-sm dispnone">
+  <i class="text-white feather-16 font-weight-bold" data-feather="printer"></i><span class="ml-1 text-white">print</span>
+</button>
+
+    <div class="col-lg-12 noprint">
+        <div class="formwrapper">
+            <div class="card bt-none">
+              <!-- Card Header - Accordion -->
+              <div class="divjust-end bg-light underline">
+                
+                <a href="#collapseCardExample" class="d-block center-btn no-decor" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                  <div class="font-weight-bold text-black pt-1">
+                    <span class="ml-lg-4 font-weight-bold text-uppercase">Select below</span>
+                    <span><i class="fas fa-chevron-down ml-3"></i></span>
+                  </div>
+                </a>
+
+              </div>
+              <!-- Card Content - Collapse -->
+              <div class="" id="collapseCardExample">
+                <div class="card-body pt-0">
+                    <form class="bg-white">
+
+                      <div class="row">
+                      
+                        <div class="col-lg-3 form-group mb-2">
+                          <label class="mb-0">Select user:</label>
+                          <select name="user" class="select-css" id="user" required>
+                            <option disabled selected value> select user </option>
+                            {% for o in users %}
+                            <option value="{{ o.id }}">{{ o.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      
+                        <div class="col-lg-3 form-group mb-2 mr-lg-5">
+                          <label class="mb-0">Select date:</label>
+                            <input id="activity_date" class="form-control ph" type="date" placeholder="-pick date-" />
+                        </div>
+                      
+                        <div class="col-lg-2 form-group mb-2">
+                          <button id="view_general" type="button" class="form-control viewbtn font-weight-bold btn btn-primary btn-sm mt-4">View</button>
+                        </div>
+                      </div>
+
+                    </form>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+  
+    <div id="reportbase" class="row">
+ 
+  <!-- <div id="detailedreport" class="dispnone col-lg-12 "></div> -->
+  <div class="col-lg-12 noprint">
+    <div class="card shadow mb-0">
+
+      <!-- Card Content - Collapse -->
+      <div class="collapse show" id="collapseCardExample2">
+        <div class="card-body pt-0">
+
+          <div class="center-btn">
+            <div class="mb-1 text-black">
+              <div class="font-weight-bold">
+                {{co.name.upper()}}
+              </div>
+              <div class="">
+                <img class="" src="{{logopath}}" alt={{co.name}} />
+              </div>
+              <span class="ln-16">P.O BOX {{co.mail_box}}, {{co.city}}. Telephone : {{co.phone}} Fax:</span>
+              <div class="ln-16">Email: {{co.mail}}</div>
+            </div>
+          </div>
+
+          <div class="ln-14 divjust-end">
+            <span class="hide">hide</span>
+            <span>Dated : <span class="text-black">{{reportdate}}</span></span>
+          </div>
+
+          <div class="center-btn mt-2 overline underline bg-aviv">
+            <!-- <h5 style="font-style: oblique;" class="font-weight-bold underline text-black">{{prop}} {{timeline}} landlord statement</h5> -->
+            <span class="font-weight-bold text-white"><span class="mt-3">INVOICE CHANGE HISTORY STATEMENT FOR {{timeline}}</span></span>
+          </div>
+
+
+
+
+          <div class="table-responsive">
+            <table id="dataTable" class="table table-bordered table-striped table-sm" width="100%" cellspacing="0">
+              <thead class="custom-header-alt small">
+                <tr>
+                  <th>Inv#</th>
+                  <th>Unit</th>
+                  <th>LastEdit</th>
+                  <th>By</th>
+                  <th>Count</th>
+                  <th>Original</th>
+                  <th>Current</th>
+                  <th>Action</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {% for o in activities %}
+                <tr>
+                  <td class="data-cell">{{o.timestamp}}</td>
+                  <td class="data-cell">{{o.user.name}}</td>
+                  <td class="data-cell">{{o.activity_type}}</td>
+                  <td class="data-cell">{{o.description}}</td>
+                  <td class="data-cell">{{o.description}}</td>
+                  <td class="data-cell">{{o.description}}</td>
+                  <td class="data-cell">{{o.description}}</td>
+                  <td class="data-cell"><button class="btn btn-success btn-sm">Expand</button></td>
+
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+
+
+<!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/datepicker.js') }}"></script>
+
+
+<!-- 
+<script>
+  var rawIds = "{{ billids|safe }}";
+  var ids = rawIds.split`,`.map(x=>x); //adding plus converts the items to numbers
+  console.log(ids)
+  $.each(ids, function(i,item) {
+  
+    $("#"+item).on('click',function(){
+      console.log("clicked",item)
+      if( isNaN(parseInt(item)) ){
+        if(item.startsWith("del")){
+          $("#del_bill_identifier").html(item)
+        }else{
+          $("#edit_bill_identifier").html(item)
+        }
+        
+      }else{
+        $("#bill_identifier").html(item)
+      }
+    });
+  });
+</script> -->
+
+
+
+<!-- <script type="text/javascript">
+  $(document).ready(function () {
+    $("#reportbtns").addClass("dispnone")
+
+    $('#dataTable').DataTable({
+      "pagingType": "simple_numbers", // "simple" option for 'Previous' and 'Next' buttons only
+      "pageLength": 100,
+      // "bPaginate": false, //hide pagination control
+      // "bFilter": false, //hide filter control
+      // "searching":false,
+      // "aoColumnDefs": [{ "bSortable": false, "aTargets": [ "_all" ] }],
+      // "targets": 'no-sort',
+      // "bSort": false,
+      columnDefs: [ { targets: 0, type: 'natural' } ],
+      // "info" : false,
+      "order": [[ 0, "asc" ]],
+      // "bLengthChange": false
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+</script> -->
+
+
+
+<script>
+  $("#view_general").click(function () {
+
+    if ($("#prop").val() == "" || $("#month").val() == "") {
+      alert("Please select user and date!")
+    }else{
+      //pass
+      $("#preloader-btn").click();
+      $.ajax({
+          url: "/change/statement",
+          type: "get",
+          data: {
+              user: $("#user").val(),
+              period: $("#activity_date").val(),
+          },
+          success: function (response) {
+              $("#reportbase").html(response)
+              $("#postloader-btn").click();
+              // $.ajax({
+              //   url: "/resolve/invoices",
+              //   type: "POST",
+              //   data: {
+              //     proptext: $("#prop").val(),
+              //     period:$("#target_period").text()
+              //   },
+              //   success: function(response) {
+              //     // $("#"+item).html('all set');
+              //   }
+              // });
+
+          }
+      });
+    }
+  });
+
+
+
+
+
+  feather.replace()
+</script>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+    
+    
+
+
+
+
+ 

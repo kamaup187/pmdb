@@ -1304,6 +1304,7 @@ class MonthlyCharge(db.Model):
     arrears_updated = db.Column(db.Boolean,default=False)
     dep_journal = db.Column(db.Boolean,default=False)
     updated = db.Column(db.Boolean,default=False)
+    payhold = db.Column(db.String,default="none")
 
     apartment_id = db.Column(db.Integer, db.ForeignKey(Apartment.id))
     house_id = db.Column(db.Integer, db.ForeignKey(House.id))

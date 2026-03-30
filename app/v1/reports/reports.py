@@ -3189,16 +3189,23 @@ class RentStatement(Resource):
                     if bill.rent:
                         paidll += bill.rent_paid
 
-                if bill.rent_balance:
-                    totalbbf += bill.rent_balance if bill.rent_balance > 0 else 0.0
-                    actual_totalbbf += bill.rent_balance
-
                 totalrent += bill.rent if bill.rent else 0.0
                 if not bill.paidll:
-                    totalpaid += bill.rent_paid if bill.rent_paid else 0.0
+                    if bill.payhold == "hold" or bill.payhold == "pending unhold":
+                        pass
+                    else:
+                        totalpaid += bill.rent_paid if bill.rent_paid else 0.0
 
                 if bill.rent_due:
+
                     totalbcf += bill.rent_due if bill.rent_due > 0 else 0.0
+
+                    if bill.payhold == "hold" or bill.payhold == "pending unhold":
+                        totalbcf += bill.rent_paid if bill.rent_paid > 0 else 0.0
+
+                else:
+                    if bill.payhold == "hold" or bill.payhold == "pending unhold":
+                        totalbcf += bill.rent_paid if bill.rent_paid > 0 else 0.0
         ###################################################################################################
    
 
@@ -3419,6 +3426,34 @@ class RentStatement(Resource):
             reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
             name=current_user.name))
 
+    def post(self):
+        inv_id = request.form.get("inv_id")
+        hold_status = request.form.get("hold_status")
+
+        inv = MonthlyChargeOp.fetch_specific_bill(get_identifier(inv_id))
+        if hold_status == "hold":
+            if inv:
+                if inv.payhold == "pending hold":
+                    print("duplicate")
+                    # MonthlyChargeOp.update_hold_status(inv, "none")
+                    return "duplicate request"
+                # AppTransactionOp.delete(inv)
+                desc = f"{inv.apartment.name} {inv.house.name}"
+                change_request = ChangeRequestOp("hold", desc,None,None,None,inv.id,None,current_user.id,current_user.company.id)
+                change_request.save()
+                MonthlyChargeOp.update_hold_status(inv, "pending hold")
+
+
+        else:
+            if inv:
+                if inv.payhold == "pending unhold":
+                    print("duplicate")
+                    # MonthlyChargeOp.update_hold_status(inv, "none")
+                    return "duplicate request"
+                desc = f"{inv.apartment.name} {inv.house.name}"
+                change_request = ChangeRequestOp("unhold", desc,None,None,None,inv.id,None,current_user.id,current_user.company.id)
+                change_request.save()
+                MonthlyChargeOp.update_hold_status(inv, "pending unhold")
 
 class RentStatement2(Resource):
     @login_required
@@ -3958,6 +3993,99 @@ class ActivityStatement(Resource):
 
         return Response(render_template(
             'ajax_report_activities_statement.html',
+
+            user=selected_apartment,
+            userid=user_obj.id,
+            user_obj=user_obj,
+
+            tenantlist=[],
+            timeline = timeline,
+
+            bills=activity_list,
+            paging="portrait",
+
+            users=users,
+            user_name=selected_apartment,
+            logopath=logo(current_user.company)[0],
+            mobilelogopath=logo(current_user.company)[1],
+            fulllogopath=logo(current_user.company)[2],
+            letterhead=logo(current_user.company)[3],
+            co=current_user.company,
+            reportdate = datetime.datetime.now().strftime("%d/%m/%Y"),
+            name=current_user.name))
+
+class ChangeStatement(Resource):
+    @login_required
+    def get(self):
+        selected_apartment = request.args.get("user")
+        selected_period = request.args.get("period")
+
+        if not selected_apartment:
+
+            user_list = current_user.company.users
+
+            template = "report_change_statement.html"
+
+            return Response(render_template(
+                template,
+                tenantlist=[],
+                prop_obj=None,
+                users=user_list,
+                logopath=logo(current_user.company)[0],
+                mobilelogopath=logo(current_user.company)[1],
+                co=current_user.company,
+                name=current_user.name))
+
+
+        if selected_period:
+            # datestring = date_formatter_alt(selected_period)
+            target_period = parse(selected_period)
+        else:
+            target_period = datetime.datetime.now()
+
+        user_obj = UserOp.fetch_user_by_id(selected_apartment)
+        db.session.expire(user_obj)
+
+        users = current_user.company.users
+
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+        ##################################################################################################
+        activity_list = []
+        all_items = []
+
+        propids = []
+        for prop in fetch_all_apartments_by_user(current_user):
+            propids.append(prop.id)
+
+        for propid in propids:
+            items = MonthlyChargeOp.fetch_all_monthlycharges_by_apartment_id_by_period(propid,target_period.month,target_period.year)
+            all_items.extend(items)
+
+        for exp in all_items:
+            if exp.histories:
+                if len(exp.histories) > 1:
+                    user_id = max(exp.histories, key=lambda x: x.id).createdby
+                    exp_dict = {
+                        "num":exp.id,
+                        "unit":f"{exp.apartment} {exp.house.name}",
+                        "date":(max(exp.histories, key=lambda x: x.id).createdon + relativedelta(hours=3)).strftime("%a, %d-%b-%y %I:%M %p"),
+                        "user":UserOp.fetch_user_by_id(user_id).name.title() if user_id else "Unknown",
+                        "count":len(exp.histories) - 1,
+                        "original":min(exp.histories, key=lambda x: x.id).total_bill,
+                        "current":exp.total_bill
+                    }
+                    activity_list.append(exp_dict)
+
+        ###################################################################################################
+
+        str_month = get_str_month(target_period.month)
+        timeline = f"{str_month.upper()} / {target_period.year}"
+
+
+        return Response(render_template(
+            'ajax_report_changes_statement.html',
 
             user=selected_apartment,
             userid=user_obj.id,

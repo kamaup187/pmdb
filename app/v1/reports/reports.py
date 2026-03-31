@@ -4085,7 +4085,7 @@ class ChangeStatement(Resource):
 
 
         return Response(render_template(
-            'ajax_report_changes_statement.html',
+            'ajax_report_change_statement.html',
 
             user=selected_apartment,
             userid=user_obj.id,

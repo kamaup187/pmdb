@@ -1555,7 +1555,10 @@ class FetchClients(Resource):
 
             items = os.getenv('VAR_ITEMS') or VAR_ITEMS
 
-            lst_items = items.split(",")
+            try:
+                lst_items = items.split(",")
+            except:
+                lst_items = ""
 
             print("heeeeeeeeeeeeeeee",lst_items)
 

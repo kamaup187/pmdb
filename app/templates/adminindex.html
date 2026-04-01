@@ -917,11 +917,11 @@
 
                       <div class="">
                         <button class="propbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
-                          <i class="feather-24 pb-1" data-feather="grid"></i>Properties</button>
+                          <i class="feather-24 pb-1" data-feather="grid"></i>Listed Properties</button>
                       </div>
 
                       <div class="">
-                        <button class="btn btn-light border-none p-0 m-0 font-weight-bold text-black">
+                        <button class="billbtn btn btn-light border-none p-0 m-0 font-weight-bold text-black">
                           <i class="feather-24 pb-1" data-feather="file-text"></i>Client Invoices</button>
                       </div>
         
@@ -4120,7 +4120,7 @@ $(".billbtnn").on('click',function(){
 
   $(".billbtn").on('click',function(){
 
-  $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> RESIDENT/TENANT INVOICES'); feather.replace();
+  $("#maintitle").html('<i class="feather-24 text-black mr-1 pb-1" data-feather="file-text"></i> CLIENT INVOICES'); feather.replace();
   $("#title-loader").addClass("title-loading");$("#title-loader").removeClass("title-loaded");
 
 
@@ -4548,7 +4548,7 @@ $("#closemodule").on('click',function(){
           pointHoverBorderColor: "rgba(78, 115, 223, 1)",
           pointHitRadius: 10,
           pointBorderWidth: 2,
-          data: [0, 000, 000, 000, 00, 0000, 000, 000, 000, 000, 0, 00],
+          data: ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
         }],
       },
       options: {

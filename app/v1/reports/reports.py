@@ -10072,10 +10072,12 @@ class FetchStatistics(Resource):
         clients = num_units + ptnts
         # num_vacs = len(houseauto(prop.id)) - num_units
 
-
-        if prop.billing_period.month != prop.company.billing_period.month:
-            bill_outline = "text-primary"
-        else:
+        try:
+            if prop.billing_period.month != prop.company.billing_period.month:
+                bill_outline = "text-primary"
+            else:
+                bill_outline = "text-dark"
+        except:
             bill_outline = "text-dark"
 
         if prop.billprogress == "billing":

@@ -1752,7 +1752,7 @@ class Index(Resource):
             if str(company) == "National Bank":
                 card_theme = "nbk-card-theme"
 
-            cpw = "KiotaPay"
+            cpw = "PMDP"
             cpwfavi = "img"
 
             auth = os.getenv("TARGET") or TARGET
@@ -1848,7 +1848,7 @@ class Index(Resource):
                 'adminindex.html',
                 username = "Admin",
                 cpwfavi = 'img',
-                cpw = "KiotaPay",
+                cpw = "PMDP",
                 unread_num = unread_num,
                 unread_msgs = unread_messages,
                 chartstring="",

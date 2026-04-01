@@ -156,6 +156,26 @@
     border: 2px solid #0c0c0c !important;
     border-collapse: collapse !important;
 }
+button:disabled {
+    cursor: not-allowed !important;
+    pointer-events: all;
+    background-color: rgba(255, 0, 0, 0.08);
+    color: #a94442; /* optional: slightly reddish text */
+    border-color: rgba(255, 0, 0, 0.2); /* optional: subtle border */
+}
+
+
+  .permission-warning {
+      background-color: rgba(255, 0, 0, 0.08);
+      border: 1px solid rgba(255, 0, 0, 0.2);
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+  }
+
+  .permission-warning span {
+      color: #a94442;
+  }
   </style>
 
 <script>
@@ -308,7 +328,8 @@
                   <a href="/rent/statement">Rent income report</a>
                   <a href="/rent/statement2">Payment report(rent)</a>
                   <a href="/combined/report">Combined report</a>
-                  <a href="/activities/statement">Activities report</a>
+                  <a href="/activities/statement">Account activity</a>
+                  <!-- <a href="/changes/statement">Pending changes report</a> -->
                   <a href="/change/statement">Audit trail</a>
                   <a href="/expenses/statement">Expenses report</a>
 

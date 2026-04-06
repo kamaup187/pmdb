@@ -763,7 +763,7 @@ class V2Clients(Resource):
             client_obj = {
                 "id": client.id,
                 "name": client.name,
-                "isActive": "Yes" if client.active else "No"
+                "isActive": "active" if client.active else "inactive"
             }
 
             return client_obj

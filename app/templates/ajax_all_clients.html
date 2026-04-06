@@ -1440,8 +1440,8 @@
       var clientUpdateForm = (obj) => {
 
         const statusOptions = `
-            <option value="Yes"  ${obj.isActive === "Yes"  ? 'selected' : ''}>Active</option>
-            <option value="No"   ${obj.isActive === "No"   ? 'selected' : ''}>Deactivate</option>
+            <option value="active"  ${obj.isActive === "active"  ? 'selected' : ''}>Activate</option>
+            <option value="inactive"   ${obj.isActive === "inactive"   ? 'selected' : ''}>Deactivate</option>
         `.trim();
 
         

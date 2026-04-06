@@ -729,6 +729,28 @@ class Clients(Resource):
             num_items=num_items,
             )
 
+    def post(self):
+        client_id = request.form.get("client_id")
+        name = request.form.get("name")
+        status = request.form.get("status")
+
+        if client_id:
+            client = CompanyOp.fetch_company_by_id(get_identifier(client_id))
+            if name:
+                existing_client = CompanyOp.fetch_company_by_name(name)
+                if existing_client and existing_client.id != client.id:
+                    return err + "name already taken"
+                else:
+                    CompanyOp.update_name(client,name)
+
+            if status:
+                if status == "active":
+                    CompanyOp.update_status(client,True)
+                else:
+                    CompanyOp.update_status(client,False)
+
+            return "Updated successfully" + proceed
+
 class V2Clients(Resource):
     def get(self):
 
